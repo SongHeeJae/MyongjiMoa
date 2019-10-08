@@ -26,8 +26,7 @@ public class LoginFragment extends Fragment {
     Button add_user;
     EditText user_email;
     EditText user_password;
-//    String[] user_data;
-    String[] info;
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.login_main, container, false);
 
@@ -36,13 +35,11 @@ public class LoginFragment extends Fragment {
         user_email = (EditText) view.findViewById(R.id.login_email);
         user_password = (EditText) view.findViewById(R.id.login_password);
 
-       // user_data = new String[2];
-        info = new String[7];
 
         add_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((LoginActivity)getActivity()).replaceAddUserFragment();
+                ((LoginActivity)getActivity()).addAddUserFragment();
             }
         });
 
@@ -69,29 +66,17 @@ public class LoginFragment extends Fragment {
                     User result = response.body();
 
                     if(response.body() != null) {
-                        info[0] = result.getId();
-                        info[1] = result.getEmail_id();
-                        info[2] = result.getName();
-                        info[3] = result.getMajor();
-                        info[4] = result.getNumber();
-                        info[5] = result.getName();
-                        info[6] = result.getDate();
+                        Intent it = new Intent(getActivity(), MainActivity.class);
+                        it.putExtra("id", result.getId());
+                        it.putExtra("email_id", result.getEmail_id());
+                        it.putExtra("nickname", result.getNickname());
+                        it.putExtra("major", result.getMajor());
+                        it.putExtra("number", result.getNumber());
+                        it.putExtra("name", result.getName());
+                        it.putExtra("date", result.getDate());
+                        getActivity().startActivity(it);
+                        getActivity().finish();
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("메시지");
-                        builder.setMessage("로그인에 성공하였습니다.");
-                        builder.setCancelable(false);
-                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                Intent it = new Intent(getActivity(), MainActivity.class);
-                                it.putExtra("user_info", info);
-                                getActivity().startActivity(it);
-                                ((LoginActivity)getActivity()).startActivity(it);
-                            }
-                        });
-                        builder.show();
                     } else {
                         Log.d("눌임", "ㅇㅇ");
                     }

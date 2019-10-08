@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
 
     <application
         android:allowBackup="false"
@@ -20,6 +23,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="kvsmzi8xtw" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
@@ -34,7 +40,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".BoardActivity"></activity>
-        <activity android:name=".ReviewMapActivity"></activity>
+        <activity android:name=".ReviewActivity"></activity>
+        <activity android:name=".MenuActivity"></activity>
+        <activity android:name=".ModifyUserActivity"></activity>
     </application>
 
 </manifest>

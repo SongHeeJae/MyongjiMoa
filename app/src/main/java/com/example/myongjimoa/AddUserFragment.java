@@ -2,6 +2,7 @@ package com.example.myongjimoa;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +40,8 @@ public class AddUserFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.add_user, container, false);
+
+        view.setBackgroundColor(Color.rgb(255, 255, 255));
 
         user_email = (EditText) view.findViewById(R.id.user_email);
         user_password = (EditText) view.findViewById(R.id.user_password);

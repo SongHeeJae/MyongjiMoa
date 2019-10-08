@@ -9,14 +9,14 @@ public class User {
     String name;
     String date;
 
-    public User(String[] user_info) {
-        id = user_info[0];
-        email_id = user_info[1];
-        nickname = user_info[2];
-        major = user_info[3];
-        number = user_info[4];
-        name = user_info[5];
-        date = user_info[6];
+    public User(String id, String email_id, String nickname, String major, String number, String name, String date) {
+        this.id = id;
+        this.email_id = email_id;
+        this.nickname = nickname;
+        this.major = major;
+        this.number = number;
+        this.name = name;
+        this.date = date;
     }
 
     public String getId() { return id; }
@@ -35,5 +35,13 @@ public class User {
 
     public String getNickname() {
         return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname=nickname;
+    }
+
+    public void setMajor(String major) {
+        this.major=major;
     }
 }

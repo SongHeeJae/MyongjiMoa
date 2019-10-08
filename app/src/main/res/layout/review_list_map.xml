@@ -3,15 +3,10 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="정보!!"/>
-
-    <Button
+    <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/menu_button"
-        android:text="학식!!"/>
+        android:id="@+id/review_map"
+        android:name="com.naver.maps.map.MapFragment" />
 
 </LinearLayout>

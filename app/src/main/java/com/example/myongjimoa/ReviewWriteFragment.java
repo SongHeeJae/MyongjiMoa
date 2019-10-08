@@ -2,23 +2,16 @@ package com.example.myongjimoa;
 
 import android.app.AlertDialog;
 import android.content.ClipData;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
+import android.media.Rating;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +30,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobileconnectors.s3.transferutility.*;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -45,7 +38,6 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,40 +55,42 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+public class ReviewWriteFragment extends Fragment {
 
-public class BoardWriteFragment extends Fragment {
 
-    EditText write_title;
     EditText write_description;
     Button write_submit;
     Button picture;
+    RatingBar rating_bar;
     List<Bitmap> images;
     RecyclerView recycler_view;
-    BoardWriteImageAdapter board_write_image_adapter;
+    ReviewWriteImageAdapter review_write_image_adapter;
     public GestureDetector gesture_detector;
     ArrayList<String> path;
 
     int upload_count;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.board_write, container, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.review_write, container, false);
         view.setBackgroundColor(Color.rgb(255, 255, 255));
+        write_description = (EditText) view.findViewById(R.id.review_write_description);
+        write_submit = (Button) view.findViewById(R.id.review_write_submit);
+        picture = (Button) view.findViewById(R.id.review_picture);
+        rating_bar = (RatingBar) view.findViewById(R.id.review_write_rating_bar);
+        recycler_view = (RecyclerView) view.findViewById(R.id.review_write_image);
 
-        write_title = (EditText) view.findViewById(R.id.write_title);
-        write_description = (EditText) view.findViewById(R.id.write_description);
-        write_submit = (Button) view.findViewById(R.id.write_submit);
-        picture = (Button) view.findViewById(R.id.picture);
-        recycler_view = (RecyclerView) view.findViewById(R.id.board_write_image);
-        Log.d("또실행됨", "ㅇㅇ");
+        images = new ArrayList<>();
+        path = new ArrayList<>();
+        review_write_image_adapter = new ReviewWriteImageAdapter();
+        gesture_detector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+            public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
 
-        path =  new ArrayList<String>();
-        images = new ArrayList<Bitmap>();
-
-        board_write_image_adapter = new BoardWriteImageAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(board_write_image_adapter);
+        recycler_view.setAdapter(review_write_image_adapter);
 
         write_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,18 +101,9 @@ public class BoardWriteFragment extends Fragment {
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BoardActivity)getActivity()).getGallery();
+                ((ReviewActivity)getActivity()).getGallery();
             }
         });
-
-
-        gesture_detector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-        });
-
-        setHasOptionsMenu(true);
 
         return view;
     }
@@ -145,13 +130,13 @@ public class BoardWriteFragment extends Fragment {
             e.printStackTrace();
         }
 
-        return tempFile.getAbsolutePath();   // 임시파일 저장경로를 리턴
+        return tempFile.getAbsolutePath();   // 임시파일 저장경로를 리턴해주면 끝!
     }
 
     public void imageUpload() {
 
 
-        if (board_write_image_adapter.getItemCount() > 0) {
+        if (review_write_image_adapter.getItemCount() > 0) {
 
             // 이미지 업로드 부분에서 이미지 업로드가 아직 실행중인데 다른쪽에서 게시글 정보가 업데이트된다면? 파일업로드처리가 끝난후, 게시글 업로드하도록 수정할필요있음
             // 옵저버패턴 https://flowarc.tistory.com/entry/%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%98%B5%EC%A0%80%EB%B2%84-%ED%8C%A8%ED%84%B4Observer-Pattern
@@ -163,10 +148,10 @@ public class BoardWriteFragment extends Fragment {
             String format_date = sdf.format(date);
 
             ArrayList<File> files = new ArrayList<File>();
-            for (int i = 0; i < board_write_image_adapter.getItemCount(); i++) {
-                files.add(new File(saveBitmapToJpeg(getActivity(), board_write_image_adapter.getItem(i), "temp_images" + i)));
+            for (int i = 0; i < review_write_image_adapter.getItemCount(); i++) {
+                files.add(new File(saveBitmapToJpeg(getActivity(), review_write_image_adapter.getItem(i), "temp_images" + i)));
             }
-
+            Toast.makeText(getActivity(), "안녕하세요", Toast.LENGTH_SHORT).show();
             // Amazon Cognito 인증 공급자 초기화
             CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                     getActivity(),
@@ -180,11 +165,11 @@ public class BoardWriteFragment extends Fragment {
             TransferUtility transfer_utility = TransferUtility.builder().s3Client(s3).context(getActivity()).build();
             s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
 
-            for (int i = 0; i < board_write_image_adapter.getItemCount(); i++) {
-                File file = new File(saveBitmapToJpeg(getActivity(), board_write_image_adapter.getItem(i), "temp_images" + i));
-                String name = ((BoardActivity)getActivity()).board_title + "_"  + ((BoardActivity)getActivity()).user_id + "_" + format_date + "_" + i;
+            for (int i = 0; i < review_write_image_adapter.getItemCount(); i++) {
+                File file = new File(saveBitmapToJpeg(getActivity(), review_write_image_adapter.getItem(i), "temp_images" + i));
+                String name = ((ReviewActivity)getActivity()).current_restaurant.getId() + "_"  + ((ReviewActivity)getActivity()).user_id + "_" + format_date + "_" + i;
                 observer = transfer_utility.upload(
-                        "myongjimoa/board_images",
+                        "myongjimoa/review_images",
                         name, // 이미지 파일이름설정 개별적으로 중복안되게구성해야함. user_id + 현재시간?
                         file
                 ); // 파일 여러개 동시 업로드하는거 찾아야됨
@@ -197,17 +182,17 @@ public class BoardWriteFragment extends Fragment {
                         if (TransferState.COMPLETED == state) {
                             Log.d("전송완료", "ㅇㅇ"); // 여기다 콜백으로 구현
                             upload_count++;
-                            if (upload_count == board_write_image_adapter.getItemCount()) {
+                            if (upload_count == review_write_image_adapter.getItemCount()) {
                                 Log.d("이미지업로드끝", "ㅇㅇ");
-                                posting(path); // 콜백으로 구현 근데 속도느림 개선필요 동시파일업로드하도록
-                                upload_count = 0; // 삭제 코드
+                                reviewUpload(path); // 콜백으로 구현 근데 속도느림 개선필요 동시파일업로드하도록
+                                upload_count = 0;
                             }
                         }
                     }
 
                     @Override
                     public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                        Log.d("s3", "onProgressChanged ㅇㅇㅇㅇㅇㅇㅇㅇ"); //프로그레스바
+                        Log.d("s3", "onProgressChanged ㅇㅇㅇㅇㅇㅇㅇㅇ");
                     }
 
                     @Override
@@ -217,11 +202,11 @@ public class BoardWriteFragment extends Fragment {
                 });
             }
         } else {
-            posting(path);
+            reviewUpload(path);
         }
     }
 
-    public void posting(ArrayList<String> path) {
+    public void reviewUpload(ArrayList<String> path) {
 
         Log.d("dd", "다음줄 실행ㅇㅇㅇㅇㅇ");
 
@@ -236,46 +221,44 @@ public class BoardWriteFragment extends Fragment {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-            Call<String> call = connectDB.writePost(((BoardActivity) getActivity()).board_title_id, ((BoardActivity) getActivity()).user_id, write_title.getText().toString(), write_description.getText().toString(), path, format_date);
+        Call<String> call = connectDB.writeReview(((ReviewActivity)getActivity()).current_restaurant.getId(), write_description.getText().toString(), ((ReviewActivity)getActivity()).user_id, rating_bar.getRating(), format_date, path);
 
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
 
-                    String result = response.body().trim();
-                    Log.d("result는?", result);
-                    if(result.equals("success")) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("메시지");
-                        builder.setMessage("글쓰기에 성공하였습니다.");
-                        builder.setCancelable(false);
-                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // 키보드 내리는 코드
-                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(write_title.getWindowToken(), 0);
-                                imm.hideSoftInputFromWindow(write_description.getWindowToken(), 0);
-                                ((BoardActivity)getActivity()).removeWriteFragment();
-                            }
-                        });
-                        builder.show();
-                    } else {
-                        Log.d("글쓰기실패", "반환값없음");
+                String result = response.body().trim();
+                Log.d("result는?", result); // 실수연산 정확성 개선
+                String[] res = result.split("/");
+                ((ReviewActivity)getActivity()).current_restaurant.setReview_num(Integer.parseInt(res[0]));
+                ((ReviewActivity)getActivity()).current_restaurant.setScore(Float.parseFloat(res[1]));
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("메시지");
+                builder.setMessage("글쓰기에 성공하였습니다.");
+                builder.setCancelable(false);
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                        // 키보드 내리는 코드
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(write_description.getWindowToken(), 0);
+                        ((ReviewActivity)getActivity()).removeWriteFragment();
                     }
-                }
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Log.d("글쓰기 연결 실패", t.getMessage());
-                }
-            });
+                });
+                builder.show();
+            }
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("글쓰기 연결 실패", t.getMessage());
+            }
+        });
     }
 
     public void setWriteImage(ClipData clip_data) {
         if (clip_data != null) {
             for (int i = 0; i < clip_data.getItemCount(); i++) {
                 try {
-                    board_write_image_adapter.add(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), clip_data.getItemAt(i).getUri()));
+                    review_write_image_adapter.add(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), clip_data.getItemAt(i).getUri()));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Log.d("파일없음", e.getMessage());
@@ -287,7 +270,7 @@ public class BoardWriteFragment extends Fragment {
         }
     }
 
-    public class BoardWriteImageAdapter extends RecyclerView.Adapter<BoardWriteImageAdapter.ViewHolder> {
+    public class ReviewWriteImageAdapter extends RecyclerView.Adapter<ReviewWriteImageAdapter.ViewHolder> {
         List<Bitmap> items = new ArrayList<Bitmap>();
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -332,97 +315,5 @@ public class BoardWriteFragment extends Fragment {
         public int getItemCount() {
             return items.size();
         }
-
-    }
-
-
-    public String getPath(Uri uri) {
-
-        boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        if (isKitKat && DocumentsContract.isDocumentUri(getActivity(), uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-            }
-            else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                return getDataColumn(contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
-                        split[1]
-                };
-
-                return getDataColumn(contentUri, selection, selectionArgs);
-            }
-        }
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            return getDataColumn(uri, null, null);
-        }
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-    public String getDataColumn(Uri uri, String selection, String[] selectionArgs) {
-        Cursor cursor = null;
-        String column = "_data";
-        String[] projection = {column};
-        try {
-            cursor = getActivity().getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                Log.d("ㅇㅇ출력", cursor.getString(column_index));
-                return cursor.getString(column_index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.findItem(R.id.menu_menus).setVisible(false);
-        menu.findItem(R.id.menu_search).setVisible(false);
-        menu.findItem(R.id.menu_refresh).setVisible(false);
     }
 }

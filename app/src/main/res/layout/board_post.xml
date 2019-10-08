@@ -36,6 +36,17 @@
             android:layout_height="wrap_content"
             android:id="@+id/post_image_recycler_view"></androidx.recyclerview.widget.RecyclerView>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="추천"
+                android:id="@+id/recommend_button"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommend_num"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

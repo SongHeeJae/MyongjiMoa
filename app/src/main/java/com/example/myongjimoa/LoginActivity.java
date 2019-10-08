@@ -28,8 +28,8 @@ public class LoginActivity extends AppCompatActivity {
         fragmentManager.popBackStack();
     }
 
-    public void replaceAddUserFragment() {
-        FragmentTransaction fragment_transaction = fragment_manager.beginTransaction().replace(R.id.login_main, add_user_fragment);
+    public void addAddUserFragment() {
+        FragmentTransaction fragment_transaction = fragment_manager.beginTransaction().add(R.id.login_main, add_user_fragment);
         fragment_transaction.addToBackStack(null);
         fragment_transaction.commitAllowingStateLoss();
     }

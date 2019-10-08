@@ -3,10 +3,14 @@ package com.example.myongjimoa;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,28 +56,17 @@ public class BoardPostFragment extends Fragment {
     RecyclerView image_recycler_view;
     public GestureDetector gesture_detector;
 
-    Button test_btn;
+    Button recommend_button;
+    TextView recommend_num;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        write_comment.setText("");
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.board_post, container, false);
 
-  /*      test_btn = (Button) view.findViewById(R.id.test_button);
-        test_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TransferObserver observer = transferUtility.download(
-                        MY_BUCKET,     /* The bucket to download from */
-        //                OBJECT_KEY,    /* The key for the object to download */
-         //               MY_FILE        /* The file to download the object to */
-         //       );
-          //  }
-        //});
+        view.setBackgroundColor(Color.rgb(255, 255, 255));
+
+        setHasOptionsMenu(true);
+
 
         post_nickname = (TextView) view.findViewById(R.id.post_nickname);
         post_date = (TextView) view.findViewById(R.id.post_date);
@@ -81,6 +74,8 @@ public class BoardPostFragment extends Fragment {
         post_description = (TextView) view.findViewById(R.id.post_description);
         comment_submit = (Button) view.findViewById(R.id.comment_submit);
         write_comment = (EditText) view.findViewById(R.id.write_comment);
+        recommend_button = (Button) view.findViewById(R.id.recommend_button);
+        recommend_num = (TextView) view.findViewById(R.id.recommend_num);
         board_post_comment_adapter = new BoardPostCommentAdapter();
         board_post_image_adapter = new BoardPostImageAdapter();
 
@@ -97,6 +92,13 @@ public class BoardPostFragment extends Fragment {
         post_date.setText(post.getDate());
         post_title.setText(post.getTitle());
         post_description.setText(post.getDescription());
+        recommend_num.setText(post.getRecommend_num() + "");
+        recommend_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recommending();
+            }
+        });
         for(int i=0; i<post.getImages().size(); i++) {
             Log.d("실행됨", post.getImages().get(i));
             board_post_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + post.getImages().get(i));
@@ -171,6 +173,8 @@ public class BoardPostFragment extends Fragment {
             }
         });
 
+        setHasOptionsMenu(true);
+
         downloadComment();
 
         return view;
@@ -183,7 +187,7 @@ public class BoardPostFragment extends Fragment {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<List<Comment>> call = connectDB.downloadComments(((BoardActivity)getActivity()).getBoard_title(), ((BoardActivity)getActivity()).getPost().getId());
+        Call<List<Comment>> call = connectDB.downloadComments(((BoardActivity)getActivity()).getPost().getId());
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -204,6 +208,58 @@ public class BoardPostFragment extends Fragment {
         });
     }
 
+    public void recommending() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ConnectDB.Base_URL)
+                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
+                .build();
+
+        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        Call<String> call = connectDB.recommendPost(((BoardActivity)getActivity()).getPost().getId(), ((BoardActivity)getActivity()).user_id);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                String result = response.body().trim();
+                Log.d("추천 성공", result);
+
+                if(!result.equals("failed")) {
+                    ((BoardActivity)getActivity()).getPost().setRecommend_num(Integer.parseInt(result));
+                    recommend_num.setText(((BoardActivity)getActivity()).getPost().getRecommend_num() + "");
+               /*     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("메시지");
+                    builder.setMessage("추천하였습니다.");
+                    builder.setCancelable(false);
+
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // 추천 수 업데이트 현재 포스트업데이트, 뷰에 다시그리기
+
+                        }
+                    });
+                    builder.show();*/
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("메시지");
+                    builder.setMessage("이미 추천한 게시글입니다.");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //
+                        }
+                    });
+                    builder.show();
+                }
+            }
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("포스트 작성 실패", t.getMessage());
+            }
+        });
+    }
+
     public void commenting() {
 
         Date date = new Date(); // 시스템 시간으로 구함 동기화되는지 확인 필요
@@ -217,7 +273,7 @@ public class BoardPostFragment extends Fragment {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.writeComment(((BoardActivity)getActivity()).getPost().getId(), ((BoardActivity)getActivity()).user_id, write_comment.getText().toString(), ((BoardActivity) getActivity()).board_title, format_date);
+        Call<String> call = connectDB.writeComment(((BoardActivity)getActivity()).getPost().getId(), ((BoardActivity)getActivity()).user_id, write_comment.getText().toString(), format_date);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -252,7 +308,7 @@ public class BoardPostFragment extends Fragment {
     }
 
     public void reloadComment() {
-        board_post_comment_adapter = null;
+        //board_post_comment_adapter = null;
         board_post_comment_adapter = new BoardPostCommentAdapter();
         comment_recycler_view.setAdapter(board_post_comment_adapter);
         downloadComment();
@@ -301,23 +357,6 @@ public class BoardPostFragment extends Fragment {
         public int getItemCount() {
             return items.size();
         }
-
-        RecyclerView.OnItemTouchListener onItemTouchListener = new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        };
     }
 
     public class BoardPostImageAdapter extends RecyclerView.Adapter<BoardPostImageAdapter.ViewHolder> {
@@ -334,6 +373,10 @@ public class BoardPostFragment extends Fragment {
 
             public void setData(String item) {
                 //값 읽어오기
+                Glide.with(BoardPostFragment.this.getActivity())
+                        .load(item)
+                        .override(500)
+                        .into(img);
 
             }
         }
@@ -351,13 +394,10 @@ public class BoardPostFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-         //   holder.setData(items.get(position));
+            holder.setData(items.get(position));
             String item = items.get(position);
 
-            Glide.with(BoardPostFragment.this.getActivity())
-                    .load(item)
-                    .override(500)
-                    .into(holder.img);
+
             Log.d("ㅇㅇ", "실행됨");
         }
 
@@ -365,22 +405,12 @@ public class BoardPostFragment extends Fragment {
         public int getItemCount() {
             return items.size();
         }
+    }
 
-        RecyclerView.OnItemTouchListener onItemTouchListener = new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        };
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.menu_menus).setVisible(true);
     }
 }

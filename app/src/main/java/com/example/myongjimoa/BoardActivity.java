@@ -3,7 +3,11 @@ package com.example.myongjimoa;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,91 +24,24 @@ public class BoardActivity extends AppCompatActivity {
     String board_title;
     String user_id;
     String nickname;
+    String board_title_id;
 
     Post current_post;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
-
         fragment_manager = getSupportFragmentManager();
         board_main_fragment = new BoardMainFragment();
-        board_post_fragment = new BoardPostFragment();
-        board_write_fragment = new BoardWriteFragment();
 
         Intent it = getIntent();
-        board_title = it.getStringExtra("title");
+        board_title_id = it.getStringExtra("board_title_id");
+        board_title = it.getStringExtra("board_title");
         user_id = it.getStringExtra("user_id");
         nickname = it.getStringExtra("nickname");
 
         setTitle(board_title);
-        if(board_title.equals("공지사항")) {
-            board_title="gongji_board";
-        } else if(board_title.equals("자유게시판")) {
-            board_title="free_board";
-        } else if(board_title.equals("명지장터")){
-            board_title="market_board";
-        } else if(board_title.equals("동아리게시판")){
-            board_title="dongari_board";
-        } else if(board_title.equals("자취생게시판")){
-            board_title="myhome_board";
-        } else if(board_title.equals("기숙사생게시판")){
-            board_title="dormitory_board";
-        } else if(board_title.equals("컴퓨터공학과")){
-            board_title="computer_board";
-        } else if(board_title.equals("정보통신공학과")){
-            board_title="jungtong_board";
-        } else if(board_title.equals("수학과")){
-            board_title="math_board";
-        } else if(board_title.equals("물리학과")){
-            board_title="pyshic_board";
-        } else if(board_title.equals("화학과")){
-            board_title="chemical_board";
-        } else if(board_title.equals("식품영양학과")){
-            board_title="food_board";
-        } else if(board_title.equals("생명과학정보학과")){
-            board_title="life_board";
-        } else if(board_title.equals("전기공학과")){
-            board_title="electric_board";
-        } else if(board_title.equals("전자공학과")){
-            board_title="electronic_board";
-        } else if(board_title.equals("화학공학과")){
-            board_title="chemicalgong_board";
-        } else if(board_title.equals("신소재공학과")){
-            board_title="sinsojae_board";
-        } else if(board_title.equals("환경에너지공학과")){
-            board_title="energy_board";
-        } else if(board_title.equals("토목환경공학과")){
-            board_title="tomok_board";
-        } else if(board_title.equals("교통공학과")){
-            board_title="gyotong_board";
-        } else if(board_title.equals("기계공학과")){
-            board_title="machine_board";
-        } else if(board_title.equals("산업경영공학과")){
-            board_title="sangyeong_board";
-        } else if(board_title.equals("디자인학부")){
-            board_title="design_board";
-        } else if(board_title.equals("체육학부")){
-            board_title="cheyuk_board";
-        } else if(board_title.equals("음악학부")){
-            board_title="music_board";
-        } else if(board_title.equals("바둑학과")){
-            board_title="baduk_board";
-        } else if(board_title.equals("영화뮤지컬학부")){
-            board_title="musical_board";
-        } else if(board_title.equals("건축학부")){
-            board_title="build_board";
-        } else if(board_title.equals("공간디자인전공")){
-            board_title="gonggan_board";
-        } else if(board_title.equals("전공자유학부")){
-            board_title="majorfree_board";
-        } else {
-            Log.d("유효하지않은 게시판", "ㅇㅇㅇ");
-            finish();
-        }
 
         fragment_manager.beginTransaction().add(R.id.board, board_main_fragment).commit();
     }
@@ -113,8 +50,9 @@ public class BoardActivity extends AppCompatActivity {
         return current_post;
     }
 
-   public void replaceBoardWriteFragment() {
-       FragmentTransaction fragment_transaction = fragment_manager.beginTransaction().replace(R.id.board, board_write_fragment);
+   public void addBoardWriteFragment() {
+       board_write_fragment = new BoardWriteFragment();
+       FragmentTransaction fragment_transaction = fragment_manager.beginTransaction().add(R.id.board, board_write_fragment);
        fragment_transaction.addToBackStack(null);
        fragment_transaction.commitAllowingStateLoss();
    }
@@ -123,21 +61,18 @@ public class BoardActivity extends AppCompatActivity {
         current_post = p;
    }
 
-    public void replaceBoardPostFragment(Post p) {
+    public void addBoardPostFragment(Post p) {
         setCurrentPost(p);
-        FragmentTransaction fragment_transaction = fragment_manager.beginTransaction().replace(R.id.board, board_post_fragment);
+        board_post_fragment = new BoardPostFragment();
+        FragmentTransaction fragment_transaction = fragment_manager.beginTransaction().add(R.id.board, board_post_fragment);
         fragment_transaction.addToBackStack(null); // 뒤로가기 했을때 액티비티 종료 안되기 위함.
         fragment_transaction.commitAllowingStateLoss();
     }
 
     public void removeWriteFragment() {
-        board_main_fragment.clearAdapter();
+        board_main_fragment.reloadPost();
         fragment_manager.beginTransaction().remove(board_write_fragment).commit();
         fragment_manager.popBackStack();
-    }
-
-    public String getBoard_title() {
-       return board_title;
     }
 
     public void getGallery() {
@@ -157,8 +92,89 @@ public class BoardActivity extends AppCompatActivity {
             board_write_fragment.setWriteImage(data.getClipData());
         }
     }
+/*
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("메뉴실행", "ㅇㅇ");
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.search_refresh, menu);
+        search = menu.findItem(R.id.menu_search);
+        my_menu = menu;
+        if(board_post_fragment != null) {
+            menu.findItem(R.id.menu_menus).setVisible(true);
+            menu.findItem(R.id.menu_search).setVisible(false);
+            menu.findItem(R.id.menu_refresh).setVisible(true);
+        } else if(board_write_fragment != null) {
+            menu.findItem(R.id.menu_menus).setVisible(false);
+            menu.findItem(R.id.menu_search).setVisible(false);
+            menu.findItem(R.id.menu_refresh).setVisible(false);
+        } else {
+            menu.findItem(R.id.menu_menus).setVisible(false);
+            menu.findItem(R.id.menu_search).setVisible(true);
+            menu.findItem(R.id.menu_refresh).setVisible(true);
+        }
 
-    public String getUser_id() {
-        return user_id;
+        search.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                board_main_fragment.setAdapter(true);
+                my_menu.findItem(R.id.menu_refresh).setVisible(false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                board_main_fragment.setAdapter(false);
+                my_menu.findItem(R.id.menu_refresh).setVisible(true);
+                return true;
+            }
+        });
+
+        SearchView sv=(SearchView)search.getActionView();
+
+        sv.setSubmitButtonEnabled(true);
+
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String search_query) {
+                board_main_fragment.setSearchAdapter(search_query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+        return true;
     }
+*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                return true;
+            case R.id.menu_refresh:
+                if(board_post_fragment != null) {
+
+                } else {
+
+                }
+                return true;
+            case R.id.menu_menus:
+                // 게시글창에서 메뉴눌렀을때 처리
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(board_post_fragment != null) board_post_fragment = null;
+        else if (board_main_fragment != null) board_main_fragment = null;
+    }
+
+
 }
