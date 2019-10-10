@@ -35,8 +35,6 @@ public class AddUserFragment extends Fragment {
     EditText user_number;
     EditText user_name;
 
-    String[] user_data;
-
     Button submit;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -38,4 +38,5 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.16.0'
     implementation 'com.amazonaws:aws-android-sdk-s3:2.16.0'
     implementation 'com.naver.maps:map-sdk:3.6.0'
+    implementation 'org.jsoup:jsoup:1.11.3'
 }

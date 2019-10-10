@@ -480,7 +480,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.removeComment(review_id);
+        Call<String> call = connectDB.removeReview(review_id);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -488,8 +488,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 String result = response.body().trim();
                 if (result.equals("success")) {
                     reloadReview();
-                } else {
-                    Log.d("삭제오류", "삭제오류");
                 }
             }
 

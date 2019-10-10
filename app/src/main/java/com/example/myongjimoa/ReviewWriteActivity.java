@@ -40,9 +40,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -257,7 +254,6 @@ public class ReviewWriteActivity extends AppCompatActivity {
                 review_write_image_adapter.add(getRealPathFromURI(clip_data.getItemAt(i).getUri()));
             }
         }
-
     }
 
     public String getRealPathFromURI(Uri contentUri) {

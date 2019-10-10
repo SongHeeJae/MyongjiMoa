@@ -94,9 +94,6 @@ public interface ConnectDB {
             @Field("image_path[]") ArrayList<String> image_path
     );
 
-   // @POST("/")
-   // Call<String> downloadMenu();
-
     @FormUrlEncoded
     @POST("recommend_post.php")
     Call<String> recommendPost(

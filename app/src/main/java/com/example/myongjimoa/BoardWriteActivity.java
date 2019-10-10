@@ -59,7 +59,6 @@ public class BoardWriteActivity extends AppCompatActivity {
     EditText write_description;
     Button write_submit;
     Button picture;
-  //  List<Bitmap> images;
     RecyclerView recycler_view;
     BoardWriteImageAdapter board_write_image_adapter;
     public GestureDetector gesture_detector;
@@ -87,7 +86,6 @@ public class BoardWriteActivity extends AppCompatActivity {
         board_title_id = it.getStringExtra("board_title_id");
 
         path =  new ArrayList<>();
-   //     images = new ArrayList<>();
 
         board_write_image_adapter = new BoardWriteImageAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
@@ -333,8 +331,6 @@ public class BoardWriteActivity extends AppCompatActivity {
         it.setType("image/*");
         it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(Intent.createChooser(it, "Get Image"), GET_GALLERY_IMAGE);
-        //최근사진 읽어오면 절대경로 오류남
-        // startActivityForResult(it, GET_GALLERY_IMAGE);
     }
 
     @Override
