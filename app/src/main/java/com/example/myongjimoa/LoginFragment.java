@@ -69,7 +69,7 @@ public class LoginFragment extends Fragment {
                         Intent it = new Intent(getActivity(), MainActivity.class);
                         it.putExtra("id", result.getId());
                         it.putExtra("email_id", result.getEmail_id());
-                        it.putExtra("nickname", result.getNickname());
+                        it.putExtra("user_nickname", result.getNickname());
                         it.putExtra("major", result.getMajor());
                         it.putExtra("number", result.getNumber());
                         it.putExtra("name", result.getName());
@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment {
                 Log.d("성공~", "로그인성공");
 
                         info[0] = jsonObject.getString("email_id");
-                        info[1] = jsonObject.getString("nickname");
+                        info[1] = jsonObject.getString("user_nickname");
                         info[2] = jsonObject.getString("school");
                         info[3] = jsonObject.getString("major");
                         info[4] = jsonObject.getString("number");

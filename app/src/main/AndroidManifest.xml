@@ -43,6 +43,10 @@
         <activity android:name=".ReviewActivity"></activity>
         <activity android:name=".MenuActivity"></activity>
         <activity android:name=".ModifyUserActivity"></activity>
+        <activity android:name=".BoardPostActivity"></activity>
+        <activity android:name=".BoardWriteActivity"></activity>
+        <activity android:name=".ReviewListActivity"></activity>
+        <activity android:name=".ReviewWriteActivity"></activity>
     </application>
 
 </manifest>

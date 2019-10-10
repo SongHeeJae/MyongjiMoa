@@ -72,12 +72,13 @@ public interface ConnectDB {
     @FormUrlEncoded
     @POST("download_restaurant.php")
     Call<List<Restaurant>> downloadRestaurant (
-            @Field("category") String category
+            @Field("category") String category,
+            @Field("order") String order
     );
 
     @FormUrlEncoded
     @POST("download_review.php")
-    Call<List<Review>> downloadReview (
+    Call<ReviewResult> downloadReview (
             @Field("restaurant_id") String restaurant_id,
             @Field("count_review_id") String count_review_id
     );
@@ -117,6 +118,45 @@ public interface ConnectDB {
             @Field("board_title_id") String board_title_id,
             @Field("count_board_id") String count_board_id,
             @Field("search_text") String search
+    );
+
+    @FormUrlEncoded
+    @POST("remove_post.php")
+    Call<String> removePost(
+            @Field("board_id") String board_id
+    );
+
+    @FormUrlEncoded
+    @POST("report_post.php")
+    Call<String> reportPost(
+            @Field("board_id") String board_id,
+            @Field("user_id") String user_id
+    );
+
+    @FormUrlEncoded
+    @POST("report_comment.php")
+    Call<String> reportComment(
+            @Field("comment_id") String comment_id,
+            @Field("user_id") String user_id
+    );
+
+    @FormUrlEncoded
+    @POST("remove_comment.php")
+    Call<String> removeComment(
+            @Field("comment_id") String comment_id
+    );
+
+    @FormUrlEncoded
+    @POST("report_review.php")
+    Call<String> reportReview(
+            @Field("review_id") String review_id,
+            @Field("user_id") String user_id
+    );
+
+    @FormUrlEncoded
+    @POST("remove_review.php")
+    Call<String> removeReview(
+            @Field("review_id") String review_id
     );
 
 }

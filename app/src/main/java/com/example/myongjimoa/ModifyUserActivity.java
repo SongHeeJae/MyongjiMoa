@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,7 +60,7 @@ public class ModifyUserActivity extends AppCompatActivity {
 
         Intent it = getIntent();
         email_id.setText(it.getStringExtra("email_id"));
-        nickname.setText(it.getStringExtra("nickname"));
+        nickname.setText(it.getStringExtra("user_nickname"));
         major.setText(it.getStringExtra("major"));
         number.setText(it.getStringExtra("number"));
         name.setText(it.getStringExtra("name"));
@@ -84,6 +85,8 @@ public class ModifyUserActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +126,7 @@ public class ModifyUserActivity extends AppCompatActivity {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.modifyUser(user_id, nickname_text.getText().toString(), major_text.getText().toString());
+        Call<String> call = connectDB.modifyUser(user_id, nickname_text.getText().toString().trim(), major_text.getText().toString().trim());
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -138,7 +141,7 @@ public class ModifyUserActivity extends AppCompatActivity {
                     textSwitch();
                     modify_check=true;
                 } else {
-                    Log.d("수정실패", "완료");
+                    Toast.makeText(getApplicationContext(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
                 }
 
             }

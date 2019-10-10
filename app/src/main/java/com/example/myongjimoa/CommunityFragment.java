@@ -72,7 +72,7 @@ public class CommunityFragment extends Fragment {
                     it.putExtra("board_title_id", m_adapter.getBoard(currentPos).getId());
                     it.putExtra("board_title", m_adapter.getBoard(currentPos).getTitle());
                     it.putExtra("user_id", ((MainActivity)getActivity()).getUserInfo().getId());
-                    it.putExtra("nickname", ((MainActivity)getActivity()).getUserInfo().getNickname());
+                    it.putExtra("user_nickname", ((MainActivity)getActivity()).getUserInfo().getNickname());
                     startActivity(it);
                     // title[currentPos]에 담긴 데이터값으로 이동
                     //Toast.makeText(MainActivity.this, kWord[currentPos], Toast.LENGTH_SHORT).show();

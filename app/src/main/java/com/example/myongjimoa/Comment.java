@@ -2,14 +2,16 @@ package com.example.myongjimoa;
 
 public class Comment {
     String id;
-    String e_mail;
+    String number;
+    String major;
     String comment;
     String date;
     String nickname;
 
-    public Comment(String id, String e_mail, String comment, String date, String nickname) {
+    public Comment(String id, String number, String major, String comment, String date, String nickname) {
         this.id = id;
-        this.e_mail = e_mail;
+        this.number = number;
+        this.major = major;
         this.nickname = nickname;
         this.comment = comment;
         this.date = date;
@@ -17,7 +19,13 @@ public class Comment {
 
     String getId() { return id; }
 
-    String getE_mail() { return e_mail; }
+    String getNumber() {
+        return number;
+    }
+
+    String getMajor() {
+        return major;
+    }
 
     String getNickname() {
         return nickname;

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent it = getIntent();
-        my_info = new User(it.getStringExtra("id"), it.getStringExtra("email_id"), it.getStringExtra("nickname"), it.getStringExtra("major"), it.getStringExtra("number"), it.getStringExtra("name"), it.getStringExtra("date"));
+        my_info = new User(it.getStringExtra("id"), it.getStringExtra("email_id"), it.getStringExtra("user_nickname"), it.getStringExtra("major"), it.getStringExtra("number"), it.getStringExtra("name"), it.getStringExtra("date"));
         fragment_manager = getSupportFragmentManager();
         community_fragment = new CommunityFragment();
         review_fragment = new ReviewFragment();
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent it = new Intent(this, ModifyUserActivity.class);
                 it.putExtra("email_id", my_info.getEmail_id());
-                it.putExtra("nickname", my_info.getNickname());
+                it.putExtra("user_nickname", my_info.getNickname());
                 it.putExtra("major", my_info.getMajor());
                 it.putExtra("number", my_info.getNumber());
                 it.putExtra("name", my_info.getName());

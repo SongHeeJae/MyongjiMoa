@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -76,18 +77,19 @@ public class AddUserFragment extends Fragment {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.addUser(user_email.getText().toString(), user_password.getText().toString(), user_nickname.getText().toString(), user_major.getText().toString(), user_number.getText().toString(), user_name.getText().toString(), format_date);
+        Call<String> call = connectDB.addUser(user_email.getText().toString().trim(), user_password.getText().toString(), user_nickname.getText().toString().trim(), user_major.getText().toString().trim(), user_number.getText().toString().trim(), user_name.getText().toString().trim(), format_date);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
                     String result = response.body().trim();
-                    Log.d("회원가입 성공", result);
+
                     if(result.equals("success")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setTitle("메시지");
-                        builder.setMessage("회원 가입에 성공하였습니다.");
                         builder.setCancelable(false);
+                        Log.d("회원가입 성공", result);
+                        builder.setMessage("회원 가입에 성공하였습니다.");
                         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -95,9 +97,12 @@ public class AddUserFragment extends Fragment {
                             }
                         });
                         builder.show();
-                    } else {
-
+                    } else if(result.equals("email")){
+                        Toast.makeText(getActivity(), "이미 등록된 이메일입니다.", Toast.LENGTH_SHORT).show();
+                    } else if(result.equals("nickname")) {
+                        Toast.makeText(getActivity(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
                     }
+
 
             }
             @Override

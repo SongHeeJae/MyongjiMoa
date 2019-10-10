@@ -33,7 +33,6 @@ public class ReviewFragment extends Fragment {
             public void onClick(View view ) {
                 Intent it = new Intent(getActivity(), ReviewActivity.class);
                 it.putExtra("user_id", ((MainActivity)getActivity()).getUserInfo().getId());
-                it.putExtra("nickname", ((MainActivity)getActivity()).getUserInfo().getNickname());
                 switch(view.getId()) {
                     case R.id.hansik :
                         it.putExtra("category", "hansik_food");
@@ -66,6 +65,7 @@ public class ReviewFragment extends Fragment {
                         it.putExtra("category", "restaurant");
                         break;
                 }
+                it.putExtra("user_nickname", ((MainActivity)getActivity()).getUserInfo().getNickname());
                 startActivity(it);
             }
         };
