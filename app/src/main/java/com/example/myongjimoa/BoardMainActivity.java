@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +25,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class CommunityFragment extends Fragment {
+public class BoardMainActivity extends AppCompatActivity {
 
     RecyclerView recycler_view;
     BoardTitleAdapter m_adapter;
@@ -33,52 +33,48 @@ public class CommunityFragment extends Fragment {
     String[] title_list;
 
     public GestureDetector gesture_detector;
+    String user_id;
+    String user_nickname;
 
-    ViewGroup view;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.board_main);
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(view == null) view = (ViewGroup) inflater.inflate(R.layout.community, container, false);
-        else return view;
+        Intent it = getIntent();
+        user_id = it.getStringExtra("user_id");
+        user_nickname = it.getStringExtra("user_nickname");
 
-        recycler_view = (RecyclerView) view.findViewById(R.id.title_recycler_view);
+        recycler_view = (RecyclerView) findViewById(R.id.title_recycler_view);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recycler_view.setLayoutManager(layoutManager);
         m_adapter = new BoardTitleAdapter();
         recycler_view.setAdapter(m_adapter);
 
         title_list = getResources().getStringArray(R.array.title_list);
 
-      /*  for (int i=0; i<title_list.length ; i++) {
-            m_adapter.add(title_list[i]);
-        } // 데이터 add*/
-
-
-        gesture_detector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
         recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
-         {
+        {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
                 View childView = rv.findChildViewUnder(e.getX(), e.getY());
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                  //  Toast.makeText(getActivity(), title_list[currentPos], Toast.LENGTH_SHORT).show();
-                    Intent it = new Intent(getActivity(), BoardActivity.class);
+                    Intent it = new Intent(BoardMainActivity.this, BoardActivity.class);
                     it.putExtra("board_title_id", m_adapter.getBoard(currentPos).getId());
                     it.putExtra("board_title", m_adapter.getBoard(currentPos).getTitle());
-                    it.putExtra("user_id", ((MainActivity)getActivity()).getUserInfo().getId());
-                    it.putExtra("user_nickname", ((MainActivity)getActivity()).getUserInfo().getNickname());
+                    it.putExtra("user_id", user_id);
+                    it.putExtra("user_nickname", user_nickname);
                     startActivity(it);
-                    // title[currentPos]에 담긴 데이터값으로 이동
-                    //Toast.makeText(MainActivity.this, kWord[currentPos], Toast.LENGTH_SHORT).show();
                     return true;
                 }
-
                 return false;
             }
 
@@ -95,7 +91,7 @@ public class CommunityFragment extends Fragment {
 
         downloadBoardList();
 
-        return view;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     void downloadBoardList() {
@@ -116,13 +112,8 @@ public class CommunityFragment extends Fragment {
                         for (int i = 0; i < result.size(); i++) {
                             m_adapter.add(new Board(result.get(i).getId(), result.get(i).getTitle()));
                         }
-                    } else {
-                        Log.d("음식점목록없음", "음식점목록없음");
                     }
-                } else {
-                    Log.d("error", "error");
                 }
-
             }
             @Override
             public void onFailure(Call<List<Board>> call, Throwable t) {
@@ -176,4 +167,13 @@ public class CommunityFragment extends Fragment {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

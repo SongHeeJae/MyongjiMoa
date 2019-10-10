@@ -267,7 +267,6 @@ public class BoardActivity extends AppCompatActivity {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Log.d("search_query는 ??", search_query);
         Call<List<Post>> call = connectDB.downloadSearchPost(board_title_id, search_count_board_id, search_query);
         call.enqueue(new Callback<List<Post>>() {
             @Override

@@ -2,16 +2,13 @@ package com.example.myongjimoa;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class ReviewFragment extends Fragment {
+public class ReviewMainActivity extends AppCompatActivity {
 
     Button hansik;
     Button chinese;
@@ -22,17 +19,21 @@ public class ReviewFragment extends Fragment {
     Button chicken;
     Button gogi;
     Button yangsik;
-    Button find_restaurant;
     Button all;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup view = (ViewGroup)inflater.inflate(R.layout.review, container, false);
+    String user_id;
+    String user_nickname;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.review);
 
         Button.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view ) {
-                Intent it = new Intent(getActivity(), ReviewActivity.class);
-                it.putExtra("user_id", ((MainActivity)getActivity()).getUserInfo().getId());
+                Intent it = new Intent(ReviewMainActivity.this, ReviewActivity.class);
+                it.putExtra("user_id", user_id);
                 switch(view.getId()) {
                     case R.id.hansik :
                         it.putExtra("category", "hansik_food");
@@ -65,44 +66,42 @@ public class ReviewFragment extends Fragment {
                         it.putExtra("category", "restaurant");
                         break;
                 }
-                it.putExtra("user_nickname", ((MainActivity)getActivity()).getUserInfo().getNickname());
+                it.putExtra("user_nickname", user_nickname);
                 startActivity(it);
             }
         };
 
-        hansik = (Button)view.findViewById(R.id.hansik);
+        hansik = (Button)findViewById(R.id.hansik);
         hansik.setOnClickListener(onClickListener);
-        chinese = (Button) view.findViewById(R.id.chinese);
+        chinese = (Button) findViewById(R.id.chinese);
         chinese.setOnClickListener(onClickListener);
-        alchol = (Button) view.findViewById(R.id.alchol);
+        alchol = (Button) findViewById(R.id.alchol);
         alchol.setOnClickListener(onClickListener);
-        cafe = (Button) view.findViewById(R.id.cafe);
+        cafe = (Button) findViewById(R.id.cafe);
         cafe.setOnClickListener(onClickListener);
-        boonsik = (Button) view.findViewById(R.id.boonsik);
+        boonsik = (Button) findViewById(R.id.boonsik);
         boonsik.setOnClickListener(onClickListener);
-        japanese = (Button) view.findViewById(R.id.japanese);
+        japanese = (Button) findViewById(R.id.japanese);
         japanese.setOnClickListener(onClickListener);
-        chicken = (Button) view.findViewById(R.id.chicken);
+        chicken = (Button) findViewById(R.id.chicken);
         chicken.setOnClickListener(onClickListener);
-        gogi = (Button) view.findViewById(R.id.gogi);
+        gogi = (Button) findViewById(R.id.gogi);
         gogi.setOnClickListener(onClickListener);
-        yangsik = (Button) view.findViewById(R.id.yangsik);
+        yangsik = (Button) findViewById(R.id.yangsik);
         yangsik.setOnClickListener(onClickListener);
-        all = (Button) view.findViewById(R.id.all);
+        all = (Button) findViewById(R.id.all);
         all.setOnClickListener(onClickListener);
-        find_restaurant = (Button) view.findViewById(R.id.find_restaurant);
-        find_restaurant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
-
-
-
-
-        return view;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

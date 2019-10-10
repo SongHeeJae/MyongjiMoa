@@ -153,7 +153,8 @@ public interface ConnectDB {
     @FormUrlEncoded
     @POST("remove_review.php")
     Call<String> removeReview(
-            @Field("review_id") String review_id
+            @Field("review_id") String review_id,
+            @Field("restaurant_id") String restaurant_id
     );
 
 }

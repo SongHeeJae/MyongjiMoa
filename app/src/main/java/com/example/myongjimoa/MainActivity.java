@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,15 +21,15 @@ import com.gun0912.tedpermission.TedPermission;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private FragmentManager fragment_manager;
-    private CommunityFragment community_fragment;
-    private ReviewFragment review_fragment;
-    private InfoFragment info_fragment;
-    private HomeFragment home_fragment;
-    private BottomNavigationView bottom_navigation_view;
+
     final int MODIFY_REQUEST_CODE=3000;
     User my_info;
 
+    Button info;
+    Button board;
+    Button review;
+    Button shuttle;
+    Button menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,44 +37,59 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Intent it = getIntent();
         my_info = new User(it.getStringExtra("id"), it.getStringExtra("email_id"), it.getStringExtra("user_nickname"), it.getStringExtra("major"), it.getStringExtra("number"), it.getStringExtra("name"), it.getStringExtra("date"));
-        fragment_manager = getSupportFragmentManager();
-        community_fragment = new CommunityFragment();
-        review_fragment = new ReviewFragment();
-        info_fragment = new InfoFragment();
-        home_fragment = new HomeFragment();
 
-
-        fragment_manager.beginTransaction().replace(R.id.main_content, home_fragment).commitAllowingStateLoss();
-
-        bottom_navigation_view = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottom_navigation_view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()) {
-                    case R.id.community:
-                        fragment_manager.beginTransaction().replace(R.id.main_content, community_fragment).commitAllowingStateLoss();
-                    // beginTransaction은 FragmentTrasaction 만드는거니깐 뭔지 검색 필요 트랜잭션을 onCreate에서 할지 결정해야됨 (성능땜에)
+            public void onClick(View v) {
+                switch(v.getId()) {
+                    case R.id.main_info:
+                        Intent info_it = new Intent(MainActivity.this, ModifyUserActivity.class);
+                        info_it.putExtra("email_id", my_info.getEmail_id());
+                        info_it.putExtra("user_nickname", my_info.getNickname());
+                        info_it.putExtra("major", my_info.getMajor());
+                        info_it.putExtra("number", my_info.getNumber());
+                        info_it.putExtra("name", my_info.getName());
+                        info_it.putExtra("date", my_info.getDate());
+                        info_it.putExtra("user_id", my_info.getId());
+                        startActivityForResult(info_it, MODIFY_REQUEST_CODE);
                         break;
-                    case R.id.review:
-                        fragment_manager.beginTransaction().replace(R.id.main_content, review_fragment).commitAllowingStateLoss();
+                    case R.id.main_board:
+                        Intent board_it = new Intent(MainActivity.this, BoardMainActivity.class);
+                        board_it.putExtra("user_id", my_info.getId());
+                        board_it.putExtra("user_nickname", my_info.getNickname());
+                        startActivity(board_it);
                         break;
-                    case R.id.info:
-                        fragment_manager.beginTransaction().replace(R.id.main_content, info_fragment).commitAllowingStateLoss();
+                    case R.id.main_review:
+                        Intent review_it = new Intent(MainActivity.this, ReviewMainActivity.class);
+                        review_it.putExtra("user_id", my_info.getId());
+                        review_it.putExtra("user_nickname", my_info.getNickname());
+                        startActivity(review_it);
                         break;
-                    case R.id.home:
-                        fragment_manager.beginTransaction().replace(R.id.main_content, home_fragment).commitAllowingStateLoss();
+                    case R.id.main_shuttle:
+                        // 처리
                         break;
-                    default:
+                    case R.id.main_menu:
+                        // 처리
+                        startActivity(new Intent(MainActivity.this, MenuActivity.class));
                         break;
                 }
-                return true;
             }
-        });
+        };
+
+        info = (Button) findViewById(R.id.main_info);
+        board = (Button) findViewById(R.id.main_board);
+        review = (Button) findViewById(R.id.main_review);
+        shuttle = (Button) findViewById(R.id.main_shuttle);
+        menu = (Button) findViewById(R.id.main_menu);
+        info.setOnClickListener(listener);
+        board.setOnClickListener(listener);
+        review.setOnClickListener(listener);
+        shuttle.setOnClickListener(listener);
+        menu.setOnClickListener(listener);
 
         permission();
 
     }
-
 
 
 
@@ -102,43 +119,13 @@ public class MainActivity extends AppCompatActivity {
         return my_info;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_title_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.main_title_menu_info:
-
-                Intent it = new Intent(this, ModifyUserActivity.class);
-                it.putExtra("email_id", my_info.getEmail_id());
-                it.putExtra("user_nickname", my_info.getNickname());
-                it.putExtra("major", my_info.getMajor());
-                it.putExtra("number", my_info.getNumber());
-                it.putExtra("name", my_info.getName());
-                it.putExtra("date", my_info.getDate());
-                it.putExtra("user_id", my_info.getId());
-                startActivityForResult(it, MODIFY_REQUEST_CODE);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("리퀘스트코드는?", MODIFY_REQUEST_CODE + "");
-        Log.d("ㅇㅇ코드", requestCode + "");
-        Log.d("result코드", resultCode + "");
-        Log.d("RESULT_OK", RESULT_OK + "");
         if(requestCode == MODIFY_REQUEST_CODE && resultCode == RESULT_OK){
             my_info.setNickname(data.getStringExtra("user_nickname"));
             my_info.setMajor(data.getStringExtra("user_major"));
-            //Log.d("리퀘스트코드는?", REQUEST_CODE + "");
         }
     }
 }

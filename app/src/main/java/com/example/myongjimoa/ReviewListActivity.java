@@ -24,6 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.Tm128;
@@ -204,25 +210,19 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
                 ReviewResult result = response.body();
 
-                if(result != null) {
-                    if (result.getReviewCount() != 0) {
-                        for (int i = 0; i < result.getReviewCount(); i++) {
-                            review_adapter.add(result.getReview(i));
-                        }
-                        if (result.getReviewCount() < 15) scroll = false; // 데이터 다 가져왔을 경우
-
-                        count_review_id = result.getReview(result.getReviewCount() - 1).getId();
-                        restaurant.setReview_num(result.getReview_num());
-                        restaurant.setScore(result.getScore());
-                        score.setText(restaurant.getScore() + "");
-                        review_num.setText(restaurant.getReview_num() + "");
-
-                    } else {
-                        Log.d("리뷰목록없음", "리뷰목록없음");
+                if (result.getReviewCount() != 0) {
+                    for (int i = 0; i < result.getReviewCount(); i++) {
+                        review_adapter.add(result.getReview(i));
                     }
-                } else {
-                    Log.d("값없음", "ㅇㅇ");
+                    if (result.getReviewCount() < 15) scroll = false; // 데이터 다 가져왔을 경우
+                    count_review_id = result.getReview(result.getReviewCount() - 1).getId();
                 }
+                restaurant.setReview_num(result.getReview_num());
+                restaurant.setScore(result.getScore());
+
+                score.setText(restaurant.getScore() + "");
+                review_num.setText(restaurant.getReview_num() + "");
+                restaurant_rating_bar.setRating(restaurant.getScore());
 
                 review_recycler_view.clearOnScrollListeners();
                 review_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -284,11 +284,11 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0) {
-                                    reportCurrentReview(items.get(pos).getId());
+                                    reportCurrentReview(items.get(pos).getId(), pos);
                                     Log.d("신고 실행", "ㅇㅇ");
                                 } else if (which == 1) {
                                     Log.d("삭제 실행", "ㅇㅇ");
-                                    removeCurrentReview(items.get(pos).getId());
+                                    removeCurrentReview(items.get(pos).getId(), pos);
                                 }
                             }
                         };
@@ -335,6 +335,10 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         @Override
         public int getItemCount() {
             return items.size();
+        }
+
+        public Review getItem(int pos) {
+            return items.get(pos);
         }
 
     }
@@ -386,8 +390,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         count_review_id = "`review`.`id`+1";
         review_adapter = new ReviewAdapter();
         review_recycler_view.setAdapter(review_adapter);
-        score.setText(restaurant.getScore() + "");
-        restaurant_rating_bar.setRating(restaurant.getScore());
         downloadReviewList();
     }
 
@@ -422,7 +424,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         return true;
     }
 
-    public void reportCurrentReview(final String review_id) {
+    public void reportCurrentReview(final String review_id, final int position) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
                 .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
@@ -450,7 +452,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                     builder.show();
                 } else if(!result.equals("failed")) {
                     if(Integer.parseInt(result) >= 5) {
-                        removeCurrentReview(review_id);
+                        removeCurrentReview(review_id, position);
                     }
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewListActivity.this);
@@ -473,20 +475,45 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
-    public void removeCurrentReview(String review_id) {
+    public void removeCurrentReview(String review_id, final int position) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.removeReview(review_id);
+        Call<String> call = connectDB.removeReview(review_id, restaurant.getId());
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
                 if (result.equals("success")) {
+                    if(review_adapter.getItem(position).getImages().size() != 0) {
+                        final List<String> remove_list = new ArrayList<>(); // 스레드에서 deleteobjects할때 이미 리스트삭제되어서 새로 만들어줌
+                        remove_list.addAll(review_adapter.getItem(position).getImages());
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Amazon Cognito 인증 공급자 초기화
+                                CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                                        ReviewListActivity.this,
+                                        "ap-northeast-2:9c5bb2b0-44a8-4a1c-944a-98d817d44e82", // 자격 증명 풀 ID
+                                        Regions.AP_NORTHEAST_2 // 리전
+                                );
+
+                                AmazonS3 s3 = new AmazonS3Client(credentialsProvider, Region.getRegion(Regions.AP_NORTHEAST_2));
+                                s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
+
+                                List<DeleteObjectsRequest.KeyVersion> key = new ArrayList<>();
+                                for (int i = 0; i < remove_list.size(); i++) {
+                                    key.add(new DeleteObjectsRequest.KeyVersion("review_images/" + remove_list.get(i)));
+                                }
+
+                                s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
+                            }
+                        }).start();
+                    }
                     reloadReview();
                 }
             }

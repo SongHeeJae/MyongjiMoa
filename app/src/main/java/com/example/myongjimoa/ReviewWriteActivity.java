@@ -218,7 +218,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.writeReview(restaurant_id, write_description.getText().toString(), user_id, rating_bar.getRating(), format_date, path);
+        Call<String> call = connectDB.writeReview(restaurant_id, Request.filter(write_description.getText().toString()), user_id, rating_bar.getRating(), format_date, path);
 
         call.enqueue(new Callback<String>() {
             @Override

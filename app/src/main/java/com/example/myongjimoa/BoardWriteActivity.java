@@ -218,7 +218,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.writePost(board_title_id, user_id, write_title.getText().toString(), write_description.getText().toString(), path, format_date);
+        Call<String> call = connectDB.writePost(board_title_id, user_id, Request.filter(write_title.getText().toString()), Request.filter(write_description.getText().toString()), path, format_date);
 
         call.enqueue(new Callback<String>() {
             @Override

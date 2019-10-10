@@ -7,11 +7,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="내주변 찾기"
-        android:id="@+id/find_restaurant"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="전체 보기"
         android:id="@+id/all"/>
     <LinearLayout

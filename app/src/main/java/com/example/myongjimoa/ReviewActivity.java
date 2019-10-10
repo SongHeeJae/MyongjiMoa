@@ -46,9 +46,6 @@ public class ReviewActivity extends AppCompatActivity {
     MenuItem search;
     SwipeRefreshLayout swipe_refresh_layout;
 
-    Button order_review;
-    Button order_score;
-
     String order; // 초기값 score순
 
     @Override
@@ -61,28 +58,6 @@ public class ReviewActivity extends AppCompatActivity {
         category = it.getStringExtra("category");
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
-
-        order_review = (Button) findViewById(R.id.order_review);
-        order_score = (Button) findViewById(R.id.order_score);
-
-        View.OnClickListener order_listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch(v.getId()) {
-                    case R.id.order_review:
-                        order = "review_num";
-                        reloadRestaurant();
-                        break;
-                    case R.id.order_score:
-                        order = "score";
-                        reloadRestaurant();
-                        break;
-                }
-            }
-        };
-        order_review.setOnClickListener(order_listener);
-
-        order_score.setOnClickListener(order_listener);
 
         order = "score";
 
@@ -272,12 +247,8 @@ public class ReviewActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_refresh, menu);
-        menu.findItem(R.id.menu_report).setVisible(false);
-        menu.findItem(R.id.menu_modify).setVisible(false);
-        menu.findItem(R.id.menu_remove).setVisible(false);
-
-        search = menu.findItem(R.id.menu_search);
+        getMenuInflater().inflate(R.menu.review_refresh, menu);
+        search = menu.findItem(R.id.review_search);
 
         search.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
@@ -327,10 +298,20 @@ public class ReviewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_search:
+            case R.id.review_search:
                 return true;
 
-            case R.id.menu_refresh:
+            case R.id.review_refresh:
+                reloadRestaurant();
+                return true;
+
+            case R.id.review_order_num:
+                order = "review_num";
+                reloadRestaurant();
+                return true;
+
+            case R.id.review_order_score:
+                order = "score";
                 reloadRestaurant();
                 return true;
             case android.R.id.home:

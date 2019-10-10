@@ -47,6 +47,8 @@
         <activity android:name=".BoardWriteActivity"></activity>
         <activity android:name=".ReviewListActivity"></activity>
         <activity android:name=".ReviewWriteActivity"></activity>
+        <activity android:name=".BoardMainActivity"></activity>
+        <activity android:name=".ReviewMainActivity"></activity>
     </application>
 
 </manifest>
