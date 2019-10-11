@@ -374,6 +374,8 @@ public class BoardActivity extends AppCompatActivity {
             reloadPost();
         } else if(resultCode == RESULT_OK && requestCode == POST_REMOVE_REQUEST_CODE) {
             reloadPost();
+        } else if(data.getBooleanExtra("modify", false)) {
+            reloadPost();
         }
     }
 }

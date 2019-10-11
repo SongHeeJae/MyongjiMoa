@@ -115,7 +115,6 @@ public class BoardPostActivity extends AppCompatActivity {
             }
         });
         for(int i=0; i<post.getImages().size(); i++) {
-            Log.d("실행됨", post.getImages().get(i));
             board_post_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + post.getImages().get(i));
         }
 
@@ -467,12 +466,16 @@ public class BoardPostActivity extends AppCompatActivity {
                 reportCurrentPost();
                 return true;
 
-            case R.id.menu_modify:
+            case R.id.menu_refresh:
                 reloadComment();
                 return true;
 
             case R.id.menu_remove:
                 removeCurrentPost();
+                return true;
+
+            case R.id.menu_modify:
+                modifyCurrentPost(post.getId());
                 return true;
 
             case android.R.id.home:
@@ -518,8 +521,6 @@ public class BoardPostActivity extends AppCompatActivity {
                                 s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
                             }
                         }).start();
-                    } else {
-                        Log.d("이미지없음", "이미지없음");
                     }
                     setResult(RESULT_OK);
                     finish();
@@ -662,5 +663,39 @@ public class BoardPostActivity extends AppCompatActivity {
                 Log.d("포스트 작성 실패", t.getMessage());
             }
         });
+    }
+
+    public void modifyCurrentPost(String board_id) {
+        Intent it = new Intent(BoardPostActivity.this, BoardWriteActivity.class);
+        it.putExtra("modify_mode", true);
+        it.putExtra("title", post.getTitle());
+        it.putExtra("description", post.getDescription());
+        it.putExtra("modify_images", post.getImages());
+        it.putExtra("board_id", board_id);
+        it.putExtra("user_id", user_id);
+        startActivityForResult(it, MODIFY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == MODIFY_REQUEST_CODE){
+            post.setTitle(data.getStringExtra("title"));
+            post.setDescription(data.getStringExtra("description"));
+            post.setRecommend_num(Integer.parseInt(data.getStringExtra("recommend_num")));
+            post.setImages(data.getStringArrayListExtra("images"));
+            board_post_image_adapter = new BoardPostImageAdapter();
+            for(int i=0; i<post.getImages().size(); i++) {
+                board_post_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + post.getImages().get(i));
+            }
+            image_recycler_view.setAdapter(board_post_image_adapter);
+            post_title.setText(post.getTitle());
+            post_description.setText(post.getDescription());
+            recommend_num.setText(post.getRecommend_num() + "");
+            reloadComment();
+            Intent it = new Intent();
+            it.putExtra("modify", true);
+            setResult(RESULT_OK, it);
+        }
     }
 }

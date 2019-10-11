@@ -58,4 +58,17 @@ public class Post {
    public void setRecommend_num(int recommend_num) {
        this.recommend_num = recommend_num;
    }
+
+   public void setTitle(String title) {
+        this.title = title;
+   }
+
+   public void setDescription(String description) {
+        this.description = description;
+   }
+
+   public void setImages(ArrayList<String> images) {
+        this.images.clear();
+        this.images.addAll(images);
+   }
 }

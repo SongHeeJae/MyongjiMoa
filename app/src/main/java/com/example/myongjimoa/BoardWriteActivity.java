@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,12 +33,10 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class BoardWriteActivity extends AppCompatActivity {
@@ -70,20 +67,24 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     private final int GET_GALLERY_IMAGE = 0;
 
+    boolean modify_mode;
+    int modify_image_num;
+    ArrayList<String> delete_images;
+    String board_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_write);
+
+        modify_image_num = 0; // 수정이미지 없으면 0으로초기화 있으면 이 num부터 이미지 올려주면됨.
+        modify_mode = false;
 
         write_title = (EditText) findViewById(R.id.write_title);
         write_description = (EditText) findViewById(R.id.write_description);
         write_submit = (Button) findViewById(R.id.write_submit);
         picture = (Button) findViewById(R.id.picture);
         recycler_view = (RecyclerView) findViewById(R.id.board_write_image);
-
-        Intent it = getIntent();
-        user_id = it.getStringExtra("user_id");
-        board_title_id = it.getStringExtra("board_title_id");
 
         path =  new ArrayList<>();
 
@@ -135,18 +136,29 @@ public class BoardWriteActivity extends AppCompatActivity {
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent it = getIntent();
+        user_id = it.getStringExtra("user_id");
+        board_title_id = it.getStringExtra("board_title_id");
+        modify_mode = it.getBooleanExtra("modify_mode", false);
+        if(modify_mode) {
+            delete_images = new ArrayList<>();
+            board_id = it.getStringExtra("board_id");
+            write_title.setText(it.getStringExtra("title"));
+            write_description.setText(it.getStringExtra("description"));
+            modify_image_num = it.getStringArrayListExtra("modify_images").size();
+            for (String img : it.getStringArrayListExtra("modify_images"))
+                board_write_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + img);
+        }
     }
 
 
     public void imageUpload() {
 
-        if (board_write_image_adapter.getItemCount() > 0) {
-
-            // 이미지 업로드 부분에서 이미지 업로드가 아직 실행중인데 다른쪽에서 게시글 정보가 업데이트된다면? 파일업로드처리가 끝난후, 게시글 업로드하도록 수정할필요있음
-            // 옵저버패턴 https://flowarc.tistory.com/entry/%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%98%B5%EC%A0%80%EB%B2%84-%ED%8C%A8%ED%84%B4Observer-Pattern
-            // 콜백으로 구현, 브로드캐스팅으로 구현
-
-            Date date = new Date(); // 시스템 시간으로 구함 동기화되는지 확인 필요
+        Log.d("zz", "ㅎㅎ");
+        if (board_write_image_adapter.getItemCount() > 0 && board_write_image_adapter.getItemCount() - modify_image_num > 0) {
+            Log.d("수정내역있음", "ㅎㅎ");
+            Date date = new Date(); // 시스템  시간으로 구함 동기화되는지 확인 필요
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
             String format_date = sdf.format(date);
@@ -163,15 +175,14 @@ public class BoardWriteActivity extends AppCompatActivity {
             TransferUtility transfer_utility = TransferUtility.builder().s3Client(s3).context(this).build();
             s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
 
-            for (int i = 0; i < board_write_image_adapter.getItemCount(); i++) {
-                String name = board_title_id + "_"  + user_id + "_" + format_date + "_" + i;
+            for (int i = modify_image_num; i < board_write_image_adapter.getItemCount(); i++) {
+                String name = board_id + user_id + "_" + format_date + "_" + i;
                 File file = new File(board_write_image_adapter.getItem(i));
                 observer = transfer_utility.upload(
                         "myongjimoa/board_images",
                         name, // 이미지 파일이름설정 개별적으로 중복안되게구성해야함. user_id + 현재시간?
                         file
-                ); // 파일 여러개 동시 업로드하는거 찾아야됨
-                Log.d("파일업로드횟수", i + "");
+                );
                 path.add(name);
                 observer.setTransferListener(new TransferListener() {
                     @Override
@@ -180,10 +191,10 @@ public class BoardWriteActivity extends AppCompatActivity {
                         if (TransferState.COMPLETED == state) {
                             Log.d("전송완료", "ㅇㅇ"); // 여기다 콜백으로 구현
                             upload_count++;
-                            if (upload_count == board_write_image_adapter.getItemCount()) {
+                            if (upload_count == board_write_image_adapter.getItemCount() - modify_image_num) {
                                 Log.d("이미지업로드끝", "ㅇㅇ");
-                                posting(path); // 콜백으로 구현 근데 속도느림 개선필요 동시파일업로드하도록
-                                upload_count = 0; // 삭제 코드
+                                if(modify_mode) modify(path);
+                                else posting(path);
                             }
                         }
                     }
@@ -199,7 +210,8 @@ public class BoardWriteActivity extends AppCompatActivity {
                 });
             }
         } else {
-            posting(path);
+            if(modify_mode) modify(path);
+            else posting(path);
         }
     }
 
@@ -237,8 +249,6 @@ public class BoardWriteActivity extends AppCompatActivity {
                         }
                     });
                     builder.show();
-                } else {
-                    Log.d("글쓰기실패", "반환값없음");
                 }
             }
             @Override
@@ -280,9 +290,6 @@ public class BoardWriteActivity extends AppCompatActivity {
             }
 
             public void setData(String data) {
-                //값 읽어오기
-               // img.setImageBitmap(data);
-                // download 경로 못읽는거 버그 오류
                 Glide.with(BoardWriteActivity.this)
                         .load(data)
                         .override(500)
@@ -292,6 +299,10 @@ public class BoardWriteActivity extends AppCompatActivity {
         }
 
         public void removeItem(int position) {
+           if(modify_mode && position < modify_image_num) {
+               modify_image_num--;
+               delete_images.add(items.get(position).substring(items.get(position).lastIndexOf("/")+1));
+           }
            items.remove(position);
            notifyItemRemoved(position);
            notifyItemChanged(position, items.size());
@@ -347,5 +358,58 @@ public class BoardWriteActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void modify(ArrayList<String> path) {
+
+
+        Log.d("수정시작", "ㅎㅎ");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ConnectDB.Base_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        Call<Post> call = connectDB.modifyPost(board_id, Request.filter(write_title.getText().toString()), Request.filter(write_description.getText().toString()), path, delete_images);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+
+                Post result = response.body();
+                if(delete_images.size() != 0) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                                    BoardWriteActivity.this,
+                                    "ap-northeast-2:9c5bb2b0-44a8-4a1c-944a-98d817d44e82", // 자격 증명 풀 ID
+                                    Regions.AP_NORTHEAST_2 // 리전
+                            );
+
+                            AmazonS3 s3 = new AmazonS3Client(credentialsProvider, Region.getRegion(Regions.AP_NORTHEAST_2));
+                            s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
+
+                            List<DeleteObjectsRequest.KeyVersion> key = new ArrayList<>();
+                            for (int i = 0; i < delete_images.size(); i++) {
+                                key.add(new DeleteObjectsRequest.KeyVersion("board_images/" + delete_images.get(i)));
+                            }
+
+                            s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
+                        }
+                    }).start();
+                }
+                Intent it = new Intent();
+                it.putExtra("title", result.getTitle());
+                it.putExtra("description", result.getDescription());
+                it.putExtra("recommend_num", result.getRecommend_num() + "");
+                it.putExtra("images", result.getImages());
+                setResult(RESULT_OK, it);
+                finish();
+            }
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Log.d("글쓰기 연결 실패", t.getMessage());
+            }
+        });
     }
 }

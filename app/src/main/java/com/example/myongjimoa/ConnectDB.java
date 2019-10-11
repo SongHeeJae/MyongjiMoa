@@ -157,4 +157,14 @@ public interface ConnectDB {
             @Field("restaurant_id") String restaurant_id
     );
 
+    @FormUrlEncoded
+    @POST("modify_post.php")
+    Call<Post> modifyPost(
+            @Field("board_id") String board_id,
+            @Field("title") String title,
+            @Field("description") String description,
+            @Field("image_path[]") ArrayList<String> image_path,
+            @Field("delete_images[]") ArrayList<String> delete_images
+    );
+
 }
