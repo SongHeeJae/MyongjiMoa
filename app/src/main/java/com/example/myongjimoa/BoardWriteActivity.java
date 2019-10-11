@@ -205,8 +205,6 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     public void posting(ArrayList<String> path) {
 
-        Log.d("dd", "다음줄 실행ㅇㅇㅇㅇㅇ");
-
         Date date = new Date(); // 시스템 시간으로 구함 동기화되는지 확인 필요
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));

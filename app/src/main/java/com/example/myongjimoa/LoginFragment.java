@@ -73,6 +73,7 @@ public class LoginFragment extends Fragment {
                         it.putExtra("number", result.getNumber());
                         it.putExtra("name", result.getName());
                         it.putExtra("date", result.getDate());
+                        it.putExtra("admin", result.getAdmin());
                         getActivity().startActivity(it);
                         getActivity().finish();
 

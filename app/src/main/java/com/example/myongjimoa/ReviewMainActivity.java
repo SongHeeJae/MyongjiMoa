@@ -29,6 +29,10 @@ public class ReviewMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review);
 
+        Intent it = getIntent();
+        user_id = it.getStringExtra("user_id");
+        user_nickname = it.getStringExtra("user_nickname");
+
         Button.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view ) {

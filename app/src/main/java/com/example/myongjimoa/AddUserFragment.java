@@ -81,7 +81,6 @@ public class AddUserFragment extends Fragment {
             public void onResponse(Call<String> call, Response<String> response) {
 
                     String result = response.body().trim();
-
                     if(result.equals("success")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setTitle("메시지");

@@ -174,7 +174,6 @@ public class BoardActivity extends AppCompatActivity {
                     if (result.size() != 0) {
                         for (int i = 0; i < result.size(); i++) {
                             board_post_title_adapter.add(new Post(result.get(i).getId(), result.get(i).getTitle(), result.get(i).getDescription(), result.get(i).getNumber(), result.get(i).getMajor(), result.get(i).getDate(), result.get(i).getNickname(), result.get(i).getImages(), result.get(i).getRecommend_num()));
-                            // post_list.add();
                         }
                         if (result.size() < 15) scroll = false; // 데이터 다 가져왔을 경우
                         count_board_id = result.get(result.size() - 1).getId();
@@ -240,13 +239,13 @@ public class BoardActivity extends AppCompatActivity {
         }
 
         @Override
-        public BoardPostTitleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_title_item, parent, false);
             return new BoardPostTitleAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(BoardPostTitleAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, int position) {
             holder.setData(items.get(position));
         }
 
@@ -281,11 +280,7 @@ public class BoardActivity extends AppCompatActivity {
                         }
                         if (result.size() < 15) search_scroll = false; // 데이터 다 가져왔을 경우
                         search_count_board_id = result.get(result.size() - 1).getId();
-                    } else {
-                        Log.d("글목록없음", "글목록없음");
                     }
-                } else {
-                    Log.d("게시판 테이블 생성", "완료");
                 }
                 recycler_view.clearOnScrollListeners();
                 recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {

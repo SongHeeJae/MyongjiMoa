@@ -225,7 +225,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
-
+                Log.d("결과는?ㅋㅋ", result);
                 if(result.equals("success")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
                     builder.setTitle("메시지");

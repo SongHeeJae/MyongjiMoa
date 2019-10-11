@@ -359,7 +359,7 @@ public class BoardPostActivity extends AppCompatActivity {
                                 }
                             }
                         };
-                        if(items.get(pos).getNickname().equals(user_nickname)) builder.setItems(new String[]{"신고", "삭제"}, dialog_listener);
+                        if(items.get(pos).getNickname().equals(user_nickname) || MainActivity.admin) builder.setItems(new String[]{"신고", "삭제"}, dialog_listener);
                         else builder.setItems(new String[]{"신고"}, dialog_listener);
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
@@ -452,7 +452,7 @@ public class BoardPostActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_refresh, menu);
         menu.findItem(R.id.menu_search).setVisible(false);
-        if(!post.getNickname().equals(user_nickname)) {
+        if(!(post.getNickname().equals(user_nickname) || MainActivity.admin)) {
             menu.findItem(R.id.menu_modify).setVisible(false);
             menu.findItem(R.id.menu_remove).setVisible(false);
         }

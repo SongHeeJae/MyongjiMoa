@@ -285,14 +285,12 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0) {
                                     reportCurrentReview(items.get(pos).getId(), pos);
-                                    Log.d("신고 실행", "ㅇㅇ");
                                 } else if (which == 1) {
-                                    Log.d("삭제 실행", "ㅇㅇ");
                                     removeCurrentReview(items.get(pos).getId(), pos);
                                 }
                             }
                         };
-                        if(items.get(pos).getNickname().equals(user_nickname)) builder.setItems(new String[]{"신고", "삭제"}, dialog_listener);
+                        if(items.get(pos).getNickname().equals(user_nickname) || MainActivity.admin) builder.setItems(new String[]{"신고", "삭제"}, dialog_listener);
                         else builder.setItems(new String[]{"신고"}, dialog_listener);
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();

@@ -168,7 +168,7 @@ public class ReviewActivity extends AppCompatActivity {
 
 
     class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder>{
-        List<Restaurant> items = new ArrayList<Restaurant>();
+        List<Restaurant> items = new ArrayList<>();
 
         class ViewHolder extends RecyclerView.ViewHolder {
             ImageView image;

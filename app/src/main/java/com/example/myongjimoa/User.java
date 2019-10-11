@@ -8,8 +8,9 @@ public class User {
     String number;
     String name;
     String date;
+    boolean admin; // true 관리자
 
-    public User(String id, String email_id, String nickname, String major, String number, String name, String date) {
+    public User(String id, String email_id, String nickname, String major, String number, String name, String date, boolean admin) {
         this.id = id;
         this.email_id = email_id;
         this.nickname = nickname;
@@ -17,6 +18,7 @@ public class User {
         this.number = number;
         this.name = name;
         this.date = date;
+        this.admin = admin;
     }
 
     public String getId() { return id; }
@@ -43,5 +45,9 @@ public class User {
 
     public void setMajor(String major) {
         this.major=major;
+    }
+
+    public boolean getAdmin() {
+        return admin;
     }
 }

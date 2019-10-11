@@ -31,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
     Button shuttle;
     Button menu;
 
+    static boolean admin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent it = getIntent();
-        my_info = new User(it.getStringExtra("id"), it.getStringExtra("email_id"), it.getStringExtra("user_nickname"), it.getStringExtra("major"), it.getStringExtra("number"), it.getStringExtra("name"), it.getStringExtra("date"));
-
+        my_info = new User(it.getStringExtra("id"), it.getStringExtra("email_id"), it.getStringExtra("user_nickname"), it.getStringExtra("major"), it.getStringExtra("number"), it.getStringExtra("name"), it.getStringExtra("date"), it.getBooleanExtra("admin", false));
+        admin = my_info.getAdmin();
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent board_it = new Intent(MainActivity.this, BoardMainActivity.class);
                         board_it.putExtra("user_id", my_info.getId());
                         board_it.putExtra("user_nickname", my_info.getNickname());
+                        Log.d("ㅇㅇ", my_info.getNickname());
                         startActivity(board_it);
                         break;
                     case R.id.main_review:
