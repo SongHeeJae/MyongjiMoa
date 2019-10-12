@@ -9,7 +9,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,20 +32,41 @@ public class BoardMainActivity extends AppCompatActivity {
     RecyclerView recycler_view;
     BoardTitleAdapter m_adapter;
 
-    String[] title_list;
-
     public GestureDetector gesture_detector;
     String user_id;
     String user_nickname;
+    String user_major;
+
+    Button my_major;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_main);
 
+        my_major = (Button) findViewById(R.id.my_major);
+        my_major.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(BoardMainActivity.this, BoardActivity.class);
+
+                Board b = m_adapter.getBoard(user_major);
+                if(b != null) {
+                    it.putExtra("board_title_id", b.getId());
+                    it.putExtra("board_title", b.getTitle());
+                    it.putExtra("user_id", user_id);
+                    it.putExtra("user_nickname", user_nickname);
+                    startActivity(it);
+                } else
+                    Toast.makeText(BoardMainActivity.this, "올바른 학과를 기입해주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Intent it = getIntent();
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
+        user_major = it.getStringExtra("user_major");
 
         recycler_view = (RecyclerView) findViewById(R.id.title_recycler_view);
 
@@ -51,8 +74,6 @@ public class BoardMainActivity extends AppCompatActivity {
         recycler_view.setLayoutManager(layoutManager);
         m_adapter = new BoardTitleAdapter();
         recycler_view.setAdapter(m_adapter);
-
-        title_list = getResources().getStringArray(R.array.title_list);
 
         gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
@@ -164,6 +185,13 @@ public class BoardMainActivity extends AppCompatActivity {
 
         public Board getBoard(int pos) {
             return items.get(pos);
+        }
+
+        public Board getBoard(String major) {
+            for(int i=0; i<items.size(); i++) {
+                if (items.get(i).getTitle().equals(major)) return items.get(i);
+            }
+            return null;
         }
     }
 

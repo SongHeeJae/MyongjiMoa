@@ -99,8 +99,6 @@ public class AddUserFragment extends Fragment {
                     } else if(result.equals("nickname")) {
                         Toast.makeText(getActivity(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
                     }
-
-
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {

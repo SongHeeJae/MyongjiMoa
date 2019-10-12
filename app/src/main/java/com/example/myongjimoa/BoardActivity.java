@@ -128,7 +128,6 @@ public class BoardActivity extends AppCompatActivity {
                     it.putExtra("description", post.getDescription());
                     it.putExtra("number", post.getNumber());
                     it.putExtra("major", post.getMajor());
-                    Log.d("학번 전공?", post.getMajor() + post.getNumber());
                     it.putExtra("date", post.getDate());
                     it.putExtra("nickname", post.getNickname());
                     it.putStringArrayListExtra("images", post.getImages());

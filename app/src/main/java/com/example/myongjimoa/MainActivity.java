@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent board_it = new Intent(MainActivity.this, BoardMainActivity.class);
                         board_it.putExtra("user_id", my_info.getId());
                         board_it.putExtra("user_nickname", my_info.getNickname());
-                        Log.d("ㅇㅇ", my_info.getNickname());
+                        board_it.putExtra("user_major", my_info.getMajor());
                         startActivity(board_it);
                         break;
                     case R.id.main_review:
