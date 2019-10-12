@@ -81,12 +81,6 @@ public class ImageActivity extends AppCompatActivity {
             return ImageFragment.newInstance(images.get(position));
         }
 
-        // Returns the page title for the top indicator
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Page " + position;
-        }
-
     }
 
     private class ImageDownload extends AsyncTask<String, Void, Void> {
