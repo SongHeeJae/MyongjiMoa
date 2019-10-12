@@ -52,7 +52,6 @@ public class ImageActivity extends AppCompatActivity {
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("지금 이미지는?", images.get(pager.getCurrentItem()));
                 new ImageDownload().execute(images.get(pager.getCurrentItem()));
             }
         });
