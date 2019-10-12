@@ -60,7 +60,7 @@ public class ImageActivity extends AppCompatActivity {
         pager = (ViewPager) findViewById(R.id.image_view_pager);
         adapter = new ImageAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         pager.setAdapter(adapter);
-
+        pager.setCurrentItem(it.getIntExtra("current", 0));
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(pager);
 

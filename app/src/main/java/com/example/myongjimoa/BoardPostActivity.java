@@ -148,6 +148,7 @@ public class BoardPostActivity extends AppCompatActivity {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(BoardPostActivity.this, ImageActivity.class);
                     it.putStringArrayListExtra("images", new ArrayList<>(board_post_image_adapter.getItems()));
+                    it.putExtra("current", currentPos);
                     startActivity(it);
                     return true;
                 }

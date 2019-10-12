@@ -271,6 +271,34 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
                 image_recycler_view.setLayoutManager(layoutManager);
                 image_recycler_view.setAdapter(review_image_adapter);
+
+                image_recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                    @Override
+                    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                        View childView = rv.findChildViewUnder(e.getX(), e.getY());
+
+                        if(childView != null && gesture_detector.onTouchEvent((e))) {
+                            int currentPos = rv.getChildAdapterPosition(childView);
+                            Intent it = new Intent(ReviewListActivity.this, ImageActivity.class);
+                            it.putStringArrayListExtra("images", new ArrayList<>(review_image_adapter.getItems()));
+                            it.putExtra("current", currentPos);
+                            startActivity(it);
+                            return true;
+                        }
+
+                        return false;
+                    }
+
+                    @Override
+                    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+                    }
+
+                    @Override
+                    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+                    }
+                });
                 review_setting = (Button) itemView.findViewById(R.id.review_setting);
                 number = (TextView) itemView.findViewById(R.id.review_number);
                 major = (TextView) itemView.findViewById(R.id.review_major);
@@ -307,7 +335,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 major.setText(data.getMajor());
                 ArrayList<String> img_data = data.getImages();
                 for(int i=0; i<img_data.size(); i++) {
-                    review_image_adapter.add(img_data.get(i));
+                    review_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/review_images/" + img_data.get(i));
                 }
                 pos=position;
             }
@@ -356,7 +384,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             public void setData(String data) {
                 Log.d("이미지경로는??", data);
                 Glide.with(ReviewListActivity.this)
-                        .load("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/review_images/" + data)
+                        .load(data)
                         .override(500)
                         .into(img);
             }
@@ -380,6 +408,10 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         @Override
         public int getItemCount() {
             return items.size();
+        }
+
+        public List<String> getItems() {
+            return items;
         }
     }
 

@@ -150,13 +150,8 @@ public class ReviewActivity extends AppCompatActivity {
                         for (int i = 0; i < result.size(); i++) {
                             restaurant_adapter.add(new Restaurant(result.get(i).getId(), result.get(i).getTitle(), result.get(i).getCategory(), result.get(i).getTelephone(), result.get(i).getHomepage(), result.get(i).getAddress(), result.get(i).getMapx(), result.get(i).getMapy(), result.get(i).getRestaurant_id(), result.get(i).getTime(), result.get(i).getMenu(), result.get(i).getImage(), result.get(i).getReview_num(), result.get(i).getScore()));
                         }
-                    } else {
-                        Log.d("음식점목록없음", "음식점목록없음");
                     }
-                } else {
-                    Log.d("error", "error");
                 }
-
             }
             @Override
             public void onFailure(Call<List<Restaurant>> call, Throwable t) {
