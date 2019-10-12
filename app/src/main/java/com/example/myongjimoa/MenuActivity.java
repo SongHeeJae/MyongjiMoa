@@ -2,6 +2,7 @@ package com.example.myongjimoa;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -117,6 +118,7 @@ public class MenuActivity extends AppCompatActivity {
                 tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(view_pager));
                 view_pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
                 Calendar calendar = Calendar.getInstance();
+                calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
                 int day = calendar.get(Calendar.DAY_OF_WEEK);
                 view_pager.setCurrentItem(day-2);
             }
