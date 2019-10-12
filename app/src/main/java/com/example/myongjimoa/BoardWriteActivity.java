@@ -143,7 +143,6 @@ public class BoardWriteActivity extends AppCompatActivity {
         modify_mode = it.getBooleanExtra("modify_mode", false);
         if(modify_mode) {
             delete_images = new ArrayList<>();
-            board_id = it.getStringExtra("board_id");
             write_title.setText(it.getStringExtra("title"));
             write_description.setText(it.getStringExtra("description"));
             modify_image_num = it.getStringArrayListExtra("modify_images").size();
@@ -155,9 +154,7 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     public void imageUpload() {
 
-        Log.d("zz", "ㅎㅎ");
         if (board_write_image_adapter.getItemCount() > 0 && board_write_image_adapter.getItemCount() - modify_image_num > 0) {
-            Log.d("수정내역있음", "ㅎㅎ");
             Date date = new Date(); // 시스템  시간으로 구함 동기화되는지 확인 필요
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
@@ -176,7 +173,7 @@ public class BoardWriteActivity extends AppCompatActivity {
             s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
 
             for (int i = modify_image_num; i < board_write_image_adapter.getItemCount(); i++) {
-                String name = board_id + user_id + "_" + format_date + "_" + i;
+                String name = user_id + "_" + format_date + "_" + i; // 관리자가 수정했을시 감지가능
                 File file = new File(board_write_image_adapter.getItem(i));
                 observer = transfer_utility.upload(
                         "myongjimoa/board_images",
@@ -362,8 +359,6 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     public void modify(ArrayList<String> path) {
 
-
-        Log.d("수정시작", "ㅎㅎ");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
                 .addConverterFactory(GsonConverterFactory.create())

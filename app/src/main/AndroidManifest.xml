@@ -49,6 +49,9 @@
         <activity android:name=".ReviewWriteActivity"></activity>
         <activity android:name=".BoardMainActivity"></activity>
         <activity android:name=".ReviewMainActivity"></activity>
+        <activity android:name=".ImageActivity"></activity>
+
+
     </application>
 
 </manifest>

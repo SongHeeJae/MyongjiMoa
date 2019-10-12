@@ -146,6 +146,9 @@ public class BoardPostActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
+                    Intent it = new Intent(BoardPostActivity.this, ImageActivity.class);
+                    it.putStringArrayListExtra("images", new ArrayList<>(board_post_image_adapter.getItems()));
+                    startActivity(it);
                     return true;
                 }
 
@@ -435,15 +438,15 @@ public class BoardPostActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.setData(items.get(position));
-            String item = items.get(position);
-
-
-            Log.d("ㅇㅇ", "실행됨");
         }
 
         @Override
         public int getItemCount() {
             return items.size();
+        }
+
+        public List<String> getItems() {
+            return items;
         }
     }
 
@@ -693,9 +696,7 @@ public class BoardPostActivity extends AppCompatActivity {
             post_description.setText(post.getDescription());
             recommend_num.setText(post.getRecommend_num() + "");
             reloadComment();
-            Intent it = new Intent();
-            it.putExtra("modify", true);
-            setResult(RESULT_OK, it);
+            setResult(RESULT_OK);
         }
     }
 }

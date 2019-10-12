@@ -372,9 +372,7 @@ public class BoardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && requestCode == WRITE_REQUEST_CODE){
             reloadPost();
-        } else if(resultCode == RESULT_OK && requestCode == POST_REMOVE_REQUEST_CODE) {
-            reloadPost();
-        } else if(data.getBooleanExtra("modify", false)) {
+        } else if(resultCode == RESULT_OK && requestCode == POST_REMOVE_REQUEST_CODE) { // 수정 또는 삭제일어났을때 reload
             reloadPost();
         }
     }
