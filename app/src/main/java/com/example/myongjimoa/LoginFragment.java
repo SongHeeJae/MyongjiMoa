@@ -64,7 +64,7 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call<User> call, Response<User> response) {
                     User result = response.body();
 
-                    if(response.body() != null) {
+                    if(result.getId() != null) {
                         Intent it = new Intent(getActivity(), MainActivity.class);
                         it.putExtra("id", result.getId());
                         it.putExtra("email_id", result.getEmail_id());
@@ -76,26 +76,23 @@ public class LoginFragment extends Fragment {
                         it.putExtra("admin", result.getAdmin());
                         getActivity().startActivity(it);
                         getActivity().finish();
-
                     } else {
-                        Log.d("눌임", "ㅇㅇ");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("메시지");
+                        builder.setMessage("로그인에 실패하였습니다.");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        builder.show();
                     }
 
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.d("로그인 처리 실패", t.getMessage());
-                Log.d("로그인실패", "로그인 실패");
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("메시지");
-                builder.setMessage("로그인에 실패하였습니다.");
-                builder.setCancelable(false);
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                builder.show();
             }
         });
     }

@@ -18,32 +18,73 @@ public class Request { // 중복 코드 static메소드로바꿈
 
         HashMap<String, HashMap<String, String>> map = new HashMap<>();
 
-        HashMap<String, String> 시 = new HashMap();
-        HashMap<String, String> 병 = new HashMap();
-        HashMap<String, String> 씨 = new HashMap();
-        HashMap<String, String> 새 = new HashMap();
+        HashMap<String, String> 개 = new HashMap();
+
         HashMap<String, String> 니 = new HashMap();
-        HashMap<String, String> 좆 = new HashMap();
+        HashMap<String, String> 느 = new HashMap();
+
+
+        HashMap<String, String> 닥 = new HashMap();
+
+        HashMap<String, String> 병 = new HashMap();
+
+        HashMap<String, String> 씨 = new HashMap();
+        HashMap<String, String> 씹 = new HashMap();
+        HashMap<String, String> 새 = new HashMap();
+        HashMap<String, String> 시 = new HashMap();
+
         HashMap<String, String> 애 = new HashMap();
+        HashMap<String, String> 엠 = new HashMap();
 
-        시.put("시발", "나쁜놈");
-        시.put("시벌", "나쁜놈");
+        HashMap<String, String> 좆 = new HashMap();
+        HashMap<String, String> 존 = new HashMap();
+        HashMap<String, String> 지 = new HashMap();
 
+        HashMap<String, String> 창 = new HashMap();
+
+        HashMap<String, String> 한 = new HashMap();
+
+        개.put("개년", "나쁜여자");
+        개.put("개놈", "나쁜남자");
+        니.put("니미", "네 어머니");
+        느.put("느금마", "네 어머니");
+        느.put("느개비", "네 아버지");
+        닥.put("닥쳐", "입다물어");
         병.put("병신", "아픈");
         병.put("병싄", "아픈");
-
+        시.put("시발", "짜증나");
+        시.put("시벌", "짜증나");
+        시.put("시바", "짜증나");
         씨.put("씨발", "나쁜");
-
-        좆.put("좆", "그곳");
-
+        씨.put("씨바", "못된");
+        씹.put("씹", "나쁜");
         새.put("새끼", "아가");
         새.put("새기", "아가");
+        새.put("새꺄", "아가");
+        애.put("애미", "어머니");
+        엠.put("엠창", "어머니");
+        좆.put("좆", "엄청");
+        존.put("존나", "엄청");
+        지.put("지랄", "말도 안되는 소리");
+        창.put("창녀", "나쁜여자");
+        창.put("창남", "나쁜남자");
+        한.put("한남", "한국남자");
 
+        map.put("씹", 씹);
+        map.put("창", 창);
         map.put("시", 시);
+        map.put("니", 니);
+        map.put("애", 애);
+        map.put("엠", 엠);
+        map.put("존", 존);
+        map.put("지", 지);
         map.put("병", 병);
         map.put("씨", 씨);
         map.put("새", 새);
         map.put("좆", 좆);
+        map.put("닥", 닥);
+        map.put("느", 느);
+        map.put("한", 한);
 
         return map;
     }

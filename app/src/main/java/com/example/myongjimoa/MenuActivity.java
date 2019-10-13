@@ -1,14 +1,20 @@
 package com.example.myongjimoa;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -26,14 +32,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
 public class MenuActivity extends AppCompatActivity {
 
     String url1 = "https://www.mju.ac.kr/mbs/mjukr/jsp/restaurant/restaurant.jsp?configIdx=36548&id=mjukr_051002020000"; // 학생회관
     String url2 = "https://www.mju.ac.kr/mbs/mjukr/jsp/restaurant/restaurant.jsp?configIdx=36337&id=mjukr_051002050000"; // 명진당
-    List<String> day_menu1; // 학생회관
-    List<String> day_menu2;
+    ArrayList<String> day_menu1; // 학생회관
+    ArrayList<String> day_menu2;
     int finished;
 
     ViewPager view_pager;
@@ -84,9 +89,7 @@ public class MenuActivity extends AppCompatActivity {
                     for (Element e : e1) {
                         Elements e2 = e.select("div[name=" + day.get(i++) + "]");
                         String menu = "";
-                        for (Element ee : e2) {
-                            menu += ee.text() + "\n";
-                        }
+                        for (Element ee : e2) menu += ee.text() + "\n";
                         day_menu1.add(menu);
                     }
                 } else {
@@ -95,9 +98,7 @@ public class MenuActivity extends AppCompatActivity {
                         String menu = "";
                         int j=0;
                         for (Element ee : e2) {
-                            if(j != 1 && j != 4) {
-                                menu += ee.text() + "\n";
-                            }
+                            if(j != 1 && j != 4) menu += ee.text() + "\n";
                             j++;
                         }
                         day_menu2.add(menu);
@@ -113,7 +114,7 @@ public class MenuActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             finished++;
             if(finished == 2) {
-                menu_adapter = new MenuAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+                menu_adapter = new MenuAdapter(day_menu1, day_menu2);
                 view_pager.setAdapter(menu_adapter);
                 tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(view_pager));
                 view_pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
@@ -125,11 +126,46 @@ public class MenuActivity extends AppCompatActivity {
         }
     }
 
-    public class MenuAdapter extends FragmentStatePagerAdapter {
+    public class MenuAdapter extends PagerAdapter {
 
+        ArrayList<String> menu1;
+        ArrayList<String> menu2;
 
-        public MenuAdapter(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
+        public MenuAdapter(ArrayList<String> menu1, ArrayList<String> menu2) {
+            this.menu1 = new ArrayList<>();
+            this.menu2 = new ArrayList<>();
+            this.menu1.addAll(menu1);
+            this.menu2.addAll(menu2);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.menu_item, container, false);
+            TextView text1 = (TextView) view.findViewById(R.id.menu1);
+            TextView text2 = (TextView) view.findViewById(R.id.menu2);
+            TextView text3 = (TextView) view.findViewById(R.id.menu3);
+            TextView text4 = (TextView) view.findViewById(R.id.menu4);
+            TextView text5 = (TextView) view.findViewById(R.id.menu5);
+            TextView text6 = (TextView) view.findViewById(R.id.menu6);
+
+            String[] m1 = menu1.get(position).trim().split("\n");
+            String[] m2 = menu2.get(position).trim().split("\n");
+            text1.setText(m1[0].trim().replaceAll(" ", "\n"));
+            text2.setText(m1[1].trim().replaceAll(" ", "\n"));
+            text3.setText(m1[2].trim().replaceAll(" ", "\n"));
+            text4.setText(m2[0].trim().replaceAll(" ", "\n"));
+            text5.setText(m2[1].trim().replaceAll(" ", "\n"));
+            text6.setText(m2[2].trim().replaceAll(" ", "\n"));
+            container.addView(view) ;
+
+            return view ;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
         }
 
         @Override
@@ -138,9 +174,8 @@ public class MenuActivity extends AppCompatActivity {
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return MenuFragment.newInstance(day_menu1.get(position), day_menu2.get(position));
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return (view == (View)object);
         }
-
     }
 }

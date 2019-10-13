@@ -1,12 +1,15 @@
 package com.example.myongjimoa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,7 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +43,7 @@ public class ImageActivity extends AppCompatActivity {
 
 
     ArrayList<String> images;
-    FragmentStatePagerAdapter adapter;
+    ImageAdapter adapter;
     Button download;
     ViewPager pager;
 
@@ -57,30 +64,52 @@ public class ImageActivity extends AppCompatActivity {
         });
 
         pager = (ViewPager) findViewById(R.id.image_view_pager);
-        adapter = new ImageAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        adapter = new ImageAdapter(images);
         pager.setAdapter(adapter);
         pager.setCurrentItem(it.getIntExtra("current", 0));
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(pager);
-
     }
 
-    public class ImageAdapter extends FragmentStatePagerAdapter {
 
-        public ImageAdapter(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
+    public class ImageAdapter extends PagerAdapter {
+
+        ArrayList<String> path;
+
+        public ImageAdapter(ArrayList<String> path) {
+            this.path = new ArrayList<>();
+            this.path.addAll(path);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.images_item, container, false);
+            PhotoView img = (PhotoView) view.findViewById(R.id.full_image);
+            Glide.with(ImageActivity.this)
+                    .load(path.get(position))
+                    .into(img);
+
+            container.addView(view) ;
+
+            return view ;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
         }
 
         @Override
         public int getCount() {
-            return images.size();
+            return path.size();
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return ImageFragment.newInstance(images.get(position));
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return (view == (View)object);
         }
-
     }
 
     private class ImageDownload extends AsyncTask<String, Void, Void> {

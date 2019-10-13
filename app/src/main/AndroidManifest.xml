@@ -50,6 +50,7 @@
         <activity android:name=".BoardMainActivity"></activity>
         <activity android:name=".ReviewMainActivity"></activity>
         <activity android:name=".ImageActivity"></activity>
+        <activity android:name=".ShuttleActivity"></activity>
 
 
     </application>

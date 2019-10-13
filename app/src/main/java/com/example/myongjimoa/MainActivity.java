@@ -69,10 +69,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(review_it);
                         break;
                     case R.id.main_shuttle:
-                        // 처리
+                        startActivity(new Intent(MainActivity.this, ShuttleActivity.class));
                         break;
                     case R.id.main_menu:
-                        // 처리
                         startActivity(new Intent(MainActivity.this, MenuActivity.class));
                         break;
                 }
