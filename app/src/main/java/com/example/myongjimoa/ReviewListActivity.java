@@ -95,6 +95,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         Intent it = getIntent();
 
         restaurant = new Restaurant(it.getStringExtra("id"), it.getStringExtra("title"), it.getStringExtra("category"), it.getStringExtra("telephone"), it.getStringExtra("homepage"), it.getStringExtra("address"), it.getStringExtra("mapx"), it.getStringExtra("mapy"), it.getStringExtra("restaurant_id"), it.getStringExtra("time"), it.getStringExtra("menu"), it.getStringExtra("image"), Integer.parseInt(it.getStringExtra("review_num")), Float.parseFloat(it.getStringExtra("score")));
+        // 가져온 데이터로 Restaurant 객체 생성
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
         image = (ImageView) findViewById(R.id.restaurant_image);
@@ -111,14 +112,14 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         write_review = (Button) findViewById(R.id.write_review);
         review_recycler_view = (RecyclerView) findViewById(R.id.review_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        review_recycler_view.setLayoutManager(layoutManager);
+        review_recycler_view.setLayoutManager(layoutManager); // 레이아웃 지정
 
         swipe_refresh_layout = (SwipeRefreshLayout) findViewById(R.id.review_swipe_refresh_layout);
         swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipe_refresh_layout.setRefreshing(false);
-                reloadReview();
+                reloadReview(); // 위로 당겼을 때 리뷰 목록 새로고침
             }
         });
 
@@ -128,14 +129,14 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 Intent it = new Intent(ReviewListActivity.this, ReviewWriteActivity.class);
                 it.putExtra("user_id", user_id);
                 it.putExtra("restaurant_id", restaurant.getId());
-                startActivityForResult(it, WRITE_REQUEST_CODE);
+                startActivityForResult(it, WRITE_REQUEST_CODE); // 글쓰기 버튼 클릭 시 글쓰기 화면으로 이동
             }
         });
 
         Glide.with(this)
                 .load(restaurant.getImage())
                 .override(500)
-                .into(image);
+                .into(image); // 대표이미지 Glide 라이브러리 이용하여 화면에 보여줌. 캐시 사용함
 
         title.setText(restaurant.getTitle());
         category.setText(restaurant.getCategory());
@@ -150,43 +151,33 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         scroll = true;
         count_review_id = "`review`.`id`+1";
         review_adapter = new ReviewAdapter();
-        downloadReviewList();
+        downloadReviewList(); // 다운로드 정보 초기값 지정 후 리뷰 다운로드 진행
 
 
-        review_recycler_view.setAdapter(review_adapter);
+        review_recycler_view.setAdapter(review_adapter); // RecyclerView 어댑터 등록
 
-        review_recycler_view.clearOnScrollListeners();
-        review_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView view, int scrollState) {
-                if(scrollState == RecyclerView.SCROLL_STATE_SETTLING ) {
-                    if(scroll) downloadReviewList();
-                }
-            }
-        });
 
         mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.review_map);
         if(mapFragment == null) {
             mapFragment = MapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.review_list_map, mapFragment).commit();
             mapFragment.getMapAsync(this);
-        }
+        } // 네이버 지도 API 사용할 fragment 생성
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         Tm128 tm128 = new Tm128(Integer.parseInt(restaurant.getMapx()), Integer.parseInt(restaurant.getMapy()));
-        LatLng coord = tm128.toLatLng();
+        LatLng coord = tm128.toLatLng(); // 서버에는 Tm128 좌표계가 저장되어있어서 LatLng좌표계로 바꿔줌
         CameraUpdate cameraUpdate = CameraUpdate.scrollTo(coord);
-        naverMap.moveCamera(cameraUpdate);
+        naverMap.moveCamera(cameraUpdate); // 그 위치로 지도의 카메라 좌표 옮겨줌
         naverMap.setLiteModeEnabled(true); // 라이트모드 속도빨라짐
         Marker marker = new Marker();
         marker.setPosition(coord);
-        marker.setMap(naverMap);
+        marker.setMap(naverMap); // 해당 위치에 마커 찍어줌.
     }
 
     @Override
@@ -199,11 +190,11 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     public void downloadReviewList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
+                .build(); // 통신 라이브러리 retrofit 객체 생성
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<ReviewResult> call = connectDB.downloadReview(restaurant.getId(), count_review_id);
+        Call<ReviewResult> call = connectDB.downloadReview(restaurant.getId(), count_review_id); // ReviewResult 형태로 받아옴
         call.enqueue(new Callback<ReviewResult>() {
             @Override
             public void onResponse(Call<ReviewResult> call, Response<ReviewResult> response) {
@@ -212,34 +203,33 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
                 if (result.getReviewCount() != 0) {
                     for (int i = 0; i < result.getReviewCount(); i++) {
-                        review_adapter.add(result.getReview(i));
+                        review_adapter.add(result.getReview(i)); // 어댑터에 add
                     }
                     if (result.getReviewCount() < 15) scroll = false; // 데이터 다 가져왔을 경우
                     count_review_id = result.getReview(result.getReviewCount() - 1).getId();
+                    // 마지막 리뷰의 id 기억해줌
                 }
                 restaurant.setReview_num(result.getReview_num());
                 restaurant.setScore(result.getScore());
-
                 score.setText(restaurant.getScore() + "");
                 review_num.setText(restaurant.getReview_num() + "");
                 restaurant_rating_bar.setRating(restaurant.getScore());
+                // 다시 받아온 리뷰 갯수와 별점으로 업데이트
 
                 review_recycler_view.clearOnScrollListeners();
                 review_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(RecyclerView view, int scrollState) {
                         if(scrollState == RecyclerView.SCROLL_STATE_SETTLING ) {
-                            if(scroll) downloadReviewList();
+                            if(scroll) downloadReviewList(); // 스크롤이 끝에 닿았을 때 더 불러올데이터가있으면 다시 다운로드 진행
                         }
                     }
                 });
-
             }
             @Override
             public void onFailure(Call<ReviewResult> call, Throwable t) {
                 Log.d("실패", t.getMessage());
             }
-
         });
     }
 
@@ -270,7 +260,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ReviewListActivity.this, RecyclerView.HORIZONTAL, false);
 
                 image_recycler_view.setLayoutManager(layoutManager);
-                image_recycler_view.setAdapter(review_image_adapter);
+                image_recycler_view.setAdapter(review_image_adapter); // 리뷰 내의 이미지 RecyclerView 어댑터와 레이아웃 설정
 
                 image_recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
                     @Override
@@ -282,10 +272,9 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                             Intent it = new Intent(ReviewListActivity.this, ImageActivity.class);
                             it.putStringArrayListExtra("images", new ArrayList<>(review_image_adapter.getItems()));
                             it.putExtra("current", currentPos);
-                            startActivity(it);
+                            startActivity(it); // 이미지 선택 할 시 ImageActivity로 이동
                             return true;
                         }
-
                         return false;
                     }
 
@@ -311,13 +300,14 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                         DialogInterface.OnClickListener dialog_listener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if(which == 0) {
+                                if(which == 0) { // 신고 버튼 클릭
                                     reportCurrentReview(items.get(pos).getId(), pos);
-                                } else if (which == 1) {
+                                } else if (which == 1) { // 삭제 버튼 클릭
                                     removeCurrentReview(items.get(pos).getId(), pos);
                                 }
                             }
                         };
+                        // 리뷰 세팅 버튼 클릭시 관리자 또는 본인 계정의 글일시, 다른 계정의 글 일시 다이얼로그 보여줌
                         if(items.get(pos).getNickname().equals(user_nickname) || MainActivity.admin) builder.setItems(new String[]{"신고", "삭제"}, dialog_listener);
                         else builder.setItems(new String[]{"신고"}, dialog_listener);
                         AlertDialog alertDialog = builder.create();
@@ -415,30 +405,31 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    public void reloadReview() {
+    public void reloadReview() { // 리뷰 목록 reload
+        // 리뷰 다운로드 데이터 초기화
         scroll = true;
         count_review_id = "`review`.`id`+1";
         review_adapter = new ReviewAdapter();
         review_recycler_view.setAdapter(review_adapter);
-        downloadReviewList();
+        downloadReviewList(); // 다시 다운로드 진행
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == WRITE_REQUEST_CODE && resultCode == RESULT_OK){
-           reloadReview();
+           reloadReview(); // 글쓰기하고 돌아왔을 시 reload
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) { // 메뉴아이템 이벤트 처리
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                reloadReview();
+                reloadReview(); // 리뷰 새로고침
                 return true;
             case android.R.id.home:
-                finish();
+                finish(); // 현재 Activity 종료
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -468,7 +459,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
                 String result = response.body().trim();
 
-                if(result.equals("removed")) { // 리뷰가 삭제되었을 경우 리로드.
+                if(result.equals("removed")) { // 리뷰가 이미 삭제되었을 경우 리로드.
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewListActivity.this);
                     builder.setTitle("알림");
                     builder.setMessage("존재하지않는 리뷰입니다.");
@@ -480,11 +471,10 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                         }
                     });
                     builder.show();
-                } else if(!result.equals("failed")) {
-                    if(Integer.parseInt(result) >= 5) {
-                        removeCurrentReview(review_id, position);
-                    }
+                } else if(!result.equals("failed")) { // 정상 신고 처리되었을 경우
+                    if(Integer.parseInt(result) >= 5) removeCurrentReview(review_id, position); // 신고 누적 5회 이상일 시 선택 리뷰 삭제 수행
                 } else {
+                    // 이미 신고한 리뷰 일 때
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewListActivity.this);
                     builder.setTitle("메시지");
                     builder.setMessage("이미 신고한 리뷰입니다.");
@@ -492,7 +482,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //
                         }
                     });
                     builder.show();
@@ -508,7 +497,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     public void removeCurrentReview(String review_id, final int position) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
                 .build();
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
@@ -520,7 +509,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 String result = response.body().trim();
                 if (result.equals("success")) {
                     if(review_adapter.getItem(position).getImages().size() != 0) {
-                        final List<String> remove_list = new ArrayList<>(); // 스레드에서 deleteobjects할때 이미 리스트삭제되어서 새로 만들어줌
+                        final List<String> remove_list = new ArrayList<>(); // 스레드에서 deleteobjects할때 이미 리스트삭제되어 오류 뜨는경우 있어서 새로 만들어줌
                         remove_list.addAll(review_adapter.getItem(position).getImages());
                         new Thread(new Runnable() {
                             @Override
@@ -538,16 +527,16 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                                 List<DeleteObjectsRequest.KeyVersion> key = new ArrayList<>();
                                 for (int i = 0; i < remove_list.size(); i++) {
                                     key.add(new DeleteObjectsRequest.KeyVersion("review_images/" + remove_list.get(i)));
-                                }
+                                } // 키 등록해준 후
 
                                 s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
+                                // 해당 버킷의 이미지 삭제 진행
                             }
                         }).start();
                     }
-                    reloadReview();
+                    reloadReview(); // 삭제 마친후 리뷰 리로드
                 }
             }
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.d("실패", t.getMessage());

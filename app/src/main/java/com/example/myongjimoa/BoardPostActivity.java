@@ -80,6 +80,7 @@ public class BoardPostActivity extends AppCompatActivity {
         post = new Post(it.getStringExtra("id"), it.getStringExtra("title"), it.getStringExtra("description"), it.getStringExtra("number"), it.getStringExtra("major"), it.getStringExtra("date"), it.getStringExtra("nickname"), it.getStringArrayListExtra("images"), Integer.parseInt(it.getStringExtra("recommend_num")));
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
+        // 받아온 정보 저장
 
         post_nickname = (TextView) findViewById(R.id.post_nickname);
         post_date = (TextView) findViewById(R.id.post_date);
@@ -91,12 +92,13 @@ public class BoardPostActivity extends AppCompatActivity {
         recommend_num = (TextView) findViewById(R.id.recommend_num);
         post_number = (TextView) findViewById(R.id.post_number);
         post_major = (TextView) findViewById(R.id.post_major);
+
         board_post_comment_adapter = new BoardPostCommentAdapter();
         board_post_image_adapter = new BoardPostImageAdapter();
 
         comment_submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // 댓글 작성 완료 버튼 클릭 시 댓글 업로드 진행
                 commenting();
             }
         });
@@ -116,7 +118,7 @@ public class BoardPostActivity extends AppCompatActivity {
         });
         for(int i=0; i<post.getImages().size(); i++) {
             board_post_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + post.getImages().get(i));
-        }
+        } // 이미지 경로 등록
 
         comment_recycler_view = (RecyclerView) findViewById(R.id.post_comment_recycler_view);
         image_recycler_view = (RecyclerView) findViewById(R.id.post_image_recycler_view);
@@ -130,7 +132,7 @@ public class BoardPostActivity extends AppCompatActivity {
         image_recycler_view.setLayoutManager(horizontal_layout_manager);
 
         image_recycler_view.setAdapter(board_post_image_adapter);
-
+        // 각각의 RecyclerView에 layout 지정
 
         gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
@@ -149,7 +151,7 @@ public class BoardPostActivity extends AppCompatActivity {
                     Intent it = new Intent(BoardPostActivity.this, ImageActivity.class);
                     it.putStringArrayListExtra("images", new ArrayList<>(board_post_image_adapter.getItems()));
                     it.putExtra("current", currentPos);
-                    startActivity(it);
+                    startActivity(it); // 이미지 중 하나 클릭시 ImageActivity로 이동
                     return true;
                 }
 
@@ -169,15 +171,15 @@ public class BoardPostActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        downloadComment();
+        downloadComment(); // 댓글 다운로드 처리
 
     }
 
     public void downloadComment() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
+                .build(); // 통신 라이브러리 retrofit객체 생성
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
         Call<List<Comment>> call = connectDB.downloadComments(post.getId());
@@ -189,9 +191,7 @@ public class BoardPostActivity extends AppCompatActivity {
                     if (result.size() != 0) {
                         for (int i = 0; i < result.size(); i++) {
                             board_post_comment_adapter.add(new Comment(result.get(i).getId(), result.get(i).getNumber(), result.get(i).getMajor(), result.get(i).getComment(), result.get(i).getDate(), result.get(i).getNickname()));
-                        }
-                    } else {
-                        Log.d("댓글없음", "ㅇㅇ");
+                        } // 어댑터에 담아줌
                     }
                 }
             }
@@ -199,7 +199,7 @@ public class BoardPostActivity extends AppCompatActivity {
             public void onFailure(Call<List<Comment>> call, Throwable t) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                 builder.setTitle("알림");
-                builder.setMessage("존재하지않는 게시글입니다.");
+                builder.setMessage("존재하지않는 게시글입니다."); // 댓글 작성 실패 시 존재하지 않는 게시글
                 builder.setCancelable(false);
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
@@ -225,9 +225,8 @@ public class BoardPostActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
-                Log.d("추천 성공", result);
 
-                if(result.equals("removed")) {
+                if(result.equals("removed")) { // 삭제된 게시글일시
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("알림");
                     builder.setMessage("존재하지않는 게시글입니다.");
@@ -239,10 +238,10 @@ public class BoardPostActivity extends AppCompatActivity {
                         }
                     });
                     builder.show();
-                } else if(!result.equals("failed")) {
+                } else if(!result.equals("failed")) { // 정상 처리되었을 시
                     post.setRecommend_num(Integer.parseInt(result));
                     recommend_num.setText(post.getRecommend_num() + "");
-                } else {
+                } else { // failed 이면 이미 추천 게시글 알림띄어줌
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("메시지");
                     builder.setMessage("이미 추천한 게시글입니다.");
@@ -250,7 +249,6 @@ public class BoardPostActivity extends AppCompatActivity {
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //
                         }
                     });
                     builder.show();
@@ -266,10 +264,10 @@ public class BoardPostActivity extends AppCompatActivity {
     public void commenting() {
 
 
-        Date date = new Date(); // 시스템 시간으로 구함 동기화되는지 확인 필요
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        String format_date = sdf.format(date);
+        String format_date = sdf.format(date); // 서버에 전송할 현재 시간
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
@@ -283,9 +281,8 @@ public class BoardPostActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
-                Log.d("댓글 쓰기 성공", result);
 
-                if(result.equals("success")) {
+                if(result.equals("success")) { // 댓글 작성 성공
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("메시지");
                     builder.setMessage("댓글 작성에 성공하였습니다.");
@@ -297,10 +294,11 @@ public class BoardPostActivity extends AppCompatActivity {
                         }
                     });
                     InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(write_comment.getWindowToken(), 0);
-                    write_comment.setText("");
+                    imm.hideSoftInputFromWindow(write_comment.getWindowToken(), 0); // 화면에 올라온 키보드 내려줌
+                    write_comment.setText(""); // 댓글 창 초기화
                     builder.show();
                 } else {
+                    // 실패 시 존재하지 않는 게시글
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("알림");
                     builder.setMessage("존재하지않는 게시글입니다.");
@@ -412,7 +410,6 @@ public class BoardPostActivity extends AppCompatActivity {
             public ViewHolder(View itemView) {
                 super(itemView);
                 img = (ImageView) itemView.findViewById(R.id.image_item);
-
             }
 
             public void setData(String item) {
@@ -421,7 +418,6 @@ public class BoardPostActivity extends AppCompatActivity {
                         .load(item)
                         .override(500)
                         .into(img);
-
             }
         }
 
@@ -466,7 +462,6 @@ public class BoardPostActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_report:
-                // 게시글창에서 신고눌렀을떄 처리
                 reportCurrentPost();
                 return true;
 
@@ -504,7 +499,7 @@ public class BoardPostActivity extends AppCompatActivity {
                 String result = response.body().trim();
                 if (result.equals("success")) {
                     if(post.getImages().size() != 0) {
-                        new Thread(new Runnable() {
+                        new Thread(new Runnable() { // 메인스레드에서는 통신작업을 수행할 수 없어서 새로운 스레드 생성. 데이터베이스 서버에서의 삭제가 끝난뒤, 파일 서버에서의 이미지 삭제 이어서 진행
                             @Override
                             public void run() {
                                 // Amazon Cognito 인증 공급자 초기화
@@ -521,15 +516,12 @@ public class BoardPostActivity extends AppCompatActivity {
                                 for (int i = 0; i < post.getImages().size(); i++) {
                                     key.add(new DeleteObjectsRequest.KeyVersion("board_images/" + post.getImages().get(i)));
                                 }
-
                                 s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
                             }
                         }).start();
                     }
                     setResult(RESULT_OK);
-                    finish();
-                } else {
-                    Log.d("삭제오류", "삭제오류");
+                    finish(); // 삭제 후 현재 Activity 종료
                 }
             }
 
@@ -554,7 +546,7 @@ public class BoardPostActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
 
-                if(result.equals("removed")) {
+                if(result.equals("removed")) { // 이미 삭제된 게시글일시
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("알림");
                     builder.setMessage("존재하지않는 게시글입니다.");
@@ -566,11 +558,11 @@ public class BoardPostActivity extends AppCompatActivity {
                         }
                     });
                     builder.show();
-                } else if(!result.equals("failed")) {
-                    if(Integer.parseInt(result) >= 5) {
+                } else if(!result.equals("failed")) { // 신고 정상 수행
+                    if(Integer.parseInt(result) >= 5) { // 신고 결과가 5회 이상이면 삭제 진행
                         removeCurrentPost();
                     }
-                } else {
+                } else { // 이미 신고한 게시글일시
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("메시지");
                     builder.setMessage("이미 신고한 게시글입니다.");
@@ -578,7 +570,6 @@ public class BoardPostActivity extends AppCompatActivity {
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //
                         }
                     });
                     builder.show();
@@ -604,10 +595,8 @@ public class BoardPostActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
-                if (result.equals("success")) {
+                if (result.equals("success")) { // 정상 삭제 수행시 댓글 reload
                     reloadComment();
-                } else {
-                    Log.d("삭제오류", "삭제오류");
                 }
             }
 
@@ -632,7 +621,7 @@ public class BoardPostActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
 
-                if(result.equals("removed")) { // 게시글 삭제되었을경우, 댓글이 삭제되었을경우. 댓글삭제되었으면 다시 게시글들어와서 댓글받아야함.
+                if(result.equals("removed")) { // 게시글 삭제되었을경우, 댓글 삭제되었을경우
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("알림");
                     builder.setMessage("존재하지않는 댓글입니다.");
@@ -645,10 +634,10 @@ public class BoardPostActivity extends AppCompatActivity {
                     });
                     builder.show();
                 } else if(!result.equals("failed")) {
-                    if(Integer.parseInt(result) >= 5) {
+                    if(Integer.parseInt(result) >= 5) { // 5회 이상일 시 삭제처리
                         removeCurrentComment(comment_id);
                     }
-                } else {
+                } else { // 이미 신고했을 시
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("메시지");
                     builder.setMessage("이미 신고한 댓글입니다.");
@@ -677,13 +666,13 @@ public class BoardPostActivity extends AppCompatActivity {
         it.putExtra("modify_images", post.getImages());
         it.putExtra("board_id", board_id);
         it.putExtra("user_id", user_id);
-        startActivityForResult(it, MODIFY_REQUEST_CODE);
+        startActivityForResult(it, MODIFY_REQUEST_CODE); // 현재 게시글 정보 가지고 글쓰기 화면으로 이동
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == MODIFY_REQUEST_CODE){
+        if(resultCode == RESULT_OK && requestCode == MODIFY_REQUEST_CODE){ // 수정이 정상적으로 진행되고 돌아왔으면, 그 정보로 화면 업데이트
             post.setTitle(data.getStringExtra("title"));
             post.setDescription(data.getStringExtra("description"));
             post.setRecommend_num(Integer.parseInt(data.getStringExtra("recommend_num")));
@@ -696,8 +685,8 @@ public class BoardPostActivity extends AppCompatActivity {
             post_title.setText(post.getTitle());
             post_description.setText(post.getDescription());
             recommend_num.setText(post.getRecommend_num() + "");
-            reloadComment();
-            setResult(RESULT_OK);
+            reloadComment(); // 댓글도 reload
+            setResult(RESULT_OK); // 게시판 화면으로 돌아갔을 때 reload 일어날수 있도록 설정
         }
     }
 }

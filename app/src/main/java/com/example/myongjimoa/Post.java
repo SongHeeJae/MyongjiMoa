@@ -14,7 +14,7 @@ public class Post {
     int recommend_num;
 
     public Post(String id, String title, String description, String number, String major, String date, String nickname, ArrayList<String> images, int recommend_num) {
-        this.images = new ArrayList<String>();
+        this.images = new ArrayList<>();
         this.images.addAll(images);
         this.id=id;
         this.title = title;

@@ -95,7 +95,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(review_write_image_adapter);
+        recycler_view.setAdapter(review_write_image_adapter); // RecyclerView 레이아웃과 어댑터 등록
         recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
@@ -103,7 +103,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    review_write_image_adapter.removeItem(currentPos);
+                    review_write_image_adapter.removeItem(currentPos); // 이미지 클릭 시 어댑터에서 삭제
                     return true;
                 }
                 return false;
@@ -125,13 +125,13 @@ public class ReviewWriteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 imageUpload();
             }
-        });
+        }); // 제출 버튼 클릭 시 서버 업로드 시작
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getGallery();
             }
-        });
+        }); // 사진 버튼 클릭 시 갤러리 열어줌.
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -139,18 +139,11 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
 
     public void imageUpload() {
-
-
         if (review_write_image_adapter.getItemCount() > 0) {
-
-            // 이미지 업로드 부분에서 이미지 업로드가 아직 실행중인데 다른쪽에서 게시글 정보가 업데이트된다면? 파일업로드처리가 끝난후, 게시글 업로드하도록 수정할필요있음
-            // 옵저버패턴 https://flowarc.tistory.com/entry/%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%98%B5%EC%A0%80%EB%B2%84-%ED%8C%A8%ED%84%B4Observer-Pattern
-            // 콜백으로 구현, 브로드캐스팅으로 구현
-
-            Date date = new Date(); // 시스템 시간으로 구함 동기화되는지 확인 필요
+            Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            String format_date = sdf.format(date);
+            String format_date = sdf.format(date); // 현재시간 구해줌. 이미지의 경로에 사용
 
             // Amazon Cognito 인증 공급자 초기화
             CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -165,25 +158,21 @@ public class ReviewWriteActivity extends AppCompatActivity {
             s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
 
             for (int i = 0; i < review_write_image_adapter.getItemCount(); i++) {
-                Log.d("업로드횟수", "ㅋㅋ");
                 String name = restaurant_id + "_"  + user_id + "_" + format_date + "_" + i;
-                File file = new File(review_write_image_adapter.getItem(i));
-                observer = transfer_utility.upload(
+                File file = new File(review_write_image_adapter.getItem(i)); // 중복안되는 이름으로 파일 생성
+                observer = transfer_utility.upload( // 서버에 업로드
                         "myongjimoa/review_images",
-                        name, // 이미지 파일이름설정 개별적으로 중복안되게구성해야함. user_id + 현재시간?
+                        name,
                         file
                 ); // 파일 여러개 동시 업로드하는거 찾아야됨
                 path.add(name);
                 observer.setTransferListener(new TransferListener() {
                     @Override
                     public void onStateChanged(int id, TransferState state) {
-                        Log.d("s3", "onStateChanged ㅇㅇㅇㅇㅇㅇㅇㅇ");
                         if (TransferState.COMPLETED == state) {
-                            Log.d("전송완료", "ㅇㅇ"); // 여기다 콜백으로 구현
                             upload_count++;
                             if (upload_count == review_write_image_adapter.getItemCount()) {
-                                Log.d("이미지업로드끝", "ㅇㅇ");
-                                reviewUpload(path); // 콜백으로 구현 근데 속도느림 개선필요 동시파일업로드하도록
+                                reviewUpload(path); // 이미지 업로드 끝나면 글 업로드 시작
                                 upload_count = 0;
                             }
                         }
@@ -191,7 +180,6 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
                     @Override
                     public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                        Log.d("s3", "onProgressChanged ㅇㅇㅇㅇㅇㅇㅇㅇ");
                     }
 
                     @Override
@@ -200,17 +188,17 @@ public class ReviewWriteActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else {
+        } else { // 업로드 할 이미지 없을 시
             reviewUpload(path);
         }
     }
 
     public void reviewUpload(ArrayList<String> path) {
 
-        Date date = new Date(); // 시스템 시간으로 구함 동기화되는지 확인 필요
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        String format_date = sdf.format(date);
+        String format_date = sdf.format(date); // 현재시간구함 서버에 전송
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
@@ -225,7 +213,6 @@ public class ReviewWriteActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
-                Log.d("결과는?ㅋㅋ", result);
                 if(result.equals("success")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
                     builder.setTitle("메시지");
@@ -235,7 +222,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             setResult(RESULT_OK);
-                            finish();
+                            finish(); // 글쓰기 완료하면 현재 Activity 종료
                         }
                     });
                     builder.show();
@@ -248,7 +235,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
         });
     }
 
-    public void setWriteImage(ClipData clip_data) {
+    public void setWriteImage(ClipData clip_data) { // 갤러리에서 받아온 ClipData를 이용하여 Uri를 얻고 그것에서 실제경로 구해서 어댑터에 등록
         if (clip_data != null) {
             for (int i = 0; i < clip_data.getItemCount(); i++) {
                 review_write_image_adapter.add(getRealPathFromURI(clip_data.getItemAt(i).getUri()));
@@ -256,15 +243,12 @@ public class ReviewWriteActivity extends AppCompatActivity {
         }
     }
 
-    public String getRealPathFromURI(Uri contentUri) {
+    public String getRealPathFromURI(Uri contentUri) { // Uri를 통해 실제경로 구하는 메소드
 
         String[] proj = { MediaStore.Images.Media.DATA };
-
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         cursor.moveToNext();
         String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-        Uri uri = Uri.fromFile(new File(path));
-
         cursor.close();
         return path;
     }
@@ -323,25 +307,23 @@ public class ReviewWriteActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) { // 갤러리 화면에서 얻어온 결과
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            setWriteImage(data.getClipData());
+            setWriteImage(data.getClipData()); // 얻어온 데이터로 ClipData로 setWriteImage 수행
         }
     }
 
-    public void getGallery() {
+    public void getGallery() { // 갤러리 열어줌
         Intent it = new Intent();
         it.setAction(Intent.ACTION_PICK);
         it.setType("image/*");
-        it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // 다중선택 가능
         startActivityForResult(Intent.createChooser(it, "Get Image"), GET_GALLERY_IMAGE);
-        //최근사진 읽어오면 절대경로 오류남
-        // startActivityForResult(it, GET_GALLERY_IMAGE);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) { // 메뉴 아이템 이벤트 처리
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();

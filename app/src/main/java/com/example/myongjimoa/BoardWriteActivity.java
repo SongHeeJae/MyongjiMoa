@@ -78,7 +78,7 @@ public class BoardWriteActivity extends AppCompatActivity {
         setContentView(R.layout.board_write);
 
         modify_image_num = 0; // 수정이미지 없으면 0으로초기화 있으면 이 num부터 이미지 올려주면됨.
-        modify_mode = false;
+        modify_mode = false; // 수정 모드 초기값 false
 
         write_title = (EditText) findViewById(R.id.write_title);
         write_description = (EditText) findViewById(R.id.write_description);
@@ -90,8 +90,8 @@ public class BoardWriteActivity extends AppCompatActivity {
 
         board_write_image_adapter = new BoardWriteImageAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        recycler_view.setLayoutManager(layoutManager);
-        recycler_view.setAdapter(board_write_image_adapter);
+        recycler_view.setLayoutManager(layoutManager); // 레이아웃 지정
+        recycler_view.setAdapter(board_write_image_adapter); // 어댑터 지정
         recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
@@ -99,7 +99,7 @@ public class BoardWriteActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    board_write_image_adapter.removeItem(currentPos);
+                    board_write_image_adapter.removeItem(currentPos); // 현재 화면에 올라온 이미지 삭제 진행
                     return true;
                 }
                 return false;
@@ -141,7 +141,8 @@ public class BoardWriteActivity extends AppCompatActivity {
         user_id = it.getStringExtra("user_id");
         board_title_id = it.getStringExtra("board_title_id");
         modify_mode = it.getBooleanExtra("modify_mode", false);
-        if(modify_mode) {
+        if(modify_mode) { // 수정 상태로 화면 열었을 시 수정하려고 가져온 데이터애 화면 보여줌
+            board_id = it.getStringExtra("board_id");
             delete_images = new ArrayList<>();
             write_title.setText(it.getStringExtra("title"));
             write_description.setText(it.getStringExtra("description"));
@@ -154,11 +155,12 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     public void imageUpload() {
 
-        if (board_write_image_adapter.getItemCount() > 0 && board_write_image_adapter.getItemCount() - modify_image_num > 0) {
-            Date date = new Date(); // 시스템  시간으로 구함 동기화되는지 확인 필요
+        if (board_write_image_adapter.getItemCount() - modify_image_num > 0) {
+            // adapter에 이미지 개수 - 수정할때 원래 가져온개수 만큼 업로드
+            Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            String format_date = sdf.format(date);
+            String format_date = sdf.format(date); // 현재 시간 구해줌
 
             // Amazon Cognito 인증 공급자 초기화
             CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -186,10 +188,8 @@ public class BoardWriteActivity extends AppCompatActivity {
                     public void onStateChanged(int id, TransferState state) {
                         Log.d("s3", "onStateChanged ㅇㅇㅇㅇㅇㅇㅇㅇ");
                         if (TransferState.COMPLETED == state) {
-                            Log.d("전송완료", "ㅇㅇ"); // 여기다 콜백으로 구현
                             upload_count++;
-                            if (upload_count == board_write_image_adapter.getItemCount() - modify_image_num) {
-                                Log.d("이미지업로드끝", "ㅇㅇ");
+                            if (upload_count == board_write_image_adapter.getItemCount() - modify_image_num) { // 이미지 업로드끝나면 진행
                                 if(modify_mode) modify(path);
                                 else posting(path);
                             }
@@ -197,7 +197,6 @@ public class BoardWriteActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                        Log.d("s3", "onProgressChanged ㅇㅇㅇㅇㅇㅇㅇㅇ"); //프로그레스바
                     }
 
                     @Override
@@ -206,7 +205,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else {
+        } else { // 이미지 업로드할 것 없을시
             if(modify_mode) modify(path);
             else posting(path);
         }
@@ -214,10 +213,10 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     public void posting(ArrayList<String> path) {
 
-        Date date = new Date(); // 시스템 시간으로 구함 동기화되는지 확인 필요
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        String format_date = sdf.format(date);
+        String format_date = sdf.format(date); // 포스팅할 현재 시간구함
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
@@ -232,8 +231,7 @@ public class BoardWriteActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
-                Log.d("result는?", result);
-                if(result.equals("success")) {
+                if(result.equals("success")) { //글쓰기 성공했을시
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardWriteActivity.this);
                     builder.setTitle("메시지");
                     builder.setMessage("글쓰기에 성공하였습니다.");
@@ -255,7 +253,7 @@ public class BoardWriteActivity extends AppCompatActivity {
         });
     }
 
-    public void setWriteImage(ClipData clip_data) {
+    public void setWriteImage(ClipData clip_data) { // 갤러리에서 받아온 clip_data의 실제경로로 adapter에 이미지등록
         if (clip_data != null) {
             for (int i = 0; i < clip_data.getItemCount(); i++) {
                     board_write_image_adapter.add(getRealPathFromURI(clip_data.getItemAt(i).getUri()));
@@ -263,14 +261,13 @@ public class BoardWriteActivity extends AppCompatActivity {
         }
     }
 
-    public String getRealPathFromURI(Uri contentUri) {
+    public String getRealPathFromURI(Uri contentUri) { // 불러온 이미지의 uri로 실제 경로 구하는 메소드
 
         String[] proj = { MediaStore.Images.Media.DATA };
 
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         cursor.moveToNext();
         String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-        Uri uri = Uri.fromFile(new File(path));
 
         cursor.close();
         return path;
@@ -331,11 +328,11 @@ public class BoardWriteActivity extends AppCompatActivity {
         }
     }
 
-    public void getGallery() {
+    public void getGallery() { // 갤러리 열기
         Intent it = new Intent();
         it.setAction(Intent.ACTION_PICK);
         it.setType("image/*");
-        it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // 다중 선택 가능
         startActivityForResult(Intent.createChooser(it, "Get Image"), GET_GALLERY_IMAGE);
     }
 
@@ -343,7 +340,7 @@ public class BoardWriteActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            setWriteImage(data.getClipData());
+            setWriteImage(data.getClipData()); // 갤러리에서 가져온 데이터로 setWriteImage 진행
         }
     }
 
@@ -351,7 +348,7 @@ public class BoardWriteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                finish(); // 메뉴의 뒤로가기 클릭시 종료
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -361,8 +358,10 @@ public class BoardWriteActivity extends AppCompatActivity {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
                 .build();
+
+        Log.d("데이터는?", board_id + Request.filter(write_title.getText().toString()) + Request.filter(write_description.getText().toString()) + path + delete_images);
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
         Call<Post> call = connectDB.modifyPost(board_id, Request.filter(write_title.getText().toString()), Request.filter(write_description.getText().toString()), path, delete_images);
@@ -398,7 +397,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                 it.putExtra("description", result.getDescription());
                 it.putExtra("recommend_num", result.getRecommend_num() + "");
                 it.putExtra("images", result.getImages());
-                setResult(RESULT_OK, it);
+                setResult(RESULT_OK, it); // 수정이 끝나면 가져온 데이터 intent에 담아서 종료
                 finish();
             }
             @Override

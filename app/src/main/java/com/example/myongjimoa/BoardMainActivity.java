@@ -52,7 +52,7 @@ public class BoardMainActivity extends AppCompatActivity {
                 Intent it = new Intent(BoardMainActivity.this, BoardActivity.class);
 
                 Board b = m_adapter.getBoard(user_major);
-                if(b != null) {
+                if(b != null) { // 내 학과 게시판 버튼 클릭시 해당하는 학과 게시판으로 이동
                     it.putExtra("board_title_id", b.getId());
                     it.putExtra("board_title", b.getTitle());
                     it.putExtra("user_id", user_id);
@@ -66,26 +66,27 @@ public class BoardMainActivity extends AppCompatActivity {
         Intent it = getIntent();
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
-        user_major = it.getStringExtra("user_major");
+        user_major = it.getStringExtra("user_major"); // 회원정보 저장해둠
 
         recycler_view = (RecyclerView) findViewById(R.id.title_recycler_view);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recycler_view.setLayoutManager(layoutManager);
+        recycler_view.setLayoutManager(layoutManager); // RecyclerView에 수직방향 레이아웃지정함
         m_adapter = new BoardTitleAdapter();
-        recycler_view.setAdapter(m_adapter);
+        recycler_view.setAdapter(m_adapter); // 어댑터 지정
 
         gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
-        });
+        }); // RecyclerView 아이템 터치 리스너에 사용
+
         recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
                 View childView = rv.findChildViewUnder(e.getX(), e.getY());
-
+                // RecyclerView 아이템 터치 리스너. 아이템 터치 시 회원정보, 게시판 정보 가지고 해당 게시판으로 이동
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(BoardMainActivity.this, BoardActivity.class);
@@ -110,19 +111,19 @@ public class BoardMainActivity extends AppCompatActivity {
             }
         });
 
-        downloadBoardList();
+        downloadBoardList(); // 게시판 목록 다운로드
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 상단 메뉴의 뒤로가기 버튼 열어줌
     }
 
     void downloadBoardList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
+                .build(); // retrofit 통신 라이브러리 객체 생성
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<List<Board>> call = connectDB.downloadBoard();
+        Call<List<Board>> call = connectDB.downloadBoard(); // List<Board> 형태로 받아옴
         call.enqueue(new Callback<List<Board>>() {
             @Override
             public void onResponse(Call<List<Board>> call, Response<List<Board>> response) {
@@ -130,7 +131,7 @@ public class BoardMainActivity extends AppCompatActivity {
                 List<Board> result = response.body();
                 if(result != null) {
                     if (result.size() != 0) {
-                        for (int i = 0; i < result.size(); i++) {
+                        for (int i = 0; i < result.size(); i++) { // 게시판 목록 어댑터에 담아줌
                             m_adapter.add(new Board(result.get(i).getId(), result.get(i).getTitle()));
                         }
                     }
@@ -198,7 +199,7 @@ public class BoardMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home: // 뒤로가기 버튼
                 finish();
                 return true;
         }

@@ -67,7 +67,7 @@ public class BoardActivity extends AppCompatActivity {
         board_title = it.getStringExtra("board_title");
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
-
+        // 이전 Activity에서 정보 받아옴
         setTitle(board_title);
 
         write = (Button) findViewById(R.id.write);
@@ -78,7 +78,7 @@ public class BoardActivity extends AppCompatActivity {
                 Intent it = new Intent(BoardActivity.this, BoardWriteActivity.class);
                 it.putExtra("user_id", user_id);
                 it.putExtra("board_title_id", board_title_id);
-                startActivityForResult(it, WRITE_REQUEST_CODE);
+                startActivityForResult(it, WRITE_REQUEST_CODE); // 글쓰기 버튼 클릭 시 글쓰기 화면으로 이동
             }
         });
 
@@ -95,14 +95,14 @@ public class BoardActivity extends AppCompatActivity {
         swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reloadPost();
+                reloadPost(); // 게시글 목록 새로고침
                 swipe_refresh_layout.setRefreshing(false);
             }
         });
 
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recycler_view.setLayoutManager(layoutManager);
+        recycler_view.setLayoutManager(layoutManager); // 수직 방향의 LinearLayout을 RecyclerView에 지정
 
         gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
@@ -118,10 +118,10 @@ public class BoardActivity extends AppCompatActivity {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(BoardActivity.this, BoardPostActivity.class);
                     Post post;
-                    if (search.isActionViewExpanded()) {
+                    if (search.isActionViewExpanded()) { // 검색창 확장되었을 시 현재 터치한 아이템
                         post = search_adapter.getPost(currentPos);
                     } else {
-                        post = board_post_title_adapter.getPost(currentPos);
+                        post = board_post_title_adapter.getPost(currentPos); // 검색창 축소 상태일 시 현재 터치한 아이템
                     }
                     it.putExtra("id", post.getId());
                     it.putExtra("title", post.getTitle());
@@ -134,7 +134,7 @@ public class BoardActivity extends AppCompatActivity {
                     it.putExtra("recommend_num", post.getRecommend_num() + "");
                     it.putExtra("user_id", user_id);
                     it.putExtra("user_nickname", user_nickname);
-                    startActivityForResult(it, POST_REMOVE_REQUEST_CODE);
+                    startActivityForResult(it, POST_REMOVE_REQUEST_CODE); // 게시글 화면으로 이동
                     return true;
                 }
                 return false;
@@ -149,9 +149,9 @@ public class BoardActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기버튼 활성화
 
-        downloadPostList();
+        downloadPostList(); // 게시글 목록 다운로드
 
     }
 
@@ -159,11 +159,11 @@ public class BoardActivity extends AppCompatActivity {
     public void downloadPostList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .addConverterFactory(GsonConverterFactory.create()) // JSON형태로 받아옴
+                .build(); // 통신 라이브러리 retrofit 객체 생성
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<List<Post>> call = connectDB.downloadPost(board_title_id, count_board_id);
+        Call<List<Post>> call = connectDB.downloadPost(board_title_id, count_board_id); // List<Post> 형태로 받아옴
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
@@ -171,23 +171,19 @@ public class BoardActivity extends AppCompatActivity {
                 List<Post> result = response.body();
                 if (result != null) {
                     if (result.size() != 0) {
-                        for (int i = 0; i < result.size(); i++) {
+                        for (int i = 0; i < result.size(); i++) { // 다운로드된 게시글 어댑터에 등록
                             board_post_title_adapter.add(new Post(result.get(i).getId(), result.get(i).getTitle(), result.get(i).getDescription(), result.get(i).getNumber(), result.get(i).getMajor(), result.get(i).getDate(), result.get(i).getNickname(), result.get(i).getImages(), result.get(i).getRecommend_num()));
                         }
-                        if (result.size() < 15) scroll = false; // 데이터 다 가져왔을 경우
-                        count_board_id = result.get(result.size() - 1).getId();
-                    } else {
-                        Log.d("글목록없음", "글목록없음");
+                        if (result.size() < 15) scroll = false; // 데이터 다 가져왔을 경우, 화면 끝에 닿았을 때 더이상 다운로드 안일어나게함
+                        count_board_id = result.get(result.size() - 1).getId(); // 현재 다운로드된 마지막 게시글의 id(PK)값
                     }
-                } else {
-                    Log.d("게시판 테이블 생성", "완료");
                 }
                 recycler_view.clearOnScrollListeners();
                 recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(RecyclerView view, int scrollState) {
                         if (scrollState == RecyclerView.SCROLL_STATE_SETTLING) {
-                            if (scroll) downloadPostList();
+                            if (scroll) downloadPostList(); // 스크롤이 끝에 닿았을때 scroll이 true 상태이면(더 다운받을 게시글이 있으면) 이어서 받아옴
                         }
                     }
                 });
@@ -201,6 +197,7 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     public void reloadPost() {
+        // 게시글 새로고침 일어났을 시 어댑터와 다른 상태변수들 초기화, 다시 다운로드
         if(search.isActionViewExpanded()) search.collapseActionView();
         scroll = true;
         count_board_id = "`board`.`id`+1";
@@ -261,21 +258,21 @@ public class BoardActivity extends AppCompatActivity {
     public void downloadSearchPostList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
+                .build(); // 통신 라이브러리 retrofit 객체 생성
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<List<Post>> call = connectDB.downloadSearchPost(board_title_id, search_count_board_id, search_query);
+        Call<List<Post>> call = connectDB.downloadSearchPost(board_title_id, search_count_board_id, search_query); // List<Post> 형태로 받아옴
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
 
+                // downloadPostList와 동일한 처리
                 List<Post> result = response.body();
                 if (result != null) {
                     if (result.size() != 0) {
                         for (int i = 0; i < result.size(); i++) {
                             search_adapter.add(new Post(result.get(i).getId(), result.get(i).getTitle(), result.get(i).getDescription(), result.get(i).getNumber(), result.get(i).getMajor(), result.get(i).getDate(), result.get(i).getNickname(), result.get(i).getImages(), result.get(i).getRecommend_num()));
-                            Log.d("학번전공은?", result.get(i).getMajor() + result.get(i).getNumber());
                         }
                         if (result.size() < 15) search_scroll = false; // 데이터 다 가져왔을 경우
                         search_count_board_id = result.get(result.size() - 1).getId();
@@ -304,12 +301,13 @@ public class BoardActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search_refresh, menu);
         menu.findItem(R.id.menu_report).setVisible(false);
         menu.findItem(R.id.menu_modify).setVisible(false);
-        menu.findItem(R.id.menu_remove).setVisible(false);
+        menu.findItem(R.id.menu_remove).setVisible(false); // 안쓰는 메뉴들 안보이게설정
         search = menu.findItem(R.id.menu_search);
 
         search.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                // 검색 활성화 시 search_adapter로 등록. 글쓰기 버튼 안보이게 설정
                 search_adapter = new BoardPostTitleAdapter();
                 recycler_view.setAdapter(search_adapter);
                 write.setVisibility(View.INVISIBLE);
@@ -318,6 +316,7 @@ public class BoardActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                // 검색창 축소 시 원래 상태로 돌림
                 recycler_view.setAdapter(board_post_title_adapter);
                 search_adapter = null;
                 write.setVisibility(View.VISIBLE);
@@ -332,6 +331,7 @@ public class BoardActivity extends AppCompatActivity {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                // 검색 완료 버튼 눌렀을 시 검색 진행
                 if(search_adapter != null) {
                     search_adapter = new BoardPostTitleAdapter();
                     recycler_view.setAdapter(search_adapter);

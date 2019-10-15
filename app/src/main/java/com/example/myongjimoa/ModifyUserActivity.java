@@ -67,10 +67,10 @@ public class ModifyUserActivity extends AppCompatActivity {
         date.setText(it.getStringExtra("date"));
         user_id = it.getStringExtra("user_id");
 
-        modify.setOnClickListener(new View.OnClickListener() {
+        modify.setOnClickListener(new View.OnClickListener() { // 수정버튼 이벤트 처리
             @Override
             public void onClick(View v) {
-                if(modify_check) {
+                if(modify_check) { // 수정 상태일때 원상태로돌려줌
                     nickname_text.setText("");
                     major_text.setText("");
                     modify.setText("취소");
@@ -78,6 +78,7 @@ public class ModifyUserActivity extends AppCompatActivity {
                     textSwitch();
                     modify_check = false;
                 } else {
+                    // 수정상태로 들어감
                     modify.setText("수정");
                     submit.setVisibility(View.INVISIBLE);
                     textSwitch();
@@ -85,8 +86,6 @@ public class ModifyUserActivity extends AppCompatActivity {
                 }
             }
         });
-
-
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,14 +111,14 @@ public class ModifyUserActivity extends AppCompatActivity {
         });
     }
 
-    void textSwitch() {
+    void textSwitch() { // ViewSwitcher를 이용하여 TextField를 EditText로 바꿔줌
         ViewSwitcher major_switcher = (ViewSwitcher) findViewById(R.id.major_switcher);
         ViewSwitcher nickname_switcher = (ViewSwitcher) findViewById(R.id.nickname_switcher);
         major_switcher.showNext();
         nickname_switcher.showNext();
     }
 
-    void modifyUserInfo() {
+    void modifyUserInfo() { // 회원정보 수정 진행
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -133,7 +132,7 @@ public class ModifyUserActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
 
-                if(result.equals("success")) {
+                if(result.equals("success")) { // 결과 정상 처리
                     modify.setText("수정");
                     submit.setVisibility(View.INVISIBLE);
                     nickname.setText(nickname_text.getText().toString());
@@ -141,6 +140,7 @@ public class ModifyUserActivity extends AppCompatActivity {
                     textSwitch();
                     modify_check=true;
                 } else {
+                    // 이미 등록된 닉네임일때
                     Toast.makeText(getApplicationContext(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -154,7 +154,7 @@ public class ModifyUserActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() { // 뒤로가기로 Activity 종료할 때 수정된 사용자 닉네임과 전공 담아줌.
         Intent intent = new Intent();
         intent.putExtra("user_nickname", nickname.getText().toString());
         intent.putExtra("user_major", major.getText().toString());

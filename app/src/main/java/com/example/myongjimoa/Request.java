@@ -10,19 +10,18 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class Request { // 중복 코드 static메소드로바꿈
+public class Request {
 
-    static HashMap<String, HashMap<String, String>> myMap = initFilterMap();
+    static HashMap<String, HashMap<String, String>> myMap;
 
-    static HashMap<String, HashMap<String, String>> initFilterMap() {
+    static void initFilterMap() { // 욕설 데이터 저장해줌. 이 메소드는 MainActivity에 진입하였을 때 수행하여 myMap 초기화
 
-        HashMap<String, HashMap<String, String>> map = new HashMap<>();
+        myMap = new HashMap<>();
 
         HashMap<String, String> 개 = new HashMap();
 
         HashMap<String, String> 니 = new HashMap();
         HashMap<String, String> 느 = new HashMap();
-
 
         HashMap<String, String> 닥 = new HashMap();
 
@@ -70,26 +69,24 @@ public class Request { // 중복 코드 static메소드로바꿈
         창.put("창남", "나쁜남자");
         한.put("한남", "한국남자");
 
-        map.put("씹", 씹);
-        map.put("창", 창);
-        map.put("시", 시);
-        map.put("니", 니);
-        map.put("애", 애);
-        map.put("엠", 엠);
-        map.put("존", 존);
-        map.put("지", 지);
-        map.put("병", 병);
-        map.put("씨", 씨);
-        map.put("새", 새);
-        map.put("좆", 좆);
-        map.put("닥", 닥);
-        map.put("느", 느);
-        map.put("한", 한);
-
-        return map;
+        myMap.put("씹", 씹);
+        myMap.put("창", 창);
+        myMap.put("시", 시);
+        myMap.put("니", 니);
+        myMap.put("애", 애);
+        myMap.put("엠", 엠);
+        myMap.put("존", 존);
+        myMap.put("지", 지);
+        myMap.put("병", 병);
+        myMap.put("씨", 씨);
+        myMap.put("새", 새);
+        myMap.put("좆", 좆);
+        myMap.put("닥", 닥);
+        myMap.put("느", 느);
+        myMap.put("한", 한);
     }
 
-    static String filter(String text) {
+    static String filter(String text) { // 비속어 필터와 순화어로 변경하는 과정 수행
         // 12593 ~ 12622 초성 유니코드
         HashMap<String, String> temp = null;
         String str = "";
@@ -115,6 +112,7 @@ public class Request { // 중복 코드 static메소드로바꿈
         }
         return text;
     }
+
 
     static Retrofit getRetrofitScalars() { // 문자열로 받을 때
         return new Retrofit.Builder()

@@ -57,11 +57,11 @@ public class MenuActivity extends AppCompatActivity {
         tabs.addTab(tabs.newTab().setText("화"));
         tabs.addTab(tabs.newTab().setText("수"));
         tabs.addTab(tabs.newTab().setText("목"));
-        tabs.addTab(tabs.newTab().setText("금"));
+        tabs.addTab(tabs.newTab().setText("금")); // 탭 메뉴들 지정해줌
         tabs.setTabGravity(tabs.GRAVITY_FILL);
         view_pager = (ViewPager) findViewById(R.id.food_menu_view_pager);
         new DownloadMenu().execute(url1);
-        new DownloadMenu().execute(url2);
+        new DownloadMenu().execute(url2); // 다운로드 진행
 
     }
 
@@ -74,7 +74,7 @@ public class MenuActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(String... params) { // 명지대학교 홈페이지 접속하여 메뉴 긁어옴
             try {
                 List<String> day = new ArrayList<>();
                 day.add("Monday_Data");
@@ -85,6 +85,7 @@ public class MenuActivity extends AppCompatActivity {
                 Document doc = Jsoup.connect(params[0]).get();
                 Elements e1 = doc.select("table[class=sub]");
                 int i = 0;
+                // 각 url로 명지대학교 홈페이지에서 해당하는 요일 태그 순서대로 메뉴 긁어옴
                 if(params[0].equals(url1)) {
                     for (Element e : e1) {
                         Elements e2 = e.select("div[name=" + day.get(i++) + "]");
@@ -111,17 +112,17 @@ public class MenuActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Void result) { // doInBackground의 실행이 끝난 뒤의 처리
             finished++;
-            if(finished == 2) {
+            if(finished == 2) { // 메뉴 두개 긁어오는 것이 끝나면
                 menu_adapter = new MenuAdapter(day_menu1, day_menu2);
-                view_pager.setAdapter(menu_adapter);
+                view_pager.setAdapter(menu_adapter); // 어댑터 지정
                 tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(view_pager));
-                view_pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+                view_pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs)); // 뷰페이저와 탭 서로 감지하기위하여 리스너 등록
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
                 int day = calendar.get(Calendar.DAY_OF_WEEK);
-                view_pager.setCurrentItem(day-2);
+                view_pager.setCurrentItem(day-2); // 뷰페이저는 현재 요일을 구하여 그 화면으로 초기 지정
             }
         }
     }

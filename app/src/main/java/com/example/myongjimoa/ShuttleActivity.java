@@ -65,7 +65,7 @@ public class ShuttleActivity extends AppCompatActivity {
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul")); // 현재시간 구함
 
         formatDateHour = sdf.format(date);
 
@@ -84,7 +84,7 @@ public class ShuttleActivity extends AppCompatActivity {
         tabs.addTab(tabs.newTab().setText("진입로방향"));
         tabs.setTabGravity(tabs.GRAVITY_FILL);
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(view_pager));
-        view_pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        view_pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs)); // 뷰페이저와 탭 서로 감지할수 있도록 리스너 등록.
 
         String add_intoschool = "";
         String add_intobus = "";
@@ -100,15 +100,15 @@ public class ShuttleActivity extends AppCompatActivity {
             add_citybus += citybus[i] + "\n";
 
         shuttle_adapter = new ShuttleAdapter(add_intoschool, add_citybus, add_intobus);
-        view_pager.setAdapter(shuttle_adapter);
+        view_pager.setAdapter(shuttle_adapter); // 셔틀 시간표로 뷰페이저에 PagerAdapter 지정
 
     }
 
-    public void setShuttleTime() {
+    public void setShuttleTime() { // 가까운 시간대의 셔틀 시간 계산
         CityBus.setText("잠시 후 이용가능한 시내 방향 셔틀이 없습니다.");
         IntoBus.setText("잠시 후 이용가능한 진입로 방향 셔틀이 없습니다.");
         IntoSchool.setText("잠시 후 이용 가능한 학교 방향 셔틀이 없습니다.");
-        if(formatDateHour.compareTo("07:00") >= 0) {
+        if(formatDateHour.compareTo("07:00") >= 0) { // 현재 시간이 범위 내에 있을시 진행
             for (int i = 0; i < citybus.length; i++) {
                 if (formatDateHour.compareTo(citybus[i]) <= 0) {
                     CityBus.setText("잠시 후 이용 가능한 시내 방향 셔틀은 " + citybus[i] + "분 입니다.");

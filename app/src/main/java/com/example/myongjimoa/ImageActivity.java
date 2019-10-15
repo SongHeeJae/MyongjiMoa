@@ -53,22 +53,22 @@ public class ImageActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.image);
         Intent it = getIntent();
-        images = new ArrayList<>(it.getStringArrayListExtra("images"));
+        images = new ArrayList<>(it.getStringArrayListExtra("images")); // 이미지 목록 가져옴
 
         download = (Button) findViewById(R.id.download_image);
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ImageDownload().execute(images.get(pager.getCurrentItem()));
+                new ImageDownload().execute(images.get(pager.getCurrentItem())); // 다운로드 버튼 클릭 시 이미지 다운로드 수행
             }
         });
 
         pager = (ViewPager) findViewById(R.id.image_view_pager);
         adapter = new ImageAdapter(images);
         pager.setAdapter(adapter);
-        pager.setCurrentItem(it.getIntExtra("current", 0));
+        pager.setCurrentItem(it.getIntExtra("current", 0)); // 초기 화면은 이전 화면에서 클릭했던 이미지의 위치로 지정
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
+        indicator.setViewPager(pager); // 동그라미 모양의 indicator 지정. 뷰 페이저의 이동에 따라 업데이트가 수행됨
     }
 
 
@@ -117,26 +117,23 @@ public class ImageActivity extends AppCompatActivity {
         private final String SAVE_FOLDER = "/myongjimoa";
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(String... params) { // 이미지 URL로 접속하여 이미지 다운로드 수행
             //다운로드 경로를 지정
             String savePath = Environment.getExternalStorageDirectory().toString() + SAVE_FOLDER;
-            File dir = new File(savePath); //상위 디렉토리가 존재하지 않을 경우 생성
+            File dir = new File(savePath);
             if (!dir.exists()) {
-                dir.mkdirs();
-            } //파일 이름 :날짜_시간
+                dir.mkdirs(); //디렉토리가 존재하지 않을 경우 디렉토리 생성
+            }
 
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            String format_date = sdf.format(date);
+            String format_date = sdf.format(date); // 현재 시간 구함. 이미지의 제목으로 사용
 
             fileName = "MM_" + format_date;
-            //웹 서버 쪽 파일이 있는 경로
-            String fileUrl = params[0];
-            //다운로드 폴더에 동일한 파일명이 존재하는지 확인
-            //if (new File(savePath + "/" + fileName).exists() == false) {
-            //} else {
-            //}
+
+            String fileUrl = params[0]; // 웹에 파일이 있는 경로
+
             String localPath = savePath + "/" + fileName + ".jpg";
             try {
                 URL imgUrl = new URL(fileUrl);
@@ -165,11 +162,10 @@ public class ImageActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            super.onPostExecute(result); //저장한 이미지 열기
-
+            super.onPostExecute(result);
             String targetDir = Environment.getExternalStorageDirectory().toString() + SAVE_FOLDER;
-            File file = new File(targetDir + "/" + fileName + ".jpg"); //type 지정 (이미지)
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+            File file = new File(targetDir + "/" + fileName + ".jpg"); // 이미지 파일 지정
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file))); // 생성한 파일 업데이트
 
             Toast.makeText(getApplicationContext(), "다운로드가 완료되었습니다.", Toast.LENGTH_SHORT).show();
         }

@@ -59,7 +59,7 @@ public class ReviewActivity extends AppCompatActivity {
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
 
-        order = "score";
+        order = "score"; // 정렬 방식 default로 점수 순으로 지정
 
         gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
@@ -88,7 +88,7 @@ public class ReviewActivity extends AppCompatActivity {
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Restaurant restaurant;
-                    if (search.isActionViewExpanded()) restaurant = search_adapter.getItem(currentPos);
+                    if (search.isActionViewExpanded()) restaurant = search_adapter.getItem(currentPos); // 검색모드일때의 아이템
                     else restaurant = restaurant_adapter.getItem(currentPos);
                     Intent it = new Intent(ReviewActivity.this, ReviewListActivity.class);
                     it.putExtra("user_id", user_id);
@@ -107,7 +107,7 @@ public class ReviewActivity extends AppCompatActivity {
                     it.putExtra("review_num", restaurant.getReview_num() + "");
                     it.putExtra("score", restaurant.getScore() + "");
                     it.putExtra("user_nickname", user_nickname);
-                    startActivity(it);
+                    startActivity(it); // ReviewListActivity로 화면 전환
                     return true;
                 }
 
@@ -134,11 +134,11 @@ public class ReviewActivity extends AppCompatActivity {
     public void downloadRestaurantList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
+                .build(); // 통신 라이브러리 retrofit 객체 생성
 
         ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<List<Restaurant>> call = connectDB.downloadRestaurant(category, order);
+        Call<List<Restaurant>> call = connectDB.downloadRestaurant(category, order); // List<Restaurant> 형태로 받아옴
         call.enqueue(new Callback<List<Restaurant>>() {
             @Override
             public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
@@ -146,10 +146,9 @@ public class ReviewActivity extends AppCompatActivity {
                 List<Restaurant> result = response.body();
                 if(result != null) {
                     if (result.size() != 0) {
-
                         for (int i = 0; i < result.size(); i++) {
                             restaurant_adapter.add(new Restaurant(result.get(i).getId(), result.get(i).getTitle(), result.get(i).getCategory(), result.get(i).getTelephone(), result.get(i).getHomepage(), result.get(i).getAddress(), result.get(i).getMapx(), result.get(i).getMapy(), result.get(i).getRestaurant_id(), result.get(i).getTime(), result.get(i).getMenu(), result.get(i).getImage(), result.get(i).getReview_num(), result.get(i).getScore()));
-                        }
+                        } // 가져온 데이터 adapter에 등록
                     }
                 }
             }
@@ -157,7 +156,6 @@ public class ReviewActivity extends AppCompatActivity {
             public void onFailure(Call<List<Restaurant>> call, Throwable t) {
                 Log.d("실패", t.getMessage());
             }
-
         });
     }
 
@@ -248,6 +246,7 @@ public class ReviewActivity extends AppCompatActivity {
         search.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                // 검색창 확장되었을때의 어댑터 처리
                 search_adapter = new RestaurantAdapter();
                 recycler_view.setAdapter(search_adapter);
                 return true;
@@ -255,6 +254,7 @@ public class ReviewActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                // 검색창 축소되면 원래의 어댑터로 돌림
                 recycler_view.setAdapter(restaurant_adapter);
                 search_adapter = null;
                 return true;
@@ -273,20 +273,21 @@ public class ReviewActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                search_adapter.clear();
-                if(newText.equals("")) {
+                // 텍스트가 입력될때 마다 어댑터에서 검색 진행
+                search_adapter.clear(); // 초기화하고
+                if(newText.equals("")) { // 입력값 없을땐 모든 값
                     search_adapter.addAll(restaurant_adapter.getItems());
                 } else {
+                    // 입력값 있을때
                     for(int i=0; i<restaurant_adapter.getItems().size(); i++) {
                         if(restaurant_adapter.getItem(i).getTitle().toLowerCase().contains(newText)) {
-                            search_adapter.add(restaurant_adapter.getItem(i));
+                            search_adapter.add(restaurant_adapter.getItem(i)); // 어댑터의 해당하는 아이템의 제목이 있을경우 search_adapter에 담아줌
                         }
                     }
                 }
                 return true;
             }
         });
-
         return true;
     }
 

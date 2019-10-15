@@ -38,7 +38,7 @@ public class ReviewMainActivity extends AppCompatActivity {
             public void onClick(View view ) {
                 Intent it = new Intent(ReviewMainActivity.this, ReviewActivity.class);
                 it.putExtra("user_id", user_id);
-                switch(view.getId()) {
+                switch(view.getId()) { // 각각의 카테고리 눌렀을때의 처리. 뒤에 value로 주는것은 서버 카테고리 테이블 명
                     case R.id.hansik :
                         it.putExtra("category", "hansik_food");
                         break;
@@ -103,7 +103,7 @@ public class ReviewMainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                finish(); // 뒤로가기 버튼 종료 처리
                 return true;
         }
         return super.onOptionsItemSelected(item);
