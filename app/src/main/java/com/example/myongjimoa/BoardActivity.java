@@ -157,12 +157,8 @@ public class BoardActivity extends AppCompatActivity {
 
 
     public void downloadPostList() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create()) // JSON형태로 받아옴
-                .build(); // 통신 라이브러리 retrofit 객체 생성
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<List<Post>> call = connectDB.downloadPost(board_title_id, count_board_id); // List<Post> 형태로 받아옴
         call.enqueue(new Callback<List<Post>>() {
             @Override
@@ -256,12 +252,8 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     public void downloadSearchPostList() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
-                .build(); // 통신 라이브러리 retrofit 객체 생성
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<List<Post>> call = connectDB.downloadSearchPost(board_title_id, search_count_board_id, search_query); // List<Post> 형태로 받아옴
         call.enqueue(new Callback<List<Post>>() {
             @Override

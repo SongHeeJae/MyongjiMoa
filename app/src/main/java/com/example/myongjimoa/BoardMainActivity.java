@@ -117,12 +117,8 @@ public class BoardMainActivity extends AppCompatActivity {
     }
 
     void downloadBoardList() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
-                .build(); // retrofit 통신 라이브러리 객체 생성
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<List<Board>> call = connectDB.downloadBoard(); // List<Board> 형태로 받아옴
         call.enqueue(new Callback<List<Board>>() {
             @Override

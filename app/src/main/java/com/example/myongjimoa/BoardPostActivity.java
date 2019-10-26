@@ -176,12 +176,8 @@ public class BoardPostActivity extends AppCompatActivity {
     }
 
     public void downloadComment() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
-                .build(); // 통신 라이브러리 retrofit객체 생성
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<List<Comment>> call = connectDB.downloadComments(post.getId());
         call.enqueue(new Callback<List<Comment>>() {
             @Override
@@ -213,12 +209,8 @@ public class BoardPostActivity extends AppCompatActivity {
     }
 
     public void recommending() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.recommendPost(post.getId(), user_id);
         call.enqueue(new Callback<String>() {
             @Override
@@ -263,19 +255,8 @@ public class BoardPostActivity extends AppCompatActivity {
 
     public void commenting() {
 
-
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        String format_date = sdf.format(date); // 서버에 전송할 현재 시간
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
-
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.writeComment(post.getId(), user_id, write_comment.getText().toString(), format_date);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        Call<String> call = connectDB.writeComment(post.getId(), user_id, write_comment.getText().toString(), Request.getTime("yyyy-MM-dd HH:mm:ss"));
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -485,12 +466,8 @@ public class BoardPostActivity extends AppCompatActivity {
     }
 
     public void removeCurrentPost() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.removePost(post.getId());
         call.enqueue(new Callback<String>() {
             @Override
@@ -502,21 +479,11 @@ public class BoardPostActivity extends AppCompatActivity {
                         new Thread(new Runnable() { // 메인스레드에서는 통신작업을 수행할 수 없어서 새로운 스레드 생성. 데이터베이스 서버에서의 삭제가 끝난뒤, 파일 서버에서의 이미지 삭제 이어서 진행
                             @Override
                             public void run() {
-                                // Amazon Cognito 인증 공급자 초기화
-                                CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                                        BoardPostActivity.this,
-                                        "ap-northeast-2:9c5bb2b0-44a8-4a1c-944a-98d817d44e82", // 자격 증명 풀 ID
-                                        Regions.AP_NORTHEAST_2 // 리전
-                                );
-
-                                AmazonS3 s3 = new AmazonS3Client(credentialsProvider, Region.getRegion(Regions.AP_NORTHEAST_2));
-                                s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
-
                                 List<DeleteObjectsRequest.KeyVersion> key = new ArrayList<>();
                                 for (int i = 0; i < post.getImages().size(); i++) {
                                     key.add(new DeleteObjectsRequest.KeyVersion("board_images/" + post.getImages().get(i)));
                                 }
-                                s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
+                                Request.getAmazonS3(BoardPostActivity.this).deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
                             }
                         }).start();
                     }
@@ -533,12 +500,8 @@ public class BoardPostActivity extends AppCompatActivity {
     }
 
     public void reportCurrentPost() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.reportPost(post.getId(), user_id);
         call.enqueue(new Callback<String>() {
             @Override
@@ -583,23 +546,17 @@ public class BoardPostActivity extends AppCompatActivity {
     }
 
     public void removeCurrentComment(String comment_id) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.removeComment(comment_id);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-
                 String result = response.body().trim();
                 if (result.equals("success")) { // 정상 삭제 수행시 댓글 reload
                     reloadComment();
                 }
             }
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.d("실패", t.getMessage());
@@ -608,12 +565,8 @@ public class BoardPostActivity extends AppCompatActivity {
     }
 
     public void reportCurrentComment(final String comment_id) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.reportComment(comment_id, user_id);
         call.enqueue(new Callback<String>() {
             @Override

@@ -140,31 +140,18 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
     public void imageUpload() {
         if (review_write_image_adapter.getItemCount() > 0) {
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            String format_date = sdf.format(date); // 현재시간 구해줌. 이미지의 경로에 사용
-
-            // Amazon Cognito 인증 공급자 초기화
-            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                    this,
-                    "ap-northeast-2:9c5bb2b0-44a8-4a1c-944a-98d817d44e82", // 자격 증명 풀 ID
-                    Regions.AP_NORTHEAST_2 // 리전
-            );
 
             TransferObserver observer;
-            AmazonS3 s3 = new AmazonS3Client(credentialsProvider, Region.getRegion(Regions.AP_NORTHEAST_2));
-            TransferUtility transfer_utility = TransferUtility.builder().s3Client(s3).context(this).build();
-            s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
+            TransferUtility transfer_utility = TransferUtility.builder().s3Client(Request.getAmazonS3(ReviewWriteActivity.this)).context(this).build();
 
             for (int i = 0; i < review_write_image_adapter.getItemCount(); i++) {
-                String name = restaurant_id + "_"  + user_id + "_" + format_date + "_" + i;
+                String name = restaurant_id + "_"  + user_id + "_" + Request.getTime("yyyyMMddHHmmss") + "_" + i;
                 File file = new File(review_write_image_adapter.getItem(i)); // 중복안되는 이름으로 파일 생성
                 observer = transfer_utility.upload( // 서버에 업로드
                         "myongjimoa/review_images",
                         name,
                         file
-                ); // 파일 여러개 동시 업로드하는거 찾아야됨
+                );
                 path.add(name);
                 observer.setTransferListener(new TransferListener() {
                     @Override
@@ -195,18 +182,8 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
     public void reviewUpload(ArrayList<String> path) {
 
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        String format_date = sdf.format(date); // 현재시간구함 서버에 전송
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
-
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.writeReview(restaurant_id, Request.filter(write_description.getText().toString()), user_id, rating_bar.getRating(), format_date, path);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        Call<String> call = connectDB.writeReview(restaurant_id, Request.filter(write_description.getText().toString()), user_id, rating_bar.getRating(), Request.getTime("yyyy-MM-dd HH:mm:ss"), path);
 
         call.enqueue(new Callback<String>() {
             @Override

@@ -188,12 +188,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
 
     public void downloadReviewList() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
-                .build(); // 통신 라이브러리 retrofit 객체 생성
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<ReviewResult> call = connectDB.downloadReview(restaurant.getId(), count_review_id); // ReviewResult 형태로 받아옴
         call.enqueue(new Callback<ReviewResult>() {
             @Override
@@ -446,12 +442,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void reportCurrentReview(final String review_id, final int position) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.reportReview(review_id, user_id);
         call.enqueue(new Callback<String>() {
             @Override
@@ -495,12 +487,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void removeCurrentReview(String review_id, final int position) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.removeReview(review_id, restaurant.getId());
         call.enqueue(new Callback<String>() {
             @Override
@@ -514,22 +502,13 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                // Amazon Cognito 인증 공급자 초기화
-                                CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                                        ReviewListActivity.this,
-                                        "ap-northeast-2:9c5bb2b0-44a8-4a1c-944a-98d817d44e82", // 자격 증명 풀 ID
-                                        Regions.AP_NORTHEAST_2 // 리전
-                                );
-
-                                AmazonS3 s3 = new AmazonS3Client(credentialsProvider, Region.getRegion(Regions.AP_NORTHEAST_2));
-                                s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
 
                                 List<DeleteObjectsRequest.KeyVersion> key = new ArrayList<>();
                                 for (int i = 0; i < remove_list.size(); i++) {
                                     key.add(new DeleteObjectsRequest.KeyVersion("review_images/" + remove_list.get(i)));
                                 } // 키 등록해준 후
 
-                                s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
+                                Request.getAmazonS3(ReviewListActivity.this).deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
                                 // 해당 버킷의 이미지 삭제 진행
                             }
                         }).start();

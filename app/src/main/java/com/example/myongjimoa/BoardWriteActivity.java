@@ -157,25 +157,13 @@ public class BoardWriteActivity extends AppCompatActivity {
 
         if (board_write_image_adapter.getItemCount() - modify_image_num > 0) {
             // adapter에 이미지 개수 - 수정할때 원래 가져온개수 만큼 업로드
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            String format_date = sdf.format(date); // 현재 시간 구해줌
-
-            // Amazon Cognito 인증 공급자 초기화
-            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                    this,
-                    "ap-northeast-2:9c5bb2b0-44a8-4a1c-944a-98d817d44e82", // 자격 증명 풀 ID
-                    Regions.AP_NORTHEAST_2 // 리전
-            );
 
             TransferObserver observer;
-            AmazonS3 s3 = new AmazonS3Client(credentialsProvider, Region.getRegion(Regions.AP_NORTHEAST_2));
-            TransferUtility transfer_utility = TransferUtility.builder().s3Client(s3).context(this).build();
-            s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
+            
+            TransferUtility transfer_utility = TransferUtility.builder().s3Client(Request.getAmazonS3(BoardWriteActivity.this)).context(this).build();
 
             for (int i = modify_image_num; i < board_write_image_adapter.getItemCount(); i++) {
-                String name = user_id + "_" + format_date + "_" + i; // 관리자가 수정했을시 감지가능
+                String name = user_id + "_" + Request.getTime("yyyyMMddHHmmss") + "_" + i; // 관리자가 수정했을시 감지가능
                 File file = new File(board_write_image_adapter.getItem(i));
                 observer = transfer_utility.upload(
                         "myongjimoa/board_images",
@@ -213,18 +201,8 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     public void posting(ArrayList<String> path) {
 
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        String format_date = sdf.format(date); // 포스팅할 현재 시간구함
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열로 받기 위함.
-                .build();
-
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.writePost(board_title_id, user_id, Request.filter(write_title.getText().toString()), Request.filter(write_description.getText().toString()), path, format_date);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        Call<String> call = connectDB.writePost(board_title_id, user_id, Request.filter(write_title.getText().toString()), Request.filter(write_description.getText().toString()), path, Request.getTime("yyyy-MM-dd HH:mm:ss"));
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -356,14 +334,7 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     public void modify(ArrayList<String> path) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받아옴
-                .build();
-
-        Log.d("데이터는?", board_id + Request.filter(write_title.getText().toString()) + Request.filter(write_description.getText().toString()) + path + delete_images);
-
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<Post> call = connectDB.modifyPost(board_id, Request.filter(write_title.getText().toString()), Request.filter(write_description.getText().toString()), path, delete_images);
         call.enqueue(new Callback<Post>() {
             @Override
@@ -374,21 +345,12 @@ public class BoardWriteActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                                    BoardWriteActivity.this,
-                                    "ap-northeast-2:9c5bb2b0-44a8-4a1c-944a-98d817d44e82", // 자격 증명 풀 ID
-                                    Regions.AP_NORTHEAST_2 // 리전
-                            );
-
-                            AmazonS3 s3 = new AmazonS3Client(credentialsProvider, Region.getRegion(Regions.AP_NORTHEAST_2));
-                            s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
-
+                            
                             List<DeleteObjectsRequest.KeyVersion> key = new ArrayList<>();
                             for (int i = 0; i < delete_images.size(); i++) {
                                 key.add(new DeleteObjectsRequest.KeyVersion("board_images/" + delete_images.get(i)));
                             }
-
-                            s3.deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
+                            Request.getAmazonS3(BoardWriteActivity.this).deleteObjects(new DeleteObjectsRequest("myongjimoa").withKeys(key));
                         }
                     }).start();
                 }

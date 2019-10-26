@@ -119,12 +119,7 @@ public class ModifyUserActivity extends AppCompatActivity {
     }
 
     void modifyUserInfo() { // 회원정보 수정 진행
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.modifyUser(user_id, nickname_text.getText().toString().trim(), major_text.getText().toString().trim());
         call.enqueue(new Callback<String>() {
             @Override
@@ -139,6 +134,10 @@ public class ModifyUserActivity extends AppCompatActivity {
                     major.setText(major_text.getText().toString());
                     textSwitch();
                     modify_check=true;
+                    Intent intent = new Intent();
+                    intent.putExtra("user_nickname", nickname.getText().toString());
+                    intent.putExtra("user_major", major.getText().toString());
+                    setResult(RESULT_OK, intent);
                 } else {
                     // 이미 등록된 닉네임일때
                     Toast.makeText(getApplicationContext(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
@@ -151,15 +150,5 @@ public class ModifyUserActivity extends AppCompatActivity {
             }
 
         });
-    }
-
-    @Override
-    public void onBackPressed() { // 뒤로가기로 Activity 종료할 때 수정된 사용자 닉네임과 전공 담아줌.
-        Intent intent = new Intent();
-        intent.putExtra("user_nickname", nickname.getText().toString());
-        intent.putExtra("user_major", major.getText().toString());
-        setResult(RESULT_OK, intent);
-        finish();
-        super.onBackPressed();
     }
 }

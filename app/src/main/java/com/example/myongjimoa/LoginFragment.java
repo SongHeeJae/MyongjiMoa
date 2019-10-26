@@ -52,12 +52,8 @@ public class LoginFragment extends Fragment {
     }
 
     public void mainLogin() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(GsonConverterFactory.create()) // JSON 형태로 받음
-                .build(); // 통신 라이브러리를 이용한 객체 생성
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<User> call = connectDB.userLogin(user_email.getText().toString(), user_password.getText().toString());
         call.enqueue(new Callback<User>() {
             @Override

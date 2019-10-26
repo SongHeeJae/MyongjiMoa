@@ -47,12 +47,9 @@ public class ShuttleActivity extends AppCompatActivity {
             "17:55", "18:05", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00",
             "20:15", "20:40", "21:00", "21:20"};
 
-    TextView dateNow;
     TextView CityBus;
     TextView IntoBus;
     TextView IntoSchool;
-
-    String formatDateHour;
 
     ViewPager view_pager;
     TabLayout tabs;
@@ -63,18 +60,10 @@ public class ShuttleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shuttle);
 
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul")); // 현재시간 구함
-
-        formatDateHour = sdf.format(date);
-
-        dateNow = (TextView) findViewById(R.id.dateNow);
         CityBus = (TextView) findViewById(R.id.CityBus_text);
         IntoBus = (TextView) findViewById(R.id.IntoBus_text);
         IntoSchool = (TextView) findViewById(R.id.IntoSchool_text);
 
-        dateNow.setText("현재 시간은 " + formatDateHour + "분 입니다.");
         setShuttleTime();
 
         view_pager = (ViewPager) findViewById(R.id.shuttle_view_pager);
@@ -101,36 +90,37 @@ public class ShuttleActivity extends AppCompatActivity {
 
         shuttle_adapter = new ShuttleAdapter(add_intoschool, add_citybus, add_intobus);
         view_pager.setAdapter(shuttle_adapter); // 셔틀 시간표로 뷰페이저에 PagerAdapter 지정
-
     }
 
     public void setShuttleTime() { // 가까운 시간대의 셔틀 시간 계산
+
+        String time = Request.getTime("HH:mm");
+
         CityBus.setText("잠시 후 이용가능한 시내 방향 셔틀이 없습니다.");
         IntoBus.setText("잠시 후 이용가능한 진입로 방향 셔틀이 없습니다.");
         IntoSchool.setText("잠시 후 이용 가능한 학교 방향 셔틀이 없습니다.");
-        if(formatDateHour.compareTo("07:00") >= 0) { // 현재 시간이 범위 내에 있을시 진행
-            for (int i = 0; i < citybus.length; i++) {
-                if (formatDateHour.compareTo(citybus[i]) <= 0) {
-                    CityBus.setText("잠시 후 이용 가능한 시내 방향 셔틀은 " + citybus[i] + "분 입니다.");
-                    break;
-                }
-            }
-
-            for (int i = 0; i < intobus.length; i++) {
-                if (formatDateHour.compareTo(intobus[i]) <= 0) {
-                    IntoBus.setText("잠시 후 이용 가능한 진입로 방향 셔틀은 " + intobus[i] + "분 입니다.");
-                    break;
-                }
-            }
-
-            for (int i = 0; i < intoschool.length; i++) {
-                if (formatDateHour.compareTo(intoschool[i]) <= 0) {
-                    IntoSchool.setText("잠시 후 이용 가능한 학교 방향 셔틀은 " + intoschool[i] + "분 입니다.");
-                    break;
-                }
-            }
-        }
+        // pos가 시간표 목록의 크기보다 크다면, 오늘은 현재 셔틀 정보 없음
+        int pos = binarySearch(citybus, time);
+        if(pos < citybus.length) CityBus.setText("잠시 후 이용 가능한 시내 방향 셔틀은 " + citybus[pos] + "분 입니다.");
+        pos = binarySearch(intobus, time);
+        if(pos < intobus.length) IntoBus.setText("잠시 후 이용 가능한 진입로 방향 셔틀은 " + intobus[pos] + "분 입니다.");
+        pos = binarySearch(intoschool, time);
+        if(pos < intoschool.length) IntoSchool.setText("잠시 후 이용 가능한 학교 방향 셔틀은 " + intoschool[pos] + "분 입니다.");
     }
+
+    public int binarySearch(String arr[], String searchValue) { // 시간표 목록에서 가까운 시간대 찾음
+        int center = 0;
+        int first = 0;
+        int last = arr.length - 1;
+        while(first <= last) {
+            center = (first + last) / 2;
+            if (searchValue.compareTo(arr[center]) == 0) return center;
+            else if (searchValue.compareTo(arr[center]) > 0) first = center + 1;
+            else last = center - 1;
+        }
+        return first > center ? center + 1: center; // 못찾았을 때 first가 더 크게 종료되었다면 center + 1, 아니라면 center가 시간표의 위치
+    }
+
 
     public class ShuttleAdapter extends PagerAdapter {
 

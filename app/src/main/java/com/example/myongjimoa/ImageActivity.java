@@ -125,12 +125,8 @@ public class ImageActivity extends AppCompatActivity {
                 dir.mkdirs(); //디렉토리가 존재하지 않을 경우 디렉토리 생성
             }
 
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            String format_date = sdf.format(date); // 현재 시간 구함. 이미지의 제목으로 사용
 
-            fileName = "MM_" + format_date;
+            fileName = "MM_" + Request.getTime("yyyyMMddHHmmss");
 
             String fileUrl = params[0]; // 웹에 파일이 있는 경로
 

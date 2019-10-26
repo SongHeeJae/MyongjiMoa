@@ -62,20 +62,8 @@ public class AddUserFragment extends Fragment {
     }
 
     public void newUser() {
-
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        String format_date = sdf.format(date); // 회원 가입 진행시 서버에 전송할 현재 시간 구함.
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectDB.Base_URL)
-                .addConverterFactory(ScalarsConverterFactory.create()) // 문자열 형태로 받음.
-                .build();
-
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.addUser(user_email.getText().toString().trim(), user_password.getText().toString(), user_nickname.getText().toString().trim(), user_major.getText().toString().trim(), user_number.getText().toString().trim(), user_name.getText().toString().trim(), format_date);
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        Call<String> call = connectDB.addUser(user_email.getText().toString().trim(), user_password.getText().toString(), user_nickname.getText().toString().trim(), user_major.getText().toString().trim(), user_number.getText().toString().trim(), user_name.getText().toString().trim(), Request.getTime("yyyy-MM-dd HH:mm:ss"));
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

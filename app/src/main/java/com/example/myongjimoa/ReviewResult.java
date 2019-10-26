@@ -13,7 +13,7 @@ public class ReviewResult {
         this.list = new ArrayList<>();
         this.score = score;
         this.review_num = review_num;
-        list.addAll(list);
+        this.list.addAll(list);
     }
 
     public float getScore() {
