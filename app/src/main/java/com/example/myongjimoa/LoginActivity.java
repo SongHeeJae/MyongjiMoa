@@ -2,6 +2,8 @@
 
 import android.os.Bundle;
 //dd
+
+//안녕하세요
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
