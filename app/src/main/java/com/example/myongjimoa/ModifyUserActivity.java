@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -33,9 +35,9 @@ public class ModifyUserActivity extends AppCompatActivity {
     TextView name;
     TextView date;
     EditText nickname_text;
-    EditText major_text;
     Button submit;
     String user_id;
+    Spinner mod_majorSpinner;
     boolean modify_check;
 
     @Override
@@ -55,7 +57,6 @@ public class ModifyUserActivity extends AppCompatActivity {
         name = (TextView) findViewById(R.id.modify_user_name);
         date = (TextView) findViewById(R.id.modify_user_date);
         nickname_text = (EditText) findViewById(R.id.edit_user_nickname);
-        major_text = (EditText) findViewById(R.id.edit_user_major);
         submit = (Button) findViewById(R.id.modify_submit);
 
         Intent it = getIntent();
@@ -68,11 +69,18 @@ public class ModifyUserActivity extends AppCompatActivity {
         user_id = it.getStringExtra("user_id");
 
         modify.setOnClickListener(new View.OnClickListener() { // 수정버튼 이벤트 처리
+
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // 수정 버튼 눌렀을 때
+
+                mod_majorSpinner = (Spinner)findViewById(R.id.spinner_major);
+                ArrayAdapter majorAdapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.major_field, android.R.layout.simple_spinner_item);
+                majorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mod_majorSpinner.setAdapter(majorAdapter);
+
+                Log.d("modify check", "" + modify_check);
                 if(modify_check) { // 수정 상태일때 원상태로돌려줌
                     nickname_text.setText("");
-                    major_text.setText("");
                     modify.setText("취소");
                     submit.setVisibility(View.VISIBLE);
                     textSwitch();
@@ -90,23 +98,24 @@ public class ModifyUserActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("수정버튼 누른 화면찾기", "22222");
                 AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
                 builder.setTitle("알림")
                         .setMessage("회원 정보를 수정하시겠습니까?")
                         .setCancelable(false)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        modifyUserInfo();
-                    }
-                })
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                modifyUserInfo();
+                            }
+                        })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                })
-                .show();
+                            }
+                        })
+                        .show();
             }
         });
     }
@@ -118,9 +127,14 @@ public class ModifyUserActivity extends AppCompatActivity {
         nickname_switcher.showNext();
     }
 
-    void modifyUserInfo() { // 회원정보 수정 진행
-        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
-        Call<String> call = connectDB.modifyUser(user_id, nickname_text.getText().toString().trim(), major_text.getText().toString().trim());
+    void modifyUserInfo() { // 회원정보 수정 진행 // 서버에서
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ConnectDB.Base_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        ConnectDB connectDB = retrofit.create(ConnectDB.class);
+        Call<String> call = connectDB.modifyUser(user_id, nickname_text.getText().toString().trim(), mod_majorSpinner.getSelectedItem().toString());
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -131,13 +145,9 @@ public class ModifyUserActivity extends AppCompatActivity {
                     modify.setText("수정");
                     submit.setVisibility(View.INVISIBLE);
                     nickname.setText(nickname_text.getText().toString());
-                    major.setText(major_text.getText().toString());
+                    major.setText(mod_majorSpinner.getSelectedItem().toString());
                     textSwitch();
                     modify_check=true;
-                    Intent intent = new Intent();
-                    intent.putExtra("user_nickname", nickname.getText().toString());
-                    intent.putExtra("user_major", major.getText().toString());
-                    setResult(RESULT_OK, intent);
                 } else {
                     // 이미 등록된 닉네임일때
                     Toast.makeText(getApplicationContext(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
@@ -150,5 +160,15 @@ public class ModifyUserActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() { // 뒤로가기로 Activity 종료할 때 수정된 사용자 닉네임과 전공 담아줌.
+        Intent intent = new Intent();
+        intent.putExtra("user_nickname", nickname.getText().toString());
+        intent.putExtra("user_major", major.getText().toString());
+        setResult(RESULT_OK, intent);
+        finish();
+        super.onBackPressed();
     }
 }
