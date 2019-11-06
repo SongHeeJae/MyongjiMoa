@@ -3,7 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +15,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="이메일을 입력해주세요."
+            android:inputType="textEmailAddress"
             android:id="@+id/user_email"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="15dp"
+            android:focusableInTouchMode="false"
+            android:text="Tip : 이메일은 Email 형식이어야 하며 중복될 수 없습니다." />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
@@ -28,10 +46,46 @@
             android:layout_height="wrap_content"
             android:text="비밀번호 :"/>
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:hint="비밀번호를 입력해주세요"
-            android:id="@+id/user_password"/>
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:id="@+id/user_password" />
+        <CheckBox
+            android:id="@+id/etpw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="보이기" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호 확인:"/>
+        <EditText
+            android:layout_width="235dp"
+            android:layout_height="wrap_content"
+            android:hint="비밀번호를 다시 입력해주세요"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:id="@+id/re_password" />
+        <CheckBox
+            android:id="@+id/etpw2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="보이기" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
@@ -53,15 +107,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="15dp"
+            android:focusableInTouchMode="false"
+            android:text="Tip : 닉네임은 중복될 수 없습니다." />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="학과 : "/>
-        <EditText
+            android:text="학과 선택 "/>
+        <Spinner
+            android:id="@+id/spinner_major"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="학과를 입력해주세요"
-            android:id="@+id/user_major"/>
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
@@ -75,8 +152,27 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:hint="학번을 입력해주세요."
             android:id="@+id/user_number"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="15dp"
+            android:focusableInTouchMode="false"
+            android:text="Tip : 학번은 17, 16 등의 형식으로 입력하세요." />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
@@ -95,11 +191,8 @@
     </LinearLayout>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="제출"
+        android:text="회원가입"
         android:id="@+id/submit"/>
-
-
-
 </LinearLayout>
