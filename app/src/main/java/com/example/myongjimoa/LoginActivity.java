@@ -1,9 +1,9 @@
 ﻿package com.example.myongjimoa;
 
-import android.os.Bundle;
-//dd
+// gdgdgdd
 
-//안녕하세요
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
