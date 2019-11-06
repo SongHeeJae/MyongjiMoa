@@ -1,4 +1,4 @@
-﻿package com.example.myongjimoa;
+package com.example.myongjimoa;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
