@@ -1,7 +1,7 @@
-package com.example.myongjimoa;
+﻿package com.example.myongjimoa;
 
 import android.os.Bundle;
-
+//dd
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
