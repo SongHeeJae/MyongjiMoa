@@ -1,7 +1,7 @@
 package com.example.myongjimoa;
 
 import java.util.ArrayList;
-
+// ㅇㅇ
 public class Post {
     String id;
     String title;

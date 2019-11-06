@@ -1,9 +1,13 @@
 ﻿package com.example.myongjimoa;
 
 import android.os.Bundle;
-//dd
+// git add .
+////// git commit -m "ㅁㄴㅇㄹ메시지입력"
+////// git push
+// git commit -am "ㅇㅇ"
 
-//안녕하세요
+// git status 현재파일들 수정된거
+// git log 버전에 로그들
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
