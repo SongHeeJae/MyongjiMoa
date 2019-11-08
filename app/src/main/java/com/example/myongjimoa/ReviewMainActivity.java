@@ -27,10 +27,6 @@ public class ReviewMainActivity extends AppCompatActivity {
     Button gogi;
     Button yangsik;
     Button all;
-    TextView chat1;
-    TextView chat2;
-    TextView chat3;
-    TextView chat4;
 
     String user_id;
     String user_nickname;
