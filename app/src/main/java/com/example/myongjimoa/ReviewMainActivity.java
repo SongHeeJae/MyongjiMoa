@@ -2,18 +2,10 @@ package com.example.myongjimoa;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ReviewMainActivity extends AppCompatActivity {
 
@@ -27,7 +19,6 @@ public class ReviewMainActivity extends AppCompatActivity {
     Button gogi;
     Button yangsik;
     Button all;
-
     String user_id;
     String user_nickname;
 
@@ -35,8 +26,6 @@ public class ReviewMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review);
-
-
 
         Button.OnClickListener onClickListener = new View.OnClickListener() {
             @Override

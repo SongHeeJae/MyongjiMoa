@@ -1,6 +1,7 @@
 package com.example.myongjimoa;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -162,6 +163,7 @@ public class ReviewActivity extends AppCompatActivity {
         List<Restaurant> items = new ArrayList<>();
 
         class ViewHolder extends RecyclerView.ViewHolder {
+
             ImageView image;
             TextView title;
             TextView category;
@@ -169,7 +171,6 @@ public class ReviewActivity extends AppCompatActivity {
             TextView address;
             TextView review_num;
             RatingBar rating_bar;
-
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -183,16 +184,18 @@ public class ReviewActivity extends AppCompatActivity {
             }
 
             public void setData(Restaurant data) {
-                title.setText(data.getTitle());
-                category.setText(data.getCategory());
-                score.setText(data.getScore() + "");
-                address.setText(data.getAddress());
-                review_num.setText(data.getReview_num()+ "");
-                rating_bar.setRating(data.getScore());
+
                 Glide.with(ReviewActivity.this)
                         .load(data.getImage())
                         .override(500)
+                        .placeholder(R.drawable.noimage)
                         .into(image);
+                title.setText(data.getTitle());
+                category.setText(data.getCategory());
+                score.setText("별점 " + data.getScore() + "점, ");
+                address.setText(data.getAddress());
+                review_num.setText(data.getReview_num()+ "개");
+                rating_bar.setRating(data.getScore());
             }
         }
 
