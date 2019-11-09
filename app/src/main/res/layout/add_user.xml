@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_gravity="center"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="20dp" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="이메일 : "/>
+
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:textAlignment="center"
+            android:background="@drawable/rounded"
             android:hint="이메일을 입력해주세요."
             android:inputType="textEmailAddress"
             android:id="@+id/user_email"/>
@@ -25,6 +31,7 @@
         android:orientation="horizontal">
         <EditText
             android:layout_width="match_parent"
+            android:textAlignment="center"
             android:layout_height="40dp"
             android:textSize="15dp"
             android:focusableInTouchMode="false"
@@ -33,72 +40,76 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="비밀번호 :"/>
+
         <EditText
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:textAlignment="center"
+            android:background="@drawable/rounded"
             android:hint="비밀번호를 입력해주세요"
             android:inputType="textPassword"
             android:singleLine="true"
             android:id="@+id/user_password" />
         <CheckBox
             android:id="@+id/etpw"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="보이기" />
+            android:layout_width="70dp"
+            android:layout_height="18dp"
+            android:text="보기" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp" >
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="비밀번호 확인:"/>
+
         <EditText
-            android:layout_width="235dp"
-            android:layout_height="wrap_content"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:textAlignment="center"
+            android:background="@drawable/rounded"
             android:hint="비밀번호를 다시 입력해주세요"
             android:inputType="textPassword"
             android:singleLine="true"
             android:id="@+id/re_password" />
         <CheckBox
             android:id="@+id/etpw2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="보이기" />
+            android:layout_width="70dp"
+            android:layout_height="18dp"
+            android:text="보기" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="닉네임 : "/>
+
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:textAlignment="center"
+            android:background="@drawable/rounded"
             android:hint="닉네임을 입력해주세요."
             android:id="@+id/user_nickname"/>
     </LinearLayout>
@@ -112,47 +123,47 @@
             android:layout_height="40dp"
             android:textSize="15dp"
             android:focusableInTouchMode="false"
+            android:textAlignment="center"
             android:text="Tip : 닉네임은 중복될 수 없습니다." />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학과 선택 "/>
+
         <Spinner
+            android:background="@drawable/rounded"
             android:id="@+id/spinner_major"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="350dp"
+            android:layout_height="40dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학번 : "/>
+
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
             android:inputType="number"
+            android:textAlignment="center"
+            android:background="@drawable/rounded"
             android:hint="학번을 입력해주세요."
             android:id="@+id/user_number"/>
     </LinearLayout>
@@ -165,30 +176,35 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textSize="15dp"
+            android:textAlignment="center"
             android:focusableInTouchMode="false"
             android:text="Tip : 학번은 17, 16 등의 형식으로 입력하세요." />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:orientation="horizontal">
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="이름 : "/>
+
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:textAlignment="center"
+            android:background="@drawable/rounded"
             android:hint="이름을 입력해주세요."
             android:id="@+id/user_name"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp" ></LinearLayout>
 
     <Button
         android:layout_width="match_parent"
