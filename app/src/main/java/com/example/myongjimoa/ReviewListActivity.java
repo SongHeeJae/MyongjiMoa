@@ -51,7 +51,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ReviewListActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    ImageView image;
+    //ImageView image;
     TextView title;
     TextView category;
     TextView telephone;
@@ -98,7 +98,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         // 가져온 데이터로 Restaurant 객체 생성
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
-        image = (ImageView) findViewById(R.id.restaurant_image);
+        //image = (ImageView) findViewById(R.id.restaurant_image);
         title = (TextView) findViewById(R.id.restaurant_title);
         category = (TextView) findViewById(R.id.restaurant_category);
         telephone = (TextView) findViewById(R.id.restaurant_telephone);
@@ -133,20 +133,20 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-        Glide.with(this)
+        /*Glide.with(this)
                 .load(restaurant.getImage())
-                .override(500)
+                .override(700)
                 .into(image); // 대표이미지 Glide 라이브러리 이용하여 화면에 보여줌. 캐시 사용함
-
+*/
         title.setText(restaurant.getTitle());
         category.setText(restaurant.getCategory());
-        telephone.setText(restaurant.getTelephone());
-        homepage.setText(restaurant.getHomepage());
-        address.setText(restaurant.getAddress());
-        time.setText(restaurant.getTime());
-        menu.setText(restaurant.getMenu());
-        score.setText(restaurant.getScore() + "");
-        review_num.setText(restaurant.getReview_num() + "");
+        telephone.setText("전화번호 : " + restaurant.getTelephone());
+        homepage.setText("홈페이지 : " + restaurant.getHomepage());
+        address.setText("주소 : " + restaurant.getAddress());
+        time.setText("영업시간 : " + restaurant.getTime());
+        menu.setText("메뉴 : " + restaurant.getMenu());
+        score.setText(restaurant.getScore() + "" + " 점");
+        review_num.setText(restaurant.getReview_num() + "" + " 개");
 
         scroll = true;
         count_review_id = "`review`.`id`+1";
@@ -207,8 +207,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 }
                 restaurant.setReview_num(result.getReview_num());
                 restaurant.setScore(result.getScore());
-                score.setText(restaurant.getScore() + "");
-                review_num.setText(restaurant.getReview_num() + "");
+                score.setText("별점 : " + restaurant.getScore() + "점");
+                review_num.setText("리뷰 개수 : " + restaurant.getReview_num() + "개");
                 restaurant_rating_bar.setRating(restaurant.getScore());
                 // 다시 받아온 리뷰 갯수와 별점으로 업데이트
 
