@@ -77,7 +77,7 @@ public class LoginFragment extends Fragment {
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); // 로그인 실패하였을 시 알림 처리
                         builder.setTitle("메시지");
-                        builder.setMessage("로그인에 실패하였습니다.");
+                        builder.setMessage("아이디나 비밀번호가 틀렸습니다.");
                         builder.setCancelable(false);
                         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
