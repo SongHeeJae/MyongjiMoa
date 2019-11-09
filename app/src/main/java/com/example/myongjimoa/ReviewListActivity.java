@@ -64,6 +64,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     RatingBar restaurant_rating_bar;
     Button write_review;
     Restaurant restaurant;
+    String[] Me = {};
 
 
    RecyclerView review_recycler_view;

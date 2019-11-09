@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,16 +24,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginFragment extends Fragment {
-    Button login;
-    Button add_user;
+    ImageButton login;
+    ImageButton add_user;
     EditText user_email;
     EditText user_password;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.login_main, container, false);
         // 사용할 레이아웃 inflate
-        login = (Button) view.findViewById(R.id.login);
-        add_user = (Button) view.findViewById(R.id.add_user);
+        login = (ImageButton) view.findViewById(R.id.login);
+        add_user = (ImageButton) view.findViewById(R.id.add_user);
         user_email = (EditText) view.findViewById(R.id.login_email);
         user_password = (EditText) view.findViewById(R.id.login_password); // 레이아웃의 id 값으로 버튼, 텍스트 객체 할당
 
