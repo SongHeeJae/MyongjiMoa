@@ -1,20 +1,15 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -26,8 +21,6 @@ import androidx.fragment.app.Fragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginFragment extends Fragment {
     ImageButton login;
@@ -73,7 +66,7 @@ public class LoginFragment extends Fragment {
                     User result = response.body(); // User에 결과가 담김
 
                     if(result.getId() != null) { // 받은 결과의 아이디 값이 null이 아니면 로그인 성공
-                        Toast.makeText(getActivity(), "띵지모아에 오신 것을 환영합니다!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "띵지모아에 오신 것을 환영합니다!", Toast.LENGTH_LONG).show();
                         Intent it = new Intent(getActivity(), MainActivity.class);
                         it.putExtra("id", result.getId());
                         it.putExtra("email_id", result.getEmail_id());
