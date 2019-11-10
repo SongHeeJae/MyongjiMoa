@@ -1,64 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="20dp" >
-    </LinearLayout>
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/user_email"
             android:layout_width="350dp"
             android:layout_height="40dp"
-            android:textAlignment="center"
             android:background="@drawable/rounded"
             android:hint="이메일을 입력해주세요."
             android:inputType="textEmailAddress"
-            android:id="@+id/user_email"/>
+            android:textAlignment="center" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
             android:layout_width="match_parent"
-            android:textAlignment="center"
             android:layout_height="40dp"
-            android:textSize="15dp"
             android:focusableInTouchMode="false"
-            android:text="Tip : 이메일은 Email 형식이어야 하며 중복될 수 없습니다." />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:orientation="horizontal">
+            android:text="Tip : 이메일은 Email 형식이어야 하며 중복될 수 없습니다."
+            android:textAlignment="center"
+            android:textSize="15dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/user_password"
             android:layout_width="280dp"
             android:layout_height="40dp"
-            android:textAlignment="center"
             android:background="@drawable/rounded"
             android:hint="비밀번호를 입력해주세요"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:id="@+id/user_password" />
+            android:textAlignment="center" />
+
         <CheckBox
             android:id="@+id/etpw"
             android:layout_width="70dp"
@@ -68,24 +62,25 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="5dp" >
-    </LinearLayout>
+        android:layout_height="5dp"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/re_password"
             android:layout_width="280dp"
             android:layout_height="40dp"
-            android:textAlignment="center"
             android:background="@drawable/rounded"
             android:hint="비밀번호를 다시 입력해주세요"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:id="@+id/re_password" />
+            android:textAlignment="center" />
+
         <CheckBox
             android:id="@+id/etpw2"
             android:layout_width="70dp"
@@ -95,120 +90,100 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:orientation="horizontal">
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/user_nickname"
             android:layout_width="350dp"
             android:layout_height="40dp"
-            android:textAlignment="center"
             android:background="@drawable/rounded"
             android:hint="닉네임을 입력해주세요."
-            android:id="@+id/user_nickname"/>
+            android:textAlignment="center" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:textSize="15dp"
             android:focusableInTouchMode="false"
+            android:text="Tip : 닉네임은 중복될 수 없습니다."
             android:textAlignment="center"
-            android:text="Tip : 닉네임은 중복될 수 없습니다." />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:orientation="horizontal">
+            android:textSize="15dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <Spinner
-            android:background="@drawable/rounded"
             android:id="@+id/spinner_major"
             android:layout_width="350dp"
-            android:layout_height="40dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:orientation="horizontal">
+            android:layout_height="40dp"
+            android:background="@drawable/rounded"
+            android:textAlignment="center" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/user_number"
             android:layout_width="350dp"
             android:layout_height="40dp"
-            android:inputType="number"
-            android:textAlignment="center"
             android:background="@drawable/rounded"
             android:hint="학번을 입력해주세요."
-            android:id="@+id/user_number"/>
+            android:inputType="number"
+            android:textAlignment="center" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:textSize="15dp"
-            android:textAlignment="center"
             android:focusableInTouchMode="false"
-            android:text="Tip : 학번은 17, 16 등의 형식으로 입력하세요." />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:orientation="horizontal">
+            android:text="Tip : 학번은 17, 16 등의 형식으로 입력하세요."
+            android:textAlignment="center"
+            android:textSize="15dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/user_name"
             android:layout_width="350dp"
             android:layout_height="40dp"
-            android:textAlignment="center"
             android:background="@drawable/rounded"
             android:hint="이름을 입력해주세요."
-            android:id="@+id/user_name"/>
+            android:textAlignment="center" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp" ></LinearLayout>
-
     <Button
+        android:id="@+id/submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="회원가입"
-        android:id="@+id/submit"/>
+        android:layout_marginTop="30dp"
+        android:text="회원가입" />
 </LinearLayout>

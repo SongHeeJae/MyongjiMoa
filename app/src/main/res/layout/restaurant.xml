@@ -9,12 +9,8 @@
         android:orientation="vertical"
         android:layout_weight="0.8">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="20dp" >
-        </LinearLayout>
-
         <TextView
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +35,6 @@
                 android:stepSize="0.01"
                 android:max="5"
                 android:id="@+id/list_restaurant_rating_bar"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -71,7 +66,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/list_restaurant_address"/>
-
         </LinearLayout>
     </LinearLayout>
 
@@ -81,13 +75,8 @@
         android:orientation="vertical"
         android:layout_weight="0.2">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:orientation="vertical">
-        </LinearLayout>
-
         <ImageView
+            android:layout_marginTop="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_restaurant_image"/>
