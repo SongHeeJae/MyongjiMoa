@@ -24,11 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
 import com.naver.maps.geometry.LatLng;
@@ -45,9 +40,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ReviewListActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -64,10 +56,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     RatingBar restaurant_rating_bar;
     Button write_review;
     Restaurant restaurant;
-    String[] Me = {};
 
-
-   RecyclerView review_recycler_view;
+    RecyclerView review_recycler_view;
     ReviewAdapter review_adapter;
     public GestureDetector gesture_detector;
 
@@ -154,9 +144,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         review_adapter = new ReviewAdapter();
         downloadReviewList(); // 다운로드 정보 초기값 지정 후 리뷰 다운로드 진행
 
-
         review_recycler_view.setAdapter(review_adapter); // RecyclerView 어댑터 등록
-
 
         mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.review_map);
         if(mapFragment == null) {
@@ -187,8 +175,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         restaurant_rating_bar.setRating(restaurant.getScore());
     }
 
-
-    public void downloadReviewList() {
+    public void downloadReviewList() { // 리뷰 목록 다운로드
 
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<ReviewResult> call = connectDB.downloadReview(restaurant.getId(), count_review_id); // ReviewResult 형태로 받아옴
@@ -244,7 +231,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             ReviewImageAdapter review_image_adapter;
             Button review_setting;
             int pos;
-
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -313,13 +299,13 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 });
             }
 
-            public void setData(Review data, int position) {
-                nickname.setText(data.getNickname());
-                date.setText(data.getDate());
+            public void setData(Review data, int position) { // xml 데이터 세팅 부분
+                nickname.setText("작성자 닉네임 : " + data.getNickname());
+                date.setText("업로드 날짜 : " + data.getDate());
                 rating_bar.setRating(data.getScore());
                 description.setText(data.getDescription());
-                number.setText(data.getNumber());
-                major.setText(data.getMajor());
+                number.setText("작성자 학번 : " + data.getNumber());
+                major.setText("작성자 전공 : " + data.getMajor());
                 ArrayList<String> img_data = data.getImages();
                 for(int i=0; i<img_data.size(); i++) {
                     review_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/review_images/" + img_data.get(i));
@@ -365,7 +351,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             public ViewHolder(View itemView) {
                 super(itemView);
                 img = (ImageView) itemView.findViewById(R.id.image_item);
-
             }
 
             public void setData(String data) {
@@ -376,6 +361,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                         .into(img);
             }
         }
+
         public void add(String item) {
             items.add(item);
             notifyDataSetChanged();
