@@ -3,6 +3,7 @@ package com.example.myongjimoa;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -95,11 +97,18 @@ public class ShuttleActivity extends AppCompatActivity {
     public void setShuttleTime() { // 가까운 시간대의 셔틀 시간 계산
 
         String time = Request.getTime("HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        Log.d("ddddddddd", "day" + day);
 
         CityBus.setText("잠시 후 이용가능한 시내 방향 셔틀이 없습니다.");
         IntoBus.setText("잠시 후 이용가능한 진입로 방향 셔틀이 없습니다.");
         IntoSchool.setText("잠시 후 이용 가능한 학교 방향 셔틀이 없습니다.");
         // pos가 시간표 목록의 크기보다 크다면, 오늘은 현재 셔틀 정보 없음
+
+        if(day == 1 || day == 7)
+            return ;
         int pos = binarySearch(citybus, time);
         if(pos < citybus.length) CityBus.setText("잠시 후 이용 가능한 시내 방향 셔틀은 " + citybus[pos] + "분 입니다.");
         pos = binarySearch(intobus, time);
