@@ -139,6 +139,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         score.setText(restaurant.getScore() + "" + " 점");
         review_num.setText(restaurant.getReview_num() + "" + " 개");
 
+        Log.d("메뉴", "" + restaurant.getMenu().split("/")[0]);
+
         scroll = true;
         count_review_id = "`review`.`id`+1";
         review_adapter = new ReviewAdapter();

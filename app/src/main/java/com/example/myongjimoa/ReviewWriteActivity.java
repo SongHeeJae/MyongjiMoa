@@ -181,7 +181,6 @@ public class ReviewWriteActivity extends AppCompatActivity {
     }
 
     public void reviewUpload(ArrayList<String> path) {
-
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.writeReview(restaurant_id, Request.filter(write_description.getText().toString()), user_id, rating_bar.getRating(), Request.getTime("yyyy-MM-dd HH:mm:ss"), path);
 
@@ -190,6 +189,8 @@ public class ReviewWriteActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
 
                 String result = response.body().trim();
+
+                Log.d("ㅇㅇ", result);
                 if(result.equals("success")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
                     builder.setTitle("메시지");
