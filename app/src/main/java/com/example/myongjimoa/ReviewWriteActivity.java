@@ -190,11 +190,10 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
 
-                Log.d("ㅇㅇ", result);
                 if(result.equals("success")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
                     builder.setTitle("메시지");
-                    builder.setMessage("글쓰기에 성공하였습니다.");
+                    builder.setMessage("리뷰를 작성했습니다.");
                     builder.setCancelable(false);
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override

@@ -100,7 +100,6 @@ public class ShuttleActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-        Log.d("ddddddddd", "day" + day);
 
         CityBus.setText("잠시 후 이용가능한 시내 방향 셔틀이 없습니다.");
         IntoBus.setText("잠시 후 이용가능한 진입로 방향 셔틀이 없습니다.");

@@ -64,7 +64,6 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:hint="리뷰를 입력해 주세요!"
-            android:textAlignment="center"
             android:background="@drawable/rounded"
             android:gravity="top"
             android:id="@+id/review_write_description" />
