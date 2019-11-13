@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ public class LoginFragment extends Fragment {
     ImageButton add_user;
     EditText user_email;
     EditText user_password;
+    LinearLayout layout;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.login_main, container, false);
@@ -35,6 +37,9 @@ public class LoginFragment extends Fragment {
         add_user = (ImageButton) view.findViewById(R.id.add_user);
         user_email = (EditText) view.findViewById(R.id.login_email);
         user_password = (EditText) view.findViewById(R.id.login_password); // 레이아웃의 id 값으로 버튼, 텍스트 객체 할당
+
+        layout = (LinearLayout) view.findViewById(R.id.layout);
+        layout.setBackgroundResource(R.drawable.back);
 
         user_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         add_user.setOnClickListener(new View.OnClickListener() {

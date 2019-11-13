@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout"
     android:orientation="vertical"
-    android:background="#DDDDDD"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -20,12 +20,17 @@
             android:src="@drawable/loginmap" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:textAlignment="center"
-        android:text="띵지모아" />
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="350dp"
+            android:layout_height="150dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/loginping" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_marginTop="15dp"
@@ -58,21 +63,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="0dp"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/login"
-            android:layout_width="77dp"
+            android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:padding="0dp"
             android:layout_marginLeft="100dp"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/login_button" />
 
         <ImageButton
+            android:layout_marginLeft="5dp"
             android:id="@+id/add_user"
             android:layout_width="70dp"
             android:layout_height="50dp"
@@ -80,9 +87,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:padding="0dp"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/adduser_button" />
-
     </LinearLayout>
 
 </LinearLayout>

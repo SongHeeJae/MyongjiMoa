@@ -90,6 +90,10 @@ public class ReviewMainActivity extends AppCompatActivity {
         all = (Button) findViewById(R.id.all);
         all.setOnClickListener(onClickListener);
 
+        Intent it = getIntent();
+        user_id = it.getStringExtra("user_id");
+        user_nickname = it.getStringExtra("user_nickname");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
