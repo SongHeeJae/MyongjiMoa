@@ -136,8 +136,6 @@ public class ReviewWriteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-
     public void imageUpload() {
         if (review_write_image_adapter.getItemCount() > 0) {
 

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -251,7 +252,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 description = (TextView) itemView.findViewById(R.id.review_description);
                 image_recycler_view = (RecyclerView) itemView.findViewById(R.id.review_image_recycler_view);
                 review_image_adapter = new ReviewImageAdapter();
-                RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ReviewListActivity.this, RecyclerView.HORIZONTAL, false);
 
                 image_recycler_view.setLayoutManager(layoutManager);
                 image_recycler_view.setAdapter(review_image_adapter); // 리뷰 내의 이미지 RecyclerView 어댑터와 레이아웃 설정
@@ -402,7 +403,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 Log.d("이미지경로는??", data);
                 Glide.with(ReviewListActivity.this)
                         .load(data)
-                        .override(500)
+                        .override(300, 300)
                         .into(img);
             }
         }

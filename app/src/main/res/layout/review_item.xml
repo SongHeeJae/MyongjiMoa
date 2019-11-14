@@ -65,18 +65,11 @@
                 android:orientation="vertical"
                 android:layout_height="wrap_content" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="리뷰 사진"
-                    android:textSize="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:textAlignment="center"/>
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/review_image_recycler_view">
+                    android:id="@+id/review_image_recycler_view"
+                    android:layout_margin="5dp">
                 </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
@@ -90,12 +83,6 @@
                 android:orientation="vertical"
                 android:background="@drawable/rounded_thin">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="리뷰 내용"
-                    android:textSize="15dp"
-                    android:textAlignment="center"/>
             <TextView
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"

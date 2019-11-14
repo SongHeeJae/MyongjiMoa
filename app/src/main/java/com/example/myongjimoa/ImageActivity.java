@@ -71,7 +71,6 @@ public class ImageActivity extends AppCompatActivity {
         indicator.setViewPager(pager); // 동그라미 모양의 indicator 지정. 뷰 페이저의 이동에 따라 업데이트가 수행됨
     }
 
-
     public class ImageAdapter extends PagerAdapter {
 
         ArrayList<String> path;
@@ -124,7 +123,6 @@ public class ImageActivity extends AppCompatActivity {
             if (!dir.exists()) {
                 dir.mkdirs(); //디렉토리가 존재하지 않을 경우 디렉토리 생성
             }
-
 
             fileName = "MM_" + Request.getTime("yyyyMMddHHmmss");
 
