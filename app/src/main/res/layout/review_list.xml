@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/colorback"
     android:layout_height="match_parent" >
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,12 +21,14 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
                         android:id="@+id/restaurant_title"/>
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_category"/>
@@ -41,31 +44,37 @@
                         android:id="@+id/review_list_rating_bar"/>
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_score"/>
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_review_num"/>
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_address"/>
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_telephone"/>
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_homepage"/>
 
                     <TextView
+                        android:textColor="#008888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_time"/>
@@ -78,14 +87,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_margin="10dp"
                         android:orientation="vertical"
-                        android:background="@drawable/rounded" >
+                        android:background="@drawable/rounded_neon" >
 
                         <TextView
+                            android:textColor="#008888"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
@@ -93,6 +100,7 @@
                             android:text="메뉴" />
 
                         <TextView
+                            android:textColor="#008888"
                             android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -114,6 +122,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="리뷰쓰기"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorwhite"
+        android:background="#008888"
         android:layout_gravity="center|bottom"
         android:id="@+id/write_review"/>
 </FrameLayout>

@@ -1,5 +1,6 @@
 package com.example.myongjimoa;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,6 +41,9 @@ public class ModifyUserActivity extends AppCompatActivity {
     Spinner mod_majorSpinner;
     boolean modify_check;
 
+    String tempnick;
+    String tempmajor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +72,9 @@ public class ModifyUserActivity extends AppCompatActivity {
         date.setText(it.getStringExtra("date"));
         user_id = it.getStringExtra("user_id");
 
+        tempnick = nickname.getText().toString().trim();
+        tempmajor = major.getText().toString();
+
         modify.setOnClickListener(new View.OnClickListener() { // 수정버튼 이벤트 처리
 
             @Override
@@ -78,7 +85,6 @@ public class ModifyUserActivity extends AppCompatActivity {
                 majorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mod_majorSpinner.setAdapter(majorAdapter);
 
-                Log.d("modify check", "" + modify_check);
                 if(modify_check) { // 수정 상태일때 원상태로돌려줌
                     nickname_text.setText("");
                     modify.setText("취소");
@@ -98,7 +104,6 @@ public class ModifyUserActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("수정버튼 누른 화면찾기", "22222");
                 AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
                 builder.setTitle("알림")
                         .setMessage("회원 정보를 수정하시겠습니까?")
@@ -112,7 +117,6 @@ public class ModifyUserActivity extends AppCompatActivity {
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
                             }
                         })
                         .show();
@@ -126,6 +130,7 @@ public class ModifyUserActivity extends AppCompatActivity {
         major_switcher.showNext();
         nickname_switcher.showNext();
     }
+
 
     void modifyUserInfo() { // 회원정보 수정 진행 // 서버에서
         Retrofit retrofit = new Retrofit.Builder()
@@ -141,16 +146,32 @@ public class ModifyUserActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
 
-                if(result.equals("success")) { // 결과 정상 처리
-                    modify.setText("수정");
-                    submit.setVisibility(View.INVISIBLE);
-                    nickname.setText(nickname_text.getText().toString());
-                    major.setText(mod_majorSpinner.getSelectedItem().toString());
-                    textSwitch();
-                    modify_check=true;
-                } else {
-                    // 이미 등록된 닉네임일때
-                    Toast.makeText(getApplicationContext(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                if(nickname_text.getText().toString().trim().equals("") || mod_majorSpinner.getSelectedItem().toString().equals("학과를 선택하세요.")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
+                    builder.setTitle("경고");
+                    builder.setMessage("모든 정보를 기입하세요!");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    builder.show();
+                }
+
+                else {
+                    if(nickname_text.getText().toString().trim().equals(tempnick) || result.equals("success")) { // 결과 정상 처리
+                        modify.setText("수정");
+                        submit.setVisibility(View.INVISIBLE);
+                        nickname.setText(nickname_text.getText().toString());
+                        major.setText(mod_majorSpinner.getSelectedItem().toString());
+                        textSwitch();
+                        modify_check=true;
+                        Toast.makeText(getApplicationContext(), "수정되었습니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 이미 등록된 닉네임일때
+                        Toast.makeText(getApplicationContext(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -165,10 +186,22 @@ public class ModifyUserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() { // 뒤로가기로 Activity 종료할 때 수정된 사용자 닉네임과 전공 담아줌.
         Intent intent = new Intent();
-        intent.putExtra("user_nickname", nickname.getText().toString());
-        intent.putExtra("user_major", major.getText().toString());
-        setResult(RESULT_OK, intent);
-        finish();
-        super.onBackPressed();
+
+        if(nickname_text.getText().toString().trim().equals("") || mod_majorSpinner.getSelectedItem().toString().equals("학과를 선택하세요.")) {
+            // 닉네임과 전공을 수정 중에 나간 경우, 수정 전 정보로 기입해줌.
+            intent.putExtra("user_nickname", tempnick);
+            intent.putExtra("user_major", tempmajor);
+            setResult(RESULT_OK, intent);
+            finish();
+            super.onBackPressed();
+        }
+        else
+        {
+            intent.putExtra("user_nickname", nickname.getText().toString());
+            intent.putExtra("user_major", major.getText().toString());
+            setResult(RESULT_OK, intent);
+            finish();
+            super.onBackPressed();
+        }
     }
 }

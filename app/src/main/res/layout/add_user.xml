@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="@color/colorback"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,8 +18,10 @@
             android:id="@+id/user_email"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_blank"
+            android:textColorHint="@color/colorwhite"
             android:hint="이메일을 입력해주세요."
+            android:textColor="@color/colorwhite"
             android:inputType="textEmailAddress"
             android:textAlignment="center" />
     </RelativeLayout>
@@ -34,6 +32,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:textColor="@color/colorwhite"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:focusableInTouchMode="false"
@@ -56,13 +55,17 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginRight="70dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_blank"
+            android:textColorHint="@color/colorwhite"
             android:hint="비밀번호를 입력해주세요"
+            android:textColor="@color/colorwhite"
             android:inputType="textPassword"
             android:singleLine="true"
             android:textAlignment="center" />
 
         <CheckBox
+            android:buttonTint="@color/colorwhite"
+            android:textColor="@color/colorwhite"
             android:id="@+id/etpw"
             android:layout_alignParentRight="true"
             android:layout_marginTop="9dp"
@@ -89,13 +92,17 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginRight="70dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_blank"
+            android:textColorHint="@color/colorwhite"
             android:hint="비밀번호를 다시 입력해주세요"
+            android:textColor="@color/colorwhite"
             android:inputType="textPassword"
             android:singleLine="true"
             android:textAlignment="center" />
 
         <CheckBox
+            android:buttonTint="@color/colorwhite"
+            android:textColor="@color/colorwhite"
             android:id="@+id/etpw2"
             android:layout_alignParentRight="true"
             android:layout_width="70dp"
@@ -117,7 +124,9 @@
             android:id="@+id/user_nickname"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_blank"
+            android:textColorHint="@color/colorwhite"
+            android:textColor="@color/colorwhite"
             android:hint="닉네임을 입력해주세요."
             android:textAlignment="center" />
     </RelativeLayout>
@@ -128,6 +137,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:textColor="@color/colorwhite"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:focusableInTouchMode="false"
@@ -149,7 +159,8 @@
             android:id="@+id/spinner_major"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_blank"
+            android:popupBackground="@color/colorwhite"
             android:textAlignment="center" />
     </RelativeLayout>
 
@@ -166,7 +177,9 @@
             android:id="@+id/user_number"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_blank"
+            android:textColorHint="@color/colorwhite"
+            android:textColor="@color/colorwhite"
             android:hint="학번을 입력해주세요."
             android:inputType="number"
             android:textAlignment="center" />
@@ -178,10 +191,11 @@
         android:orientation="horizontal">
 
         <EditText
+            android:textColor="@color/colorwhite"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:focusableInTouchMode="false"
-            android:text="Tip : 학번은 17, 16 등의 형식으로 입력하세요."
+            android:text="Tip : 학번은 17, 16 등 숫자 2자리 형식으로 입력하세요."
             android:textAlignment="center"
             android:textSize="15dp" />
     </LinearLayout>
@@ -199,7 +213,9 @@
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_blank"
+            android:textColorHint="@color/colorwhite"
+            android:textColor="@color/colorwhite"
             android:hint="이름을 입력해주세요."
             android:textAlignment="center" />
     </RelativeLayout>
@@ -210,5 +226,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="회원가입" />
-    </LinearLayout>
-</ScrollView>
+
+</LinearLayout>

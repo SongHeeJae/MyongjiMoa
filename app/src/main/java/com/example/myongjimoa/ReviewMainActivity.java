@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ReviewMainActivity extends AppCompatActivity {
@@ -18,10 +21,9 @@ public class ReviewMainActivity extends AppCompatActivity {
     Button chicken;
     Button gogi;
     Button yangsik;
-    Button all;
+    ImageButton all;
     String user_id;
     String user_nickname;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +89,7 @@ public class ReviewMainActivity extends AppCompatActivity {
         gogi.setOnClickListener(onClickListener);
         yangsik = (Button) findViewById(R.id.yangsik);
         yangsik.setOnClickListener(onClickListener);
-        all = (Button) findViewById(R.id.all);
+        all = (ImageButton) findViewById(R.id.all);
         all.setOnClickListener(onClickListener);
 
         Intent it = getIntent();

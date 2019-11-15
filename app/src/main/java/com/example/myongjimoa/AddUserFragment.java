@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -54,7 +55,6 @@ public class AddUserFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.add_user, container, false);
-        view.setBackgroundColor(Color.rgb(255, 255, 255)); // add로 전환할 시 화면 겹침 방지하기 위해 배경색 지정
 
         user_email = (EditText) view.findViewById(R.id.user_email);
         user_password = (EditText) view.findViewById(R.id.user_password);

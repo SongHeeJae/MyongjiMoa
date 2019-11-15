@@ -187,8 +187,8 @@ public class ReviewActivity extends AppCompatActivity {
 
                 Glide.with(ReviewActivity.this)
                         .load(data.getImage())
-                        .override(500)
                         .placeholder(R.drawable.noimage)
+                        .override(500, 500)
                         .into(image);
                 title.setText(data.getTitle());
                 category.setText(data.getCategory());
