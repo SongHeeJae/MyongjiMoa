@@ -1,6 +1,7 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
+import android.app.assist.AssistStructure;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -90,6 +92,7 @@ public class AddUserFragment extends Fragment {
         ArrayAdapter majorAdapter = ArrayAdapter.createFromResource(getContext(), R.array.major_field, android.R.layout.simple_spinner_item);
         majorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         majorSpinner.setAdapter(majorAdapter);
+        majorSpinner.setBackgroundColor(Color.WHITE);
 
         submit.setOnClickListener(new View.OnClickListener() {
 

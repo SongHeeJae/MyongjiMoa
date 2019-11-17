@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
@@ -35,7 +35,6 @@
                     android:layout_marginRight="15dp"
                     android:layout_width="100dp"
                     android:layout_height="45dp"
-                    android:text="전체 보기"
                     android:padding="0dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/sending_button"
@@ -70,7 +69,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 

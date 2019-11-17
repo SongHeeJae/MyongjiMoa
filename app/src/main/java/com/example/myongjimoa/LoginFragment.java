@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -52,9 +53,9 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener () {
             @Override
             public void onClick(View v) {
-                mainLogin();
+                    mainLogin();
             }
-        } );  // 리스너 등록. 버튼 클릭 시 메인 화면으로 전환
+        });  // 리스너 등록. 버튼 클릭 시 메인 화면으로 전환
         return view;
     }
 

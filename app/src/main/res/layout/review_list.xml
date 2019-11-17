@@ -108,11 +108,16 @@
                             android:id="@+id/restaurant_menu"/>
                         </LinearLayout>
 
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:focusableInTouchMode="false" />
+
                      <androidx.recyclerview.widget.RecyclerView
                          android:layout_width="match_parent"
                          android:layout_height="wrap_content"
-                        android:id="@+id/review_recycler_view" />
-
+                         android:id="@+id/review_recycler_view"
+                         />
                     </LinearLayout>
 
          </androidx.core.widget.NestedScrollView>

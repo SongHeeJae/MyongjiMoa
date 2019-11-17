@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -84,6 +85,7 @@ public class ModifyUserActivity extends AppCompatActivity {
                 ArrayAdapter majorAdapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.major_field, android.R.layout.simple_spinner_item);
                 majorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mod_majorSpinner.setAdapter(majorAdapter);
+                mod_majorSpinner.setBackgroundColor(Color.WHITE);
 
                 if(modify_check) { // 수정 상태일때 원상태로돌려줌
                     nickname_text.setText("");
