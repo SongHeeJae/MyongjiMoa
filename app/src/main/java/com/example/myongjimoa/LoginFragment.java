@@ -1,16 +1,17 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -23,6 +24,29 @@ import androidx.fragment.app.Fragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+/*class SavedSharedPreference {
+
+    static final String PREF_USER_NAME = "username";
+    // key 값
+
+    static SharedPreferences getSharedPreferences(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx);
+    }
+
+    public  static  void setUserName(Context ctx, String userName) {
+        // 계정의 정보 임시 저장
+        // 로그인시 자동 로그인 여부에 따라 호출될 메소드임. userName이 저장된다.
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_USER_NAME, userName);
+        editor.commit();
+    }
+
+    public static String getUserName(Context ctx) {
+        // 저장된 정보를 가져옴
+        return getSharedPreferences(ctx).getString(PREF_USER_NAME, "");
+    }
+}*/
 
 public class LoginFragment extends Fragment {
     ImageButton login;

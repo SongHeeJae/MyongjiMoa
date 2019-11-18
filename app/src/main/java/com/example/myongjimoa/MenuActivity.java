@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-
 public class MenuActivity extends AppCompatActivity {
 
     String url1 = "https://www.mju.ac.kr/mbs/mjukr/jsp/restaurant/restaurant.jsp?configIdx=36548&id=mjukr_051002020000"; // 학생회관
