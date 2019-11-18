@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,15 +23,14 @@ import com.gun0912.tedpermission.TedPermission;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
     final int MODIFY_REQUEST_CODE=3000;
     User my_info;
 
-    Button info;
-    Button board;
-    Button review;
-    Button shuttle;
-    Button menu;
+    ImageButton main_me;
+    ImageButton main_group;
+    ImageButton main_review;
+    ImageButton main_food;
+    ImageButton main_shuttle;
 
     static boolean admin;
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch(v.getId()) {
                     // 필요한 정보들 Intent에 저장하여 startActivity
-                    case R.id.main_info: // 정보 버튼 클릭 시
+                    case R.id.imageButton2: // 정보 버튼 클릭 시
                         Intent info_it = new Intent(MainActivity.this, ModifyUserActivity.class);
                         info_it.putExtra("email_id", my_info.getEmail_id());
                         info_it.putExtra("user_nickname", my_info.getNickname());
@@ -56,39 +57,39 @@ public class MainActivity extends AppCompatActivity {
                         info_it.putExtra("user_id", my_info.getId());
                         startActivityForResult(info_it, MODIFY_REQUEST_CODE);
                         break;
-                    case R.id.main_board: // 게시판 버튼 클릭 시
+                    case R.id.group: // 게시판 버튼 클릭 시
                         Intent board_it = new Intent(MainActivity.this, BoardMainActivity.class);
                         board_it.putExtra("user_id", my_info.getId());
                         board_it.putExtra("user_nickname", my_info.getNickname());
                         board_it.putExtra("user_major", my_info.getMajor());
                         startActivity(board_it);
                         break;
-                    case R.id.main_review: // 리뷰 버튼 클릭 시
+                    case R.id.review: // 리뷰 버튼 클릭 시
                         Intent review_it = new Intent(MainActivity.this, ReviewMainActivity.class);
                         review_it.putExtra("user_id", my_info.getId());
                         review_it.putExtra("user_nickname", my_info.getNickname());
                         startActivity(review_it);
                         break;
-                    case R.id.main_shuttle: // 셔틀 버튼 클릭 시
+                    case R.id.shuttle: // 셔틀 버튼 클릭 시
                         startActivity(new Intent(MainActivity.this, ShuttleActivity.class));
                         break;
-                    case R.id.main_menu: // 학식 메뉴 버튼 클릭 시
+                    case R.id.food: // 학식 메뉴 버튼 클릭 시
                         startActivity(new Intent(MainActivity.this, MenuActivity.class));
                         break;
                 }
             }
         };
 
-        info = (Button) findViewById(R.id.main_info);
-        board = (Button) findViewById(R.id.main_board);
-        review = (Button) findViewById(R.id.main_review);
-        shuttle = (Button) findViewById(R.id.main_shuttle);
-        menu = (Button) findViewById(R.id.main_menu);
-        info.setOnClickListener(listener);
-        board.setOnClickListener(listener);
-        review.setOnClickListener(listener);
-        shuttle.setOnClickListener(listener);
-        menu.setOnClickListener(listener);
+        main_me = (ImageButton) findViewById(R.id.imageButton2);
+        main_group = (ImageButton) findViewById(R.id.group);
+        main_review = (ImageButton) findViewById(R.id.review);
+        main_shuttle = (ImageButton) findViewById(R.id.shuttle);
+        main_food = (ImageButton) findViewById(R.id.food);
+        main_me.setOnClickListener(listener);
+        main_group.setOnClickListener(listener);
+        main_review.setOnClickListener(listener);
+        main_shuttle.setOnClickListener(listener);
+        main_food.setOnClickListener(listener);
 
         Request.initFilterMap(); // Request 클래스의 initFilterMap 메소드 수행(비속어 필터 변수 초기화)
 
