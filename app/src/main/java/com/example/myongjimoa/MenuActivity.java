@@ -3,11 +3,14 @@ package com.example.myongjimoa;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,11 +37,16 @@ import java.util.TimeZone;
 
 public class MenuActivity extends AppCompatActivity {
 
+    ProgressBar progressBar;
     String url1 = "https://www.mju.ac.kr/mbs/mjukr/jsp/restaurant/restaurant.jsp?configIdx=36548&id=mjukr_051002020000"; // 학생회관
     String url2 = "https://www.mju.ac.kr/mbs/mjukr/jsp/restaurant/restaurant.jsp?configIdx=36337&id=mjukr_051002050000"; // 명진당
     ArrayList<String> day_menu1; // 학생회관
     ArrayList<String> day_menu2;
+    Handler handler = new Handler();
+    boolean t_bool = true;
+    boolean temp = true;
     int finished;
+    int value;
 
     ViewPager view_pager;
     TabLayout tabs;
@@ -48,6 +56,10 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
+
+        progressBar = (ProgressBar) findViewById(R.id.h_progressbar);
+        progressBar.setIndeterminate(false);
+        progressBar.setProgress(80);
         day_menu1 = new ArrayList<>();
         day_menu2 = new ArrayList<>();
 
@@ -61,7 +73,6 @@ public class MenuActivity extends AppCompatActivity {
         view_pager = (ViewPager) findViewById(R.id.food_menu_view_pager);
         new DownloadMenu().execute(url1);
         new DownloadMenu().execute(url2); // 다운로드 진행
-
     }
 
 
@@ -70,10 +81,50 @@ public class MenuActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-        }
+            if(t_bool) { // true 상태, 즉 로딩중인 경우
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            value += 1;
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (t_bool) {
+                                        progressBar.setProgress(value);
+                                    } else {
+                                        progressBar.setProgress(100);
+                                        if(!temp)
+                                        {
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    progressBar.setProgress(0);
+                                                }
+                                            }, 500);
+                                        }
+                                    }
+                                }
+                            });
+
+                            if(!temp)
+                                break;
+
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                thread.start();
+            }
+    }
 
         @Override
         protected Void doInBackground(String... params) { // 명지대학교 홈페이지 접속하여 메뉴 긁어옴
+
             try {
                 List<String> day = new ArrayList<>();
                 day.add("Monday_Data");
@@ -87,6 +138,7 @@ public class MenuActivity extends AppCompatActivity {
                 // 각 url로 명지대학교 홈페이지에서 해당하는 요일 태그 순서대로 메뉴 긁어옴
                 if(params[0].equals(url1)) {
                     for (Element e : e1) {
+                        if(i>=day.size()) break;
                         Elements e2 = e.select("div[name=" + day.get(i++) + "]");
                         String menu = "";
                         for (Element ee : e2) menu += ee.text() + "\n";
@@ -114,6 +166,7 @@ public class MenuActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) { // doInBackground의 실행이 끝난 뒤의 처리
             finished++;
             if(finished == 2) { // 메뉴 두개 긁어오는 것이 끝나면
+                t_bool = false;
                 menu_adapter = new MenuAdapter(day_menu1, day_menu2);
                 view_pager.setAdapter(menu_adapter); // 어댑터 지정
                 tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(view_pager));
@@ -122,6 +175,8 @@ public class MenuActivity extends AppCompatActivity {
                 calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
                 int day = calendar.get(Calendar.DAY_OF_WEEK);
                 view_pager.setCurrentItem(day-2); // 뷰페이저는 현재 요일을 구하여 그 화면으로 초기 지정
+                if(!t_bool)
+                    temp = false;
             }
         }
     }

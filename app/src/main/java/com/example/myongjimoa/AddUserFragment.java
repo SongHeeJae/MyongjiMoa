@@ -2,13 +2,17 @@ package com.example.myongjimoa;
 
 import android.app.AlertDialog;
 import android.app.assist.AssistStructure;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +59,15 @@ public class AddUserFragment extends Fragment {
     CheckBox checkBox;
     CheckBox checkBox2;
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.add_user, container, false);
 
@@ -94,10 +107,78 @@ public class AddUserFragment extends Fragment {
         majorSpinner.setAdapter(majorAdapter);
         majorSpinner.setBackgroundColor(Color.WHITE);
 
+        user_email.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
+        });
+
+        user_password.setOnKeyListener(new View.OnKeyListener() { // 비밀번호 입력 edittext 엔터키 차단
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
+        });
+
+        re_password.setOnKeyListener(new View.OnKeyListener() { // 비밀번호 재입력 edittext 엔터키 차단
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
+        });
+
+        user_nickname.setOnKeyListener(new View.OnKeyListener() { // 닉네임 입력 edittext 엔터키 차단
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
+        });
+
+        user_name.setOnKeyListener(new View.OnKeyListener() { // 이름 입력 edittext 엔터키 차단
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
+        });
+
+        user_number.setOnKeyListener(new View.OnKeyListener() { // 학번 입력 edittext 엔터키 차단
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
+        });
+
         submit.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
+                if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); // 로그인 실패하였을 시 알림 처리
+                    builder.setTitle("메시지");
+                    builder.setMessage("네트워크 연결을 확인해 주세요.");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    builder.show();
+                    return ;
+                }
 
                 if (user_email.getText().toString().equals("") || !isEmailValid(user_email.getText().toString()))
                     Toast.makeText(getActivity(), "올바른 Email 형식을 입력해 주세요.", Toast.LENGTH_LONG).show();

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -235,6 +236,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
             ImageView img;
             public ViewHolder(View itemView) {
                 super(itemView);
+                recycler_view.setHasFixedSize(true);
                 img = (ImageView) itemView.findViewById(R.id.image_view);
             }
 

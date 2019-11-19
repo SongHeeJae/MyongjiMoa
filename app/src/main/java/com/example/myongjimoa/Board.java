@@ -17,5 +17,3 @@ public class Board {
         return id;
     }
 }
-
-// 수정

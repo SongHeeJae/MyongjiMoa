@@ -95,8 +95,8 @@
                 android:text="첨부된 이미지"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:id="@+id/review_write_image">
         </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>

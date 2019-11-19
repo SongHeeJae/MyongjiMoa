@@ -10,6 +10,7 @@
         android:id="@+id/review_swipe_refresh_layout" >
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -79,10 +80,16 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_time"/>
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/review_list_map" />
+                    <LinearLayout
+                        android:id="@+id/map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="180dp"
+                            android:id="@+id/review_list_map" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

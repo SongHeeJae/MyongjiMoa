@@ -32,11 +32,16 @@
             android:enabled="true" />
 
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".LoginActivity"><intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".LoginActivity"></activity>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+        <activity android:name=".SplashActivity"
+            android:theme="@style/splash_background">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".BoardActivity"></activity>
         <activity android:name=".ReviewActivity"></activity>
         <activity android:name=".MenuActivity"></activity>

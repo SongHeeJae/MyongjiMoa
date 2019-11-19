@@ -1,9 +1,11 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -13,8 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +26,6 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
@@ -38,9 +39,7 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -149,11 +148,14 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         review_recycler_view.setAdapter(review_adapter); // RecyclerView 어댑터 등록
 
         mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.review_map);
+
         if(mapFragment == null) {
             mapFragment = MapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.review_list_map, mapFragment).commit();
             mapFragment.getMapAsync(this);
         } // 네이버 지도 API 사용할 fragment 생성
+
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -241,7 +243,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             TextView description;
             RecyclerView image_recycler_view;
             ReviewImageAdapter review_image_adapter;
-            Button review_setting;
+            ImageButton review_setting;
             int pos;
 
             public ViewHolder(View itemView) {
@@ -283,7 +285,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
                     }
                 });
-                review_setting = (Button) itemView.findViewById(R.id.review_setting);
+                review_setting = (ImageButton) itemView.findViewById(R.id.review_setting);
                 number = (TextView) itemView.findViewById(R.id.review_number);
                 major = (TextView) itemView.findViewById(R.id.review_major);
 
@@ -333,7 +335,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                                     });
                                     builder.show();
                                 }
-
                             }
                         };
                         // 리뷰 세팅 버튼 클릭시 관리자 또는 본인 계정의 글일시, 다른 계정의 글 일시 다이얼로그 보여줌

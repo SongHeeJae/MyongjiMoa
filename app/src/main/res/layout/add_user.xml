@@ -27,6 +27,7 @@
             android:background="@drawable/rounded_blank"
             android:textColorHint="@color/colorwhite"
             android:hint="이메일을 입력해주세요."
+            android:textCursorDrawable="@drawable/cursor"
             android:textColor="@color/colorwhite"
             android:inputType="textEmailAddress"
             android:textAlignment="center" />
@@ -65,6 +66,7 @@
             android:background="@drawable/rounded_blank"
             android:textColorHint="@color/colorwhite"
             android:hint="비밀번호를 입력해주세요"
+            android:textCursorDrawable="@drawable/cursor"
             android:textColor="@color/colorwhite"
             android:inputType="textPassword"
             android:singleLine="true"
@@ -102,6 +104,7 @@
             android:background="@drawable/rounded_blank"
             android:textColorHint="@color/colorwhite"
             android:hint="비밀번호를 다시 입력해주세요"
+            android:textCursorDrawable="@drawable/cursor"
             android:textColor="@color/colorwhite"
             android:inputType="textPassword"
             android:singleLine="true"
@@ -135,6 +138,7 @@
             android:textColorHint="@color/colorwhite"
             android:textColor="@color/colorwhite"
             android:hint="닉네임을 입력해주세요."
+            android:textCursorDrawable="@drawable/cursor"
             android:textAlignment="center" />
 
     </RelativeLayout>
@@ -152,7 +156,6 @@
             android:text="Tip : 닉네임은 중복될 수 없습니다."
             android:textAlignment="center"
             android:textSize="15dp" />
-
     </LinearLayout>
 
     <RelativeLayout
@@ -189,6 +192,7 @@
             android:background="@drawable/rounded_blank"
             android:textColorHint="@color/colorwhite"
             android:textColor="@color/colorwhite"
+            android:textCursorDrawable="@drawable/cursor"
             android:hint="학번을 입력해주세요."
             android:inputType="number"
             android:textAlignment="center" />
@@ -225,6 +229,7 @@
             android:background="@drawable/rounded_blank"
             android:textColorHint="@color/colorwhite"
             android:textColor="@color/colorwhite"
+            android:textCursorDrawable="@drawable/cursor"
             android:hint="이름을 입력해주세요."
             android:textAlignment="center" />
     </RelativeLayout>

@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style
+        name = "splash_background" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">
+            @drawable/loginmap
+        </item>
+    </style>
+
 </resources>
