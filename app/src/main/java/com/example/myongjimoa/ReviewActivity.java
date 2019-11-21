@@ -1,7 +1,12 @@
 package com.example.myongjimoa;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -56,6 +62,19 @@ public class ReviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_main);
 
+        if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
+            AlertDialog.Builder builder = new AlertDialog.Builder(ReviewActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결을 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+            builder.show();
+            return ;
+        }
 
         Intent it = getIntent();
         category = it.getStringExtra("category");
@@ -132,6 +151,15 @@ public class ReviewActivity extends AppCompatActivity {
         downloadRestaurantList();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
     }
 
     public void downloadRestaurantList() {

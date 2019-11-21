@@ -8,6 +8,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ProgressBar
+        android:id="@+id/h_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layerType="none" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

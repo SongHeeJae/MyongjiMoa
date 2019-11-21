@@ -53,11 +53,12 @@
     <EditText
         android:layout_width="350dp"
         android:layout_height="40dp"
-        android:hint="아이디를 입력해주세요"
+        android:hint="이메일을 입력해주세요"
         android:textAlignment="center"
         android:textColorHint="@color/colorwhite"
         android:background="@drawable/rounded"
         android:textCursorDrawable="@drawable/cursor"
+        android:imeOptions="actionNext"
         android:id="@+id/login_email"/>
     </LinearLayout>
 

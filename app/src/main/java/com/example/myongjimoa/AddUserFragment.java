@@ -8,7 +8,9 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -59,15 +61,6 @@ public class AddUserFragment extends Fragment {
     CheckBox checkBox;
     CheckBox checkBox2;
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.add_user, container, false);
 
@@ -106,6 +99,8 @@ public class AddUserFragment extends Fragment {
         majorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         majorSpinner.setAdapter(majorAdapter);
         majorSpinner.setBackgroundColor(Color.WHITE);
+
+        user_name.setFilters(new InputFilter[] {filterKor});
 
         user_email.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
             @Override
@@ -186,6 +181,8 @@ public class AddUserFragment extends Fragment {
                     Toast.makeText(getActivity(), "비밀번호를 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (re_password.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "비밀번호 확인을 입력해 주세요.", Toast.LENGTH_LONG).show();
+                else if (user_password.getText().toString().length() < 6 || re_password.getText().toString().length() < 6)
+                    Toast.makeText(getActivity(), "비밀번호는 6자리 이상으로 해주세요.", Toast.LENGTH_LONG).show();
                 else if (user_nickname.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "닉네임을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (majorSpinner.getSelectedItemPosition() == 0)
@@ -286,4 +283,25 @@ public class AddUserFragment extends Fragment {
             }
         });
     }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
+
+    public InputFilter filterKor = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            Pattern ps = Pattern.compile("^[ㄱ-ㅎ가-힣]+$");
+
+            if (!ps.matcher(source).matches()) {
+                return "";
+            }
+            return null;
+        }
+    };
+
 }

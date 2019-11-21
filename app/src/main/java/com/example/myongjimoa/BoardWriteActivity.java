@@ -2,11 +2,15 @@ package com.example.myongjimoa;
 
 import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -18,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,6 +77,11 @@ public class BoardWriteActivity extends AppCompatActivity {
     ArrayList<String> delete_images;
     String board_id;
 
+    int value = 0;
+    boolean bool_upload = false;
+    ProgressBar progressBar;
+    Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +95,7 @@ public class BoardWriteActivity extends AppCompatActivity {
         write_submit = (Button) findViewById(R.id.write_submit);
         picture = (Button) findViewById(R.id.picture);
         recycler_view = (RecyclerView) findViewById(R.id.board_write_image);
+        progressBar = (ProgressBar) findViewById(R.id.h_progressbar);
 
         path =  new ArrayList<>();
 
@@ -118,9 +129,51 @@ public class BoardWriteActivity extends AppCompatActivity {
         write_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardWriteActivity.this);
+                    builder.setTitle("메시지")
+                            .setMessage("네트워크 연결을 확인해 주세요.")
+                            .setCancelable(false)
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+                    builder.show();
+                    progressBar.setProgress(0);
+                    return ;
+                }
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            value += 5;
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(value);
+                                }
+                            });
+
+                            if(bool_upload) { // 업로드 끝난 경우
+                                progressBar.setProgress(100);
+                                break;
+                            }
+
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                thread.start();
                 imageUpload();
             }
         });
+
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,6 +205,14 @@ public class BoardWriteActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
 
     public void imageUpload() {
 
@@ -229,6 +290,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                 Log.d("글쓰기 연결 실패", t.getMessage());
             }
         });
+        bool_upload = true;
     }
 
     public void setWriteImage(ClipData clip_data) { // 갤러리에서 받아온 clip_data의 실제경로로 adapter에 이미지등록

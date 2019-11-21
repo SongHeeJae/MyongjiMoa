@@ -1,13 +1,14 @@
 package com.example.myongjimoa;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,8 +19,6 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,6 +75,15 @@ public class ModifyUserActivity extends AppCompatActivity {
         tempnick = nickname.getText().toString().trim();
         tempmajor = major.getText().toString();
 
+        nickname.setOnKeyListener(new View.OnKeyListener() { // 닉네임 재입력 edittext 엔터키 차단
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
+        });
+
         modify.setOnClickListener(new View.OnClickListener() { // 수정버튼 이벤트 처리
 
             @Override
@@ -113,6 +121,19 @@ public class ModifyUserActivity extends AppCompatActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
+                                    builder.setTitle("메시지")
+                                            .setMessage("네트워크 연결을 확인해 주세요.")
+                                            .setCancelable(false)
+                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            });
+                                    builder.show();
+                                    return ;
+                                }
                                 modifyUserInfo();
                             }
                         })
@@ -150,7 +171,7 @@ public class ModifyUserActivity extends AppCompatActivity {
 
                 if(nickname_text.getText().toString().trim().equals("") || mod_majorSpinner.getSelectedItem().toString().equals("학과를 선택하세요.")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
-                    builder.setTitle("경고");
+                    builder.setTitle("메시지");
                     builder.setMessage("모든 정보를 기입하세요!");
                     builder.setCancelable(false);
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -179,7 +200,6 @@ public class ModifyUserActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.d("실패", t.getMessage());
             }
 
         });
@@ -187,6 +207,14 @@ public class ModifyUserActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { // 뒤로가기로 Activity 종료할 때 수정된 사용자 닉네임과 전공 담아줌.
+
+        /*
+        에러 내용
+        수정하다가 앱을 종료하면 서버에 정보가 저장되지 않아서 다음 실행할때 내정보 확인화면에 들어가면
+        정보가 default 설정값으로 설정되어 있음.
+        정보가 이전 정보로 돌아갈 수 있도록 서버를 만져야 함.
+         */
+
         Intent intent = new Intent();
 
         if(nickname_text.getText().toString().trim().equals("") || mod_majorSpinner.getSelectedItem().toString().equals("학과를 선택하세요.")) {
@@ -197,13 +225,22 @@ public class ModifyUserActivity extends AppCompatActivity {
             finish();
             super.onBackPressed();
         }
-        else
-        {
+
+        else {
             intent.putExtra("user_nickname", nickname.getText().toString());
             intent.putExtra("user_major", major.getText().toString());
             setResult(RESULT_OK, intent);
             finish();
             super.onBackPressed();
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
     }
 }

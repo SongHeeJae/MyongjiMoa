@@ -1,6 +1,10 @@
 package com.example.myongjimoa;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,10 +75,33 @@ public class MenuActivity extends AppCompatActivity {
         tabs.addTab(tabs.newTab().setText("금")); // 탭 메뉴들 지정해줌
         tabs.setTabGravity(tabs.GRAVITY_FILL);
         view_pager = (ViewPager) findViewById(R.id.food_menu_view_pager);
-        new DownloadMenu().execute(url1);
-        new DownloadMenu().execute(url2); // 다운로드 진행
+        if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
+            AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결을 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+            builder.show();
+            progressBar.setProgress(0);
+        }
+        else {
+            new DownloadMenu().execute(url1);
+            new DownloadMenu().execute(url2); // 다운로드 진행
+        }
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
 
     private class DownloadMenu extends AsyncTask<String, Void, Void> {
 
@@ -94,6 +121,7 @@ public class MenuActivity extends AppCompatActivity {
                                         progressBar.setProgress(value);
                                     } else {
                                         progressBar.setProgress(100);
+                                        Toast.makeText(getApplicationContext(), "정보 불러오기 완료!", Toast.LENGTH_SHORT).show();
                                         if(!temp)
                                         {
                                             handler.postDelayed(new Runnable() {

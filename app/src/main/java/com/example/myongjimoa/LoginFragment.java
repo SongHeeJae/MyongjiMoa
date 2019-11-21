@@ -125,7 +125,8 @@ public class LoginFragment extends Fragment {
                         }
                     });
                     thread.start();
-                } else if (bool_login) // 로그인 성공시 progressBar
+                }
+                else if (bool_login) // 로그인 성공시 progressBar
                     progressBar.setProgress(100);
                 mainLogin();
             }

@@ -1,6 +1,11 @@
 package com.example.myongjimoa;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -46,6 +51,21 @@ public class BoardMainActivity extends AppCompatActivity {
         setContentView(R.layout.board_main);
 
         my_major = (Button) findViewById(R.id.my_major);
+
+        if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
+            AlertDialog.Builder builder = new AlertDialog.Builder(BoardMainActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결을 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+            builder.show();
+            return ;
+        }
+
         my_major.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +134,15 @@ public class BoardMainActivity extends AppCompatActivity {
         downloadBoardList(); // 게시판 목록 다운로드
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 상단 메뉴의 뒤로가기 버튼 열어줌
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
     }
 
     void downloadBoardList() {

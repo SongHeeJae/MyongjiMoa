@@ -1,11 +1,9 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -401,7 +399,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             }
 
             public void setData(String data) {
-                Log.d("이미지경로는??", data);
                 Glide.with(ReviewListActivity.this)
                         .load(data)
                         .override(300, 300)

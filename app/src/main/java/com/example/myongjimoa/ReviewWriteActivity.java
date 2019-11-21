@@ -1,13 +1,18 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -20,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +75,11 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
     int upload_count;
 
+    int value = 0;
+    boolean bool_upload = false;
+    ProgressBar progressBar;
+    Handler handler = new Handler();
+
     private final int GET_GALLERY_IMAGE = 0;
 
     @Override
@@ -85,6 +96,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
         picture = (Button) findViewById(R.id.review_picture);
         rating_bar = (RatingBar) findViewById(R.id.review_write_rating_bar);
         recycler_view = (RecyclerView) findViewById(R.id.review_write_image);
+        progressBar = (ProgressBar) findViewById(R.id.h_progressbar);
 
         path = new ArrayList<>();
         review_write_image_adapter = new ReviewWriteImageAdapter();
@@ -112,21 +124,62 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
             @Override
             public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
             }
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
             }
         });
 
         write_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
+                    builder.setTitle("메시지")
+                            .setMessage("네트워크 연결을 확인해 주세요.")
+                            .setCancelable(false)
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+                    builder.show();
+                    progressBar.setProgress(0);
+                    return ;
+                }
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            value += 5;
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(value);
+                                }
+                            });
+
+                            if(bool_upload) { // 업로드 끝난 경우
+                                progressBar.setProgress(100);
+                                break;
+                            }
+
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                thread.start();
                 imageUpload();
             }
         }); // 제출 버튼 클릭 시 서버 업로드 시작
+
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,9 +190,17 @@ public class ReviewWriteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
+
     public void imageUpload() {
         if (review_write_image_adapter.getItemCount() > 0) {
-
             TransferObserver observer;
             TransferUtility transfer_utility = TransferUtility.builder().s3Client(Request.getAmazonS3(ReviewWriteActivity.this)).context(this).build();
 
@@ -209,6 +270,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
                 Log.d("글쓰기 연결 실패", t.getMessage());
             }
         });
+        bool_upload = true;
     }
 
     public void setWriteImage(ClipData clip_data) { // 갤러리에서 받아온 ClipData를 이용하여 Uri를 얻고 그것에서 실제경로 구해서 어댑터에 등록
@@ -308,6 +370,4 @@ public class ReviewWriteActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

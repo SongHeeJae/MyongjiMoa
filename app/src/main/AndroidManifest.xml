@@ -3,16 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myongjimoa">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
 
     <application
         android:allowBackup="false"
@@ -31,31 +28,29 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
-
-        <activity android:name=".SplashActivity"
+        <activity android:name=".MainActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".SplashActivity"
             android:theme="@style/splash_background">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".BoardActivity"></activity>
-        <activity android:name=".ReviewActivity"></activity>
-        <activity android:name=".MenuActivity"></activity>
-        <activity android:name=".ModifyUserActivity"></activity>
-        <activity android:name=".BoardPostActivity"></activity>
-        <activity android:name=".BoardWriteActivity"></activity>
-        <activity android:name=".ReviewListActivity"></activity>
-        <activity android:name=".ReviewWriteActivity"></activity>
-        <activity android:name=".BoardMainActivity"></activity>
-        <activity android:name=".ReviewMainActivity"></activity>
-        <activity android:name=".ImageActivity"></activity>
-        <activity android:name=".ShuttleActivity"></activity>
-
-
+        <activity android:name=".BoardActivity" />
+        <activity android:name=".ReviewActivity" />
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".ModifyUserActivity" />
+        <activity android:name=".BoardPostActivity" />
+        <activity android:name=".BoardWriteActivity" />
+        <activity android:name=".ReviewListActivity" />
+        <activity android:name=".ReviewWriteActivity" />
+        <activity android:name=".BoardMainActivity" />
+        <activity android:name=".ReviewMainActivity" />
+        <activity android:name=".ImageActivity" />
+        <activity android:name=".ShuttleActivity" />
     </application>
 
 </manifest>
