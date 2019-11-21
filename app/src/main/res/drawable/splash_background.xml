@@ -5,7 +5,7 @@
         android:drawable="@color/colorback" />
     <item>
         <bitmap
-            android:src="@drawable/loginmap"
+            android:src="@drawable/login_myongji"
             android:gravity="center" />
     </item>
 </layer-list>

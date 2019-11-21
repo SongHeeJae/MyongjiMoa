@@ -11,7 +11,7 @@
     <style
         name = "splash_background" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">
-            @drawable/loginmap
+            @drawable/login_myongji
         </item>
     </style>
 

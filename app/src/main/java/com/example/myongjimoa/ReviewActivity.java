@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,9 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -37,8 +34,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -132,7 +127,6 @@ public class ReviewActivity extends AppCompatActivity {
                     startActivity(it); // ReviewListActivity로 화면 전환
                     return true;
                 }
-
                 return false;
             }
 
