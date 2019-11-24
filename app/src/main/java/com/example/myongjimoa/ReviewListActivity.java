@@ -345,12 +345,12 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             }
 
             public void setData(Review data, int position) { // xml 데이터 세팅 부분
-                nickname.setText("작성자 닉네임 : " + data.getNickname());
-                date.setText("업로드 날짜 : " + data.getDate());
+                nickname.setText("별명 : " + data.getNickname());
+                date.setText("시간 : " + data.getDate());
                 rating_bar.setRating(data.getScore());
                 description.setText(data.getDescription());
-                number.setText("작성자 학번 : " + data.getNumber());
-                major.setText("작성자 전공 : " + data.getMajor());
+                number.setText("학번 : " + data.getNumber());
+                major.setText("전공 : " + data.getMajor());
                 ArrayList<String> img_data = data.getImages();
                 for(int i=0; i<img_data.size(); i++) {
                     review_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/review_images/" + img_data.get(i));

@@ -1,46 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorback"
+    android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/board_swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="테스트라인"/>
-                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="0dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/post_recycler_view"
                     android:layout_width="match_parent"
+                    android:textColor="@color/colorneon"
                     android:layout_height="match_parent"
-                    android:id="@+id/board_swipe_refresh_layout" >
+                    android:overScrollMode="never"
+                    android:layout_marginBottom="5dp"
+                    android:padding="15dp">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:overScrollMode="never"
-                            android:background="@android:color/background_light"
-                            android:id="@+id/post_recycler_view">
-                        </androidx.recyclerview.widget.RecyclerView>
-
-                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        </LinearLayout>
+                </androidx.recyclerview.widget.RecyclerView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <Button
+            android:id="@+id/write"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="글쓰기"
             android:layout_gravity="center|bottom"
-            android:id="@+id/write"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="테스트버튼"
-            android:layout_gravity="top|right"
-            android:id="@+id/test_button" />
-
+            android:background="@color/colorneon"
+            android:layout_marginBottom="15dp"
+            android:text="글쓰기"
+            android:textColor="@color/colorwhite" />
 </FrameLayout>

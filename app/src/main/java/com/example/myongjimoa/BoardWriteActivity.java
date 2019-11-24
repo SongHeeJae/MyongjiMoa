@@ -144,33 +144,50 @@ public class BoardWriteActivity extends AppCompatActivity {
                     return ;
                 }
 
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            value += 5;
-                            handler.post(new Runnable() {
+                if(write_description.getText().toString().length() == 0 || write_title.getText().toString().length() == 0)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardWriteActivity.this);
+                    builder.setTitle("메시지")
+                            .setMessage("제목 혹은 내용을 입력하세요.")
+                            .setCancelable(false)
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void run() {
-                                    progressBar.setProgress(value);
+                                public void onClick(DialogInterface dialog, int which) {
                                 }
                             });
+                    builder.show();
+                    return ;
+                }
 
-                            if(bool_upload) { // 업로드 끝난 경우
-                                progressBar.setProgress(100);
-                                break;
-                            }
+                else {
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                value += 5;
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressBar.setProgress(value);
+                                    }
+                                });
 
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                if (bool_upload) { // 업로드 끝난 경우
+                                    progressBar.setProgress(100);
+                                    break;
+                                }
+
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    }
-                });
-                thread.start();
-                imageUpload();
+                    });
+                    thread.start();
+                    imageUpload();
+                }
             }
         });
 
@@ -235,7 +252,6 @@ public class BoardWriteActivity extends AppCompatActivity {
                 observer.setTransferListener(new TransferListener() {
                     @Override
                     public void onStateChanged(int id, TransferState state) {
-                        Log.d("s3", "onStateChanged ㅇㅇㅇㅇㅇㅇㅇㅇ");
                         if (TransferState.COMPLETED == state) {
                             upload_count++;
                             if (upload_count == board_write_image_adapter.getItemCount() - modify_image_num) { // 이미지 업로드끝나면 진행
@@ -273,7 +289,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                 if(result.equals("success")) { //글쓰기 성공했을시
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardWriteActivity.this);
                     builder.setTitle("메시지");
-                    builder.setMessage("글쓰기에 성공하였습니다.");
+                    builder.setMessage("성공적으로 게시되었습니다.");
                     builder.setCancelable(false);
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override

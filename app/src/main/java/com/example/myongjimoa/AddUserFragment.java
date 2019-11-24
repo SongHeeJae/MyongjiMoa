@@ -100,8 +100,6 @@ public class AddUserFragment extends Fragment {
         majorSpinner.setAdapter(majorAdapter);
         majorSpinner.setBackgroundColor(Color.WHITE);
 
-        user_name.setFilters(new InputFilter[] {filterKor});
-
         user_email.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -292,16 +290,4 @@ public class AddUserFragment extends Fragment {
         else
             return false;
     }
-
-    public InputFilter filterKor = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            Pattern ps = Pattern.compile("^[ㄱ-ㅎ가-힣]+$");
-
-            if (!ps.matcher(source).matches()) {
-                return "";
-            }
-            return null;
-        }
-    };
-
 }

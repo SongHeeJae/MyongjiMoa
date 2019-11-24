@@ -22,14 +22,14 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
                         android:id="@+id/restaurant_title"/>
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_category"/>
@@ -45,37 +45,37 @@
                         android:id="@+id/review_list_rating_bar"/>
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_score"/>
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_review_num"/>
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_address"/>
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_telephone"/>
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_homepage"/>
 
                     <TextView
-                        android:textColor="#008888"
+                        android:textColor="@color/colorneon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_time"/>
@@ -99,7 +99,7 @@
                         android:background="@drawable/rounded_neon" >
 
                         <TextView
-                            android:textColor="#008888"
+                            android:textColor="@color/colorneon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
@@ -107,7 +107,7 @@
                             android:text="메뉴" />
 
                         <TextView
-                            android:textColor="#008888"
+                            android:textColor="@color/colorneon"
                             android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
         android:text="리뷰쓰기"
         android:layout_marginBottom="10dp"
         android:textColor="@color/colorwhite"
-        android:background="#008888"
+        android:background="@color/colorneon"
         android:layout_gravity="center|bottom"
         android:id="@+id/write_review"/>
 </FrameLayout>

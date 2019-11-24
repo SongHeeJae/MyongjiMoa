@@ -21,7 +21,7 @@
             <TextView
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:textColor="#008888"
+                android:textColor="@color/colorneon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
@@ -29,7 +29,7 @@
 
             <TextView
                 android:layout_marginLeft="5dp"
-                android:textColor="#008888"
+                android:textColor="@color/colorneon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
@@ -37,7 +37,7 @@
 
             <TextView
                 android:layout_marginLeft="5dp"
-                android:textColor="#008888"
+                android:textColor="@color/colorneon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
@@ -73,14 +73,13 @@
             </LinearLayout>
             <TextView
                 android:layout_marginLeft="5dp"
-                android:textColor="#008888"
+                android:textColor="@color/colorneon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/review_date"/>
 
             <LinearLayout
                 android:layout_margin="10dp"
-                android:background="@drawable/rounded_blank"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:layout_height="wrap_content" >

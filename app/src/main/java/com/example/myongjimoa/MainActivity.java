@@ -3,7 +3,9 @@ package com.example.myongjimoa;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,35 +102,6 @@ public class MainActivity extends AppCompatActivity {
         permission(); // 권한 체크 메소드
     }
 
-    public void LogOut() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-        super.onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("메시지").setMessage("로그아웃 하시겠습니까?");
-        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "로그아웃 되셨습니다.", Toast.LENGTH_SHORT).show();
-                LogOut();
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "취소했습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
     public  void permission() {
         PermissionListener permissionListener = new PermissionListener() {
             @Override
@@ -155,6 +128,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == MODIFY_REQUEST_CODE && resultCode == RESULT_OK){
+
+            if(data.getBooleanExtra("logout", false)) {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+
             // 내 정보 수정화면에서 돌아왔을 시 수정된 정보로 업데이트해둠
             my_info.setNickname(data.getStringExtra("user_nickname"));
             my_info.setMajor(data.getStringExtra("user_major"));

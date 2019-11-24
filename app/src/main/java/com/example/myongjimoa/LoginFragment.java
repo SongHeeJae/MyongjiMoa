@@ -4,16 +4,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -37,6 +40,7 @@ public class LoginFragment extends Fragment {
     EditText user_password;
     LinearLayout layout;
     ProgressBar progressBar;
+    CheckBox auto;
     int value = 0;
     Handler handler = new Handler();
 
@@ -48,6 +52,7 @@ public class LoginFragment extends Fragment {
         user_email = (EditText) view.findViewById(R.id.login_email);
         user_password = (EditText) view.findViewById(R.id.login_password); // 레이아웃의 id 값으로 버튼, 텍스트 객체 할당
         progressBar = (ProgressBar) view.findViewById(R.id.h_progressbar);
+        auto = (CheckBox) view.findViewById(R.id.auto);
 
         layout = (LinearLayout) view.findViewById(R.id.layout);
         layout.setBackgroundResource(R.drawable.back);
@@ -141,6 +146,7 @@ public class LoginFragment extends Fragment {
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
+
                     User result = response.body(); // User에 결과가 담김
 
                     if (result.getId() != null) { // 받은 결과의 아이디 값이 null이 아니면 로그인 성공
@@ -155,6 +161,19 @@ public class LoginFragment extends Fragment {
                         it.putExtra("name", result.getName());
                         it.putExtra("date", result.getDate());
                         it.putExtra("admin", result.getAdmin());
+                        if(auto.isChecked()) {
+                            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("id", result.getId());
+                            editor.putString("email_id", result.getEmail_id());
+                            editor.putString("user_nickname", result.getNickname());
+                            editor.putString("major", result.getMajor());
+                            editor.putString("number", result.getNumber());
+                            editor.putString("name", result.getName());
+                            editor.putString("date", result.getDate());
+                            editor.putBoolean("admin", result.getAdmin());
+                            editor.apply();
+                        }
                         getActivity().startActivity(it);
                         getActivity().finish(); // 회원정보 담아서 MainActivity로 이동. LoginActivity는 종료
                     } else {
@@ -171,6 +190,8 @@ public class LoginFragment extends Fragment {
                         builder.show();
                         fail_login = false;
                     }
+
+
                 }
 
                 @Override

@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,6 +21,9 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myongjimoa.ConnectDB;
+import com.example.myongjimoa.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +49,8 @@ public class ModifyUserActivity extends AppCompatActivity {
     String tempnick;
     String tempmajor;
 
+    Button logout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +69,31 @@ public class ModifyUserActivity extends AppCompatActivity {
         date = (TextView) findViewById(R.id.modify_user_date);
         nickname_text = (EditText) findViewById(R.id.edit_user_nickname);
         submit = (Button) findViewById(R.id.modify_submit);
+        logout = (Button) findViewById(R.id.logout);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
+                builder.setTitle("로그인 화면으로 이동하시겠습니까?").setMessage("자동로그인은 해제됩니다.");
+                builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "로그아웃 되셨습니다.", Toast.LENGTH_SHORT).show();
+                        LogOut();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "취소했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
 
         Intent it = getIntent();
         email_id.setText(it.getStringExtra("email_id"));
@@ -147,6 +179,18 @@ public class ModifyUserActivity extends AppCompatActivity {
         });
     }
 
+    public void LogOut() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove("id");
+        editor.apply();
+
+        Intent it = new Intent();
+        setResult(RESULT_OK, it);
+        it.putExtra("logout", true);
+        finish();
+    }
+
     void textSwitch() { // ViewSwitcher를 이용하여 TextField를 EditText로 바꿔줌
         ViewSwitcher major_switcher = (ViewSwitcher) findViewById(R.id.major_switcher);
         ViewSwitcher nickname_switcher = (ViewSwitcher) findViewById(R.id.nickname_switcher);
@@ -208,13 +252,6 @@ public class ModifyUserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() { // 뒤로가기로 Activity 종료할 때 수정된 사용자 닉네임과 전공 담아줌.
 
-        /*
-        에러 내용
-        수정하다가 앱을 종료하면 서버에 정보가 저장되지 않아서 다음 실행할때 내정보 확인화면에 들어가면
-        정보가 default 설정값으로 설정되어 있음.
-        정보가 이전 정보로 돌아갈 수 있도록 서버를 만져야 함.
-         */
-
         Intent intent = new Intent();
 
         if(nickname_text.getText().toString().trim().equals("") || mod_majorSpinner.getSelectedItem().toString().equals("학과를 선택하세요.")) {
@@ -225,7 +262,6 @@ public class ModifyUserActivity extends AppCompatActivity {
             finish();
             super.onBackPressed();
         }
-
         else {
             intent.putExtra("user_nickname", nickname.getText().toString());
             intent.putExtra("user_major", major.getText().toString());

@@ -67,6 +67,7 @@ public class BoardActivity extends AppCompatActivity {
         board_title = it.getStringExtra("board_title");
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
+
         // 이전 Activity에서 정보 받아옴
         setTitle(board_title);
 
@@ -207,21 +208,34 @@ public class BoardActivity extends AppCompatActivity {
         List<Post> items = new ArrayList<>();
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView text;
+            TextView title;
+            TextView nickname;
+            TextView major;
+            TextView number;
+            TextView description;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                text = (TextView) itemView.findViewById(R.id.post_title);
+                title = (TextView) itemView.findViewById(R.id.post_title);
+                nickname = (TextView) itemView.findViewById(R.id.post_nickname);
+                major = (TextView) itemView.findViewById(R.id.post_major);
+                number = (TextView) itemView.findViewById(R.id.post_number);
+                description = (TextView) itemView.findViewById(R.id.post_description);
 
-                // 제목 글자수가 1줄 초과하면 ...으로 처리.
-                text.setMaxLines(1);
-                text.setEllipsize(TextUtils.TruncateAt.END);
-
+                // 제목 및 내용 글자수가 1줄 초과하면 ...으로 처리.
+                title.setMaxLines(1);
+                description.setMaxLines(1);
+                title.setEllipsize(TextUtils.TruncateAt.END);
+                description.setEllipsize(TextUtils.TruncateAt.END);
             }
 
             public void setData(Post data) {
                 //값 읽어오기
-                text.setText(data.getTitle());
+                title.setText(data.getTitle());
+                description.setText(data.getDescription());
+                nickname.setText(data.getNickname());
+                major.setText(data.getMajor());
+                number.setText(data.getNumber()+ "학번");
             }
         }
 

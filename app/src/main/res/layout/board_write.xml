@@ -1,66 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorback"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <ProgressBar
-        android:id="@+id/h_progressbar"
-        style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/h_progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layerType="none" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layerType="none" />
+        android:layout_margin="10dp"
+        android:background="@drawable/rectangle_report"
+        android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="글써주세요"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="완료"
-                    android:id="@+id/write_submit"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="사진업로드"
-                    android:id="@+id/picture"/>
-
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:hint="제목을 입력해주세요."
+                android:layout_weight="3"
+                android:layout_marginLeft="10dp"
+                android:textCursorDrawable="@drawable/cursor"
+                android:textAlignment="center"
+                android:textColor="@color/colorwhite"
+                android:textColorHint="@color/colorwhite"
                 android:id="@+id/write_title" />
 
-            <EditText
+            <Button
+                android:id="@+id/picture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="내용을 입력해주세요."
-                android:gravity="top"
-                android:id="@+id/write_description" />
+                android:layout_weight="7"
+                android:background="@color/colorneon"
+                android:text="PHOTO" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="420dp"
+            android:hint="내용을 입력해주세요."
+            android:background="@drawable/rounded_blank"
+            android:textCursorDrawable="@drawable/cursor"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:textColor="@color/colorwhite"
+            android:textColorHint="@color/colorwhite"
+            android:gravity="top"
+            android:id="@+id/write_description" />
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_neon">
+
+        <TextView
+            android:layout_margin="5dp"
+            android:textColor="@color/colorneon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/board_write_image">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_gravity="center"
+            android:text="첨부된 이미지"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/board_write_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+        <Button
+            android:id="@+id/write_submit"
+            android:background="@color/colorneon"
+            android:textColor="@color/colorwhite"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="10dp"
+            android:text="완료" />
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -50,16 +50,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-    <EditText
-        android:layout_width="350dp"
-        android:layout_height="40dp"
-        android:hint="이메일을 입력해주세요"
-        android:textAlignment="center"
-        android:textColorHint="@color/colorwhite"
-        android:background="@drawable/rounded"
-        android:textCursorDrawable="@drawable/cursor"
-        android:imeOptions="actionNext"
-        android:id="@+id/login_email"/>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:hint="이메일을 입력해주세요"
+            android:textAlignment="center"
+            android:textColorHint="@color/colorwhite"
+            android:background="@drawable/rounded"
+            android:textCursorDrawable="@drawable/cursor"
+            android:imeOptions="actionNext"
+            android:id="@+id/login_email"/>
     </LinearLayout>
 
     <LinearLayout
@@ -67,16 +67,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
-    <EditText
-        android:layout_width="350dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="5dp"
-        android:hint="비밀번호를 입력해주세요"
-        android:textColorHint="@color/colorwhite"
-        android:textAlignment="center"
-        android:textCursorDrawable="@drawable/cursor"
-        android:background="@drawable/rounded"
-        android:id="@+id/login_password"/>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:hint="비밀번호를 입력해주세요"
+            android:textColorHint="@color/colorwhite"
+            android:textAlignment="center"
+            android:textCursorDrawable="@drawable/cursor"
+            android:background="@drawable/rounded"
+            android:id="@+id/login_password"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorwhite"
+            android:buttonTint="@color/colorwhite"
+            android:text="자동로그인"
+            android:id="@+id/auto" />
+
     </LinearLayout>
 
     <LinearLayout

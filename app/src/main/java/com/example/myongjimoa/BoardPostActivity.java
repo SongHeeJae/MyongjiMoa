@@ -16,8 +16,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,12 +64,13 @@ public class BoardPostActivity extends AppCompatActivity {
     RecyclerView image_recycler_view;
     public GestureDetector gesture_detector;
 
-    Button recommend_button;
+    ImageButton recommend_button;
     TextView recommend_num;
 
     Post post;
     String user_id;
     String user_nickname;
+    String dated;
 
     private final int MODIFY_REQUEST_CODE = 1000;
 
@@ -88,7 +91,7 @@ public class BoardPostActivity extends AppCompatActivity {
         post_description = (TextView) findViewById(R.id.post_description);
         comment_submit = (Button) findViewById(R.id.comment_submit);
         write_comment = (EditText) findViewById(R.id.write_comment);
-        recommend_button = (Button) findViewById(R.id.recommend_button);
+        recommend_button = (ImageButton) findViewById(R.id.recommend_button);
         recommend_num = (TextView) findViewById(R.id.recommend_num);
         post_number = (TextView) findViewById(R.id.post_number);
         post_major = (TextView) findViewById(R.id.post_major);
@@ -103,13 +106,15 @@ public class BoardPostActivity extends AppCompatActivity {
             }
         });
 
-        post_nickname.setText(post.getNickname());
-        post_date.setText(post.getDate());
+        dated = post.getDate().substring(0, 16);
+
+        post_nickname.setText(post.getNickname() + " | ");
+        post_date.setText(dated + " | ");
         post_title.setText(post.getTitle());
         post_description.setText(post.getDescription());
-        post_number.setText(post.getNumber());
-        post_major.setText(post.getMajor());
-        recommend_num.setText(post.getRecommend_num() + "");
+        post_number.setText(post.getNumber() + " 학번 | ");
+        post_major.setText(post.getMajor() + " 전공");
+        recommend_num.setText(post.getRecommend_num() + "개");
         recommend_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,7 +237,8 @@ public class BoardPostActivity extends AppCompatActivity {
                     builder.show();
                 } else if(!result.equals("failed")) { // 정상 처리되었을 시
                     post.setRecommend_num(Integer.parseInt(result));
-                    recommend_num.setText(post.getRecommend_num() + "");
+                    Toast.makeText(getApplicationContext(), "추천했습니다.", Toast.LENGTH_SHORT).show();
+                    recommend_num.setText(post.getRecommend_num() + "개");
                 } else { // failed 이면 이미 추천 게시글 알림띄어줌
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("메시지");
@@ -316,7 +322,7 @@ public class BoardPostActivity extends AppCompatActivity {
             TextView comment_date;
             TextView comment_number;
             TextView comment_major;
-            Button comment_button;
+            ImageButton comment_button;
             int pos;
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -325,7 +331,7 @@ public class BoardPostActivity extends AppCompatActivity {
                 comment_date = (TextView) itemView.findViewById(R.id.comment_date);
                 comment_major = (TextView) itemView.findViewById(R.id.comment_major);
                 comment_number = (TextView) itemView.findViewById(R.id.comment_number);
-                comment_button = (Button) itemView.findViewById(R.id.comment_button);
+                comment_button = (ImageButton) itemView.findViewById(R.id.comment_button);
                 comment_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -334,10 +340,43 @@ public class BoardPostActivity extends AppCompatActivity {
                         DialogInterface.OnClickListener dialog_listener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if(which == 0) {
-                                    reportCurrentComment(items.get(pos).getId());
-                                } else if (which == 1) {
-                                    removeCurrentComment(items.get(pos).getId());
+                                if(which == 0) { // 신고
+                                    final AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
+                                    builder.setTitle("신고").setMessage("정말 신고하시겠습니까?");
+                                    builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            reportCurrentComment(items.get(pos).getId());
+                                        }
+                                    });
+
+                                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                    builder.show();
+                                } else if (which == 1) { // 삭제
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
+                                    builder.setTitle("삭제").setMessage("정말 삭제하시겠습니까?");
+                                    builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                            removeCurrentComment(items.get(pos).getId());
+
+                                        }
+                                    });
+                                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    builder.show();
                                 }
                             }
                         };
@@ -351,11 +390,11 @@ public class BoardPostActivity extends AppCompatActivity {
 
             public void setData(Comment item, int position) {
                 //값 읽어오기
-                comment_nickname.setText(item.getNickname());
-                comment.setText(item.getComment());
-                comment_date.setText(item.getDate());
-                comment_major.setText(item.getMajor());
-                comment_number.setText(item.getNumber());
+                comment_nickname.setText("별명 : " + item.getNickname());
+                comment.setText("" + item.getComment());
+                comment_date.setText("시간 : " + item.getDate());
+                comment_major.setText("전공 : " + item.getMajor());
+                comment_number.setText("학번 : " + item.getNumber());
                 pos=position;
             }
         }
@@ -441,9 +480,23 @@ public class BoardPostActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
         switch (item.getItemId()) {
             case R.id.menu_report:
-                reportCurrentPost();
+                builder.setTitle("신고").setMessage("정말 신고하시겠습니까?");
+                builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reportCurrentPost();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.show();
                 return true;
 
             case R.id.menu_refresh:
@@ -451,7 +504,20 @@ public class BoardPostActivity extends AppCompatActivity {
                 return true;
 
             case R.id.menu_remove:
-                removeCurrentPost();
+                builder.setTitle("삭제").setMessage("정말 삭제하시겠습니까?");
+                builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeCurrentPost();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.show();
                 return true;
 
             case R.id.menu_modify:
@@ -475,6 +541,7 @@ public class BoardPostActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
                 if (result.equals("success")) {
+                    Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     if(post.getImages().size() != 0) {
                         new Thread(new Runnable() { // 메인스레드에서는 통신작업을 수행할 수 없어서 새로운 스레드 생성. 데이터베이스 서버에서의 삭제가 끝난뒤, 파일 서버에서의 이미지 삭제 이어서 진행
                             @Override
@@ -522,6 +589,7 @@ public class BoardPostActivity extends AppCompatActivity {
                     });
                     builder.show();
                 } else if(!result.equals("failed")) { // 신고 정상 수행
+                    Toast.makeText(getApplicationContext(), "신고했습니다.", Toast.LENGTH_SHORT).show();
                     if(Integer.parseInt(result) >= 5) { // 신고 결과가 5회 이상이면 삭제 진행
                         removeCurrentPost();
                     }
@@ -553,7 +621,7 @@ public class BoardPostActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body().trim();
-                if (result.equals("success")) { // 정상 삭제 수행시 댓글 reload
+                if (result.equals("success")) {// 정상 삭제 수행시 댓글 reload
                     reloadComment();
                 }
             }
@@ -587,6 +655,7 @@ public class BoardPostActivity extends AppCompatActivity {
                     });
                     builder.show();
                 } else if(!result.equals("failed")) {
+                    Toast.makeText(getApplicationContext(), "신고되었습니다.", Toast.LENGTH_SHORT).show();
                     if(Integer.parseInt(result) >= 5) { // 5회 이상일 시 삭제처리
                         removeCurrentComment(comment_id);
                     }

@@ -19,17 +19,18 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="20dp"
             android:baselineAligned="false"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/loginping" />
+            app:srcCompat="@drawable/loginping"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/main_back"
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="420dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/menu_back"
         android:orientation="vertical">
 
@@ -38,41 +39,26 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:layout_marginRight="20dp"
-            android:padding="0dp">
+            android:visibility="visible"
+            android:layout_marginTop="15dp">
 
-            <RelativeLayout
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="70dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="180dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="15dp"
+                android:backgroundTint="#00383434"
+                android:scaleType="fitXY"
+                android:src="@drawable/main_me"/>
 
-                <ImageButton
-                    android:id="@+id/imageButton2"
-                    android:layout_width="138dp"
-                    android:layout_height="182dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:backgroundTint="#00383434"
-                    android:padding="0dp"
-                    android:layout_marginRight="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/main_me" />
-
-                <ImageButton
-                    android:id="@+id/group"
-                    android:layout_width="138dp"
-                    android:layout_height="182dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:layout_marginRight="30dp"
-                    android:backgroundTint="#005A5353"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:padding="0dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/main_group" />
-            </RelativeLayout>
+            <ImageButton
+                android:id="@+id/group"
+                android:layout_width="180dp"
+                android:layout_height="200dp"
+                android:layout_marginRight="12dp"
+                android:backgroundTint="#00383434"
+                android:scaleType="fitXY"
+                android:src="@drawable/main_group"/>
         </LinearLayout>
 
         <LinearLayout
@@ -80,52 +66,42 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="47dp"
-            android:padding="0dp">
+            android:visibility="visible"
+            android:layout_marginBottom="15dp">
 
             <ImageButton
                 android:id="@+id/review"
-                style="@android:style/Widget.Material.ImageButton"
-                android:layout_width="150dp"
-                android:layout_height="182dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:backgroundTint="#00554E4E"
-                android:padding="0dp"
+                android:layout_width="180dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="15dp"
+                android:backgroundTint="#00383434"
                 android:scaleType="fitXY"
-                android:src="@drawable/main_review" />
+                android:src="@drawable/main_review"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="182dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical"
-                android:padding="0dp">
+                android:visibility="visible">
 
                 <ImageButton
                     android:id="@+id/food"
-                    android:layout_width="133dp"
-                    android:layout_height="85dp"
-                    android:layout_marginRight="60dp"
-                    android:layout_weight="0"
-                    android:adjustViewBounds="true"
-                    android:backgroundTint="#00494343"
-                    android:padding="0dp"
+                    android:layout_width="180dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="12dp"
+                    android:backgroundTint="#00383434"
                     android:scaleType="fitXY"
-                    android:src="@drawable/main_food" />
+                    android:src="@drawable/main_food"/>
 
                 <ImageButton
                     android:id="@+id/shuttle"
-                    android:layout_width="133dp"
-                    android:layout_height="100dp"
-                    android:layout_marginRight="60dp"
-                    android:layout_weight="0"
-                    android:adjustViewBounds="true"
-                    android:backgroundTint="#00463F3F"
-                    android:padding="0dp"
+                    android:layout_width="180dp"
+                    android:layout_height="115dp"
+                    android:layout_marginRight="12dp"
+                    android:backgroundTint="#00383434"
                     android:scaleType="fitXY"
-                    android:src="@drawable/main_shuttle" />
+                    android:src="@drawable/main_shuttle"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

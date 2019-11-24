@@ -1,14 +1,10 @@
 package com.example.myongjimoa;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,19 +14,17 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 public class ShuttleActivity extends AppCompatActivity {
 
 
-    String[] citybus = {"08:00", "08:15", "08:30", "08:45", "09:00", "09:15", "09:30", "09:45",
-            "10:00", "10:15", "10:30", "10:45", "11:00", "11:30", "12:00", "12:30", "13:00",
-            "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:40", "19:20", "20:00", "20:40"};
+    String[] citybus = {"08:00", "08:15", "08:30", "08:45", "09:00", "09:15", "09:30", "09:45"
+            , "10:00", "10:15", "10:30", "10:45", "11:00", "11:30","12:00", "12:30",
+            "13:00", "13:30", "14:00", "14:30",  "15:00", "15:30", "16:00", "16:30",
+            "17:00", "17:30","18:00", "18:40",  "19:20", "20:00", "20:40"};
 
     String[] intobus = {"08:10", "08:20", "08:25", "08:40", "08:50", "08:55", "09:10", "09:20",
             "09:25", "09:40", "09:50", "09:55", "10:10", "10:20", "10:25", "10:40", "10:50",
@@ -97,23 +91,24 @@ public class ShuttleActivity extends AppCompatActivity {
     public void setShuttleTime() { // 가까운 시간대의 셔틀 시간 계산
 
         String time = Request.getTime("HH:mm");
+
+        CityBus.setText("이용가능 한 시내 방향 셔틀이 없습니다.");
+        IntoBus.setText("이용가능 한 진입로 방향 셔틀이 없습니다.");
+        IntoSchool.setText("이용가능 한 학교 방향 셔틀이 없습니다.");
+        // pos가 시간표 목록의 크기보다 크다면, 오늘은 현재 셔틀 정보 없음
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-
-        CityBus.setText("잠시 후 이용가능한 시내 방향 셔틀이 없습니다.");
-        IntoBus.setText("잠시 후 이용가능한 진입로 방향 셔틀이 없습니다.");
-        IntoSchool.setText("잠시 후 이용 가능한 학교 방향 셔틀이 없습니다.");
-        // pos가 시간표 목록의 크기보다 크다면, 오늘은 현재 셔틀 정보 없음
-
         if(day == 1 || day == 7)
             return ;
+
         int pos = binarySearch(citybus, time);
-        if(pos < citybus.length) CityBus.setText("잠시 후 이용 가능한 시내 방향 셔틀은 " + citybus[pos] + "분 입니다.");
+        if(pos < citybus.length) CityBus.setText("이용 가능한 시내 방향 셔틀은 " + citybus[pos] + "분 입니다.");
         pos = binarySearch(intobus, time);
-        if(pos < intobus.length) IntoBus.setText("잠시 후 이용 가능한 진입로 방향 셔틀은 " + intobus[pos] + "분 입니다.");
+        if(pos < intobus.length) IntoBus.setText("이용 가능한 진입로 방향 셔틀은 " + intobus[pos] + "분 입니다.");
         pos = binarySearch(intoschool, time);
-        if(pos < intoschool.length) IntoSchool.setText("잠시 후 이용 가능한 학교 방향 셔틀은 " + intoschool[pos] + "분 입니다.");
+        if(pos < intoschool.length) IntoSchool.setText("이용 가능한 학교 방향 셔틀은 " + intoschool[pos] + "분 입니다.");
     }
 
     public int binarySearch(String arr[], String searchValue) { // 시간표 목록에서 가까운 시간대 찾음
@@ -128,7 +123,6 @@ public class ShuttleActivity extends AppCompatActivity {
         }
         return first > center ? center + 1: center; // 못찾았을 때 first가 더 크게 종료되었다면 center + 1, 아니라면 center가 시간표의 위치
     }
-
 
     public class ShuttleAdapter extends PagerAdapter {
 
@@ -146,8 +140,17 @@ public class ShuttleActivity extends AppCompatActivity {
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.shuttle_tab, container, false);
-            TextView textView = (TextView) view.findViewById(R.id.shuttle_time) ;
-            textView.setText(times.get(position));
+            TextView[] text = {
+                    (TextView) view.findViewById(R.id.shuttle_time1),
+                    (TextView) view.findViewById(R.id.shuttle_time2),
+                    (TextView) view.findViewById(R.id.shuttle_time3)
+            };
+            String[] t = times.get(position).split("\n");
+            for(int i=0; i<3; i++) {
+                String tt = "";
+                for(int j=t.length/3*i ; j < t.length/3*(i+1); j++) tt += t[j] + "\n";
+                text[i].setText(tt );
+            }
 
             container.addView(view) ;
 

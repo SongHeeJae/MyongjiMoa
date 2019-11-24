@@ -41,7 +41,6 @@ public class BoardMainActivity extends AppCompatActivity {
     String user_id;
     String user_nickname;
     String user_major;
-
     Button my_major;
 
 
@@ -132,7 +131,6 @@ public class BoardMainActivity extends AppCompatActivity {
         });
 
         downloadBoardList(); // 게시판 목록 다운로드
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 상단 메뉴의 뒤로가기 버튼 열어줌
     }
 

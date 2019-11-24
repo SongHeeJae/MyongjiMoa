@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:textSize="18dp"
             android:text="이메일" />
 
@@ -28,7 +28,7 @@
             android:textSize="18dp"
             android:layout_weight="0.8"
             android:id="@+id/modify_user_email"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:text="닉네임" />
 
         <ViewSwitcher
@@ -61,7 +61,7 @@
 
             <TextView
                 android:layout_marginTop="5dp"
-                android:textColor="#008888"
+                android:textColor="@color/colorneon"
                 android:textSize="18dp"
                 android:id="@+id/modify_user_nickname"
                 android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:text="전공" />
 
         <ViewSwitcher
@@ -104,7 +104,7 @@
 
             <TextView
                 android:textSize="18dp"
-                android:textColor="#008888"
+                android:textColor="@color/colorneon"
                 android:id="@+id/modify_user_major"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -133,13 +133,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:text="학번" />
 
         <TextView
             android:textSize="18dp"
             android:layout_weight="0.8"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:id="@+id/modify_user_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -162,13 +162,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:text="이름" />
 
         <TextView
             android:textSize="18dp"
             android:layout_weight="0.8"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:id="@+id/modify_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -190,13 +190,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:text="가입일" />
 
         <TextView
             android:textSize="18dp"
             android:layout_weight="0.8"
-            android:textColor="#008888"
+            android:textColor="@color/colorneon"
             android:id="@+id/modify_user_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -206,15 +206,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-    <Button
-        android:layout_marginTop="30dp"
-        android:layout_centerInParent="true"
-        android:textColor="@color/colorwhite"
-        android:background="#008888"
-        android:id="@+id/user_modify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="수정" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그아웃"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/colorwhite"
+            android:background="@color/colorneon"
+            android:layout_centerVertical="true"
+            android:id="@+id/logout" />
+
+        <Button
+            android:layout_marginTop="30dp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorwhite"
+            android:background="@color/colorneon"
+            android:id="@+id/user_modify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수정" />
 
     </RelativeLayout>
 
@@ -222,15 +233,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/modify_submit"
-        android:textColor="@color/colorwhite"
-        android:background="#008888"
-        android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
-        android:text="완료"
-        android:visibility="invisible"/>
+        <Button
+            android:id="@+id/modify_submit"
+            android:textColor="@color/colorwhite"
+            android:background="@color/colorneon"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:text="완료"
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 

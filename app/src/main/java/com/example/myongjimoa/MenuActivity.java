@@ -68,11 +68,11 @@ public class MenuActivity extends AppCompatActivity {
         day_menu2 = new ArrayList<>();
 
         tabs = (TabLayout) findViewById(R.id.food_days_tabs);
-        tabs.addTab(tabs.newTab().setText("월"));
-        tabs.addTab(tabs.newTab().setText("화"));
-        tabs.addTab(tabs.newTab().setText("수"));
-        tabs.addTab(tabs.newTab().setText("목"));
-        tabs.addTab(tabs.newTab().setText("금")); // 탭 메뉴들 지정해줌
+        tabs.addTab(tabs.newTab().setText("MON"));
+        tabs.addTab(tabs.newTab().setText("TUE"));
+        tabs.addTab(tabs.newTab().setText("WED"));
+        tabs.addTab(tabs.newTab().setText("THU"));
+        tabs.addTab(tabs.newTab().setText("FRI")); // 탭 메뉴들 지정해줌
         tabs.setTabGravity(tabs.GRAVITY_FILL);
         view_pager = (ViewPager) findViewById(R.id.food_menu_view_pager);
         if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
@@ -148,7 +148,7 @@ public class MenuActivity extends AppCompatActivity {
                 });
                 thread.start();
             }
-    }
+        }
 
         @Override
         protected Void doInBackground(String... params) { // 명지대학교 홈페이지 접속하여 메뉴 긁어옴
