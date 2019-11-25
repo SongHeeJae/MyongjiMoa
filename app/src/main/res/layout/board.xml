@@ -6,6 +6,16 @@
     android:background="@color/colorback"
     android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/no_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="16dp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="게시글이 없습니다. 처음으로 업로드 해보세요!" />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/board_swipe_refresh_layout"
             android:layout_width="match_parent"

@@ -243,6 +243,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             ReviewImageAdapter review_image_adapter;
             ImageButton review_setting;
             int pos;
+            String temp;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -345,8 +346,11 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             }
 
             public void setData(Review data, int position) { // xml 데이터 세팅 부분
+
+                temp = data.getDate().substring(0, 16);
+
                 nickname.setText("별명 : " + data.getNickname());
-                date.setText("시간 : " + data.getDate());
+                date.setText("시간 : " + temp);
                 rating_bar.setRating(data.getScore());
                 description.setText(data.getDescription());
                 number.setText("학번 : " + data.getNumber());
@@ -401,7 +405,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             public void setData(String data) {
                 Glide.with(ReviewListActivity.this)
                         .load(data)
-                        .override(300, 300)
                         .into(img);
             }
         }

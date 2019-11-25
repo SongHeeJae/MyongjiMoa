@@ -323,6 +323,7 @@ public class BoardPostActivity extends AppCompatActivity {
             TextView comment_number;
             TextView comment_major;
             ImageButton comment_button;
+            String temp;
             int pos;
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -389,10 +390,13 @@ public class BoardPostActivity extends AppCompatActivity {
             }
 
             public void setData(Comment item, int position) {
+
+                temp = post.getDate().substring(0, 16);
+
                 //값 읽어오기
                 comment_nickname.setText("별명 : " + item.getNickname());
                 comment.setText("" + item.getComment());
-                comment_date.setText("시간 : " + item.getDate());
+                comment_date.setText("시간 : " + temp);
                 comment_major.setText("전공 : " + item.getMajor());
                 comment_number.setText("학번 : " + item.getNumber());
                 pos=position;
@@ -436,7 +440,6 @@ public class BoardPostActivity extends AppCompatActivity {
                 //값 읽어오기
                 Glide.with(BoardPostActivity.this)
                         .load(item)
-                        .override(500)
                         .into(img);
             }
         }

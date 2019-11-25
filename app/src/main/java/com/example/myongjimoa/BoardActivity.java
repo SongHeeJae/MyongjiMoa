@@ -49,6 +49,7 @@ public class BoardActivity extends AppCompatActivity {
     Button write;
 
     String count_board_id;
+    TextView no_show;
 
     boolean scroll;
 
@@ -67,11 +68,13 @@ public class BoardActivity extends AppCompatActivity {
         board_title = it.getStringExtra("board_title");
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
+        no_show = (TextView) findViewById(R.id.no_show);
 
         // 이전 Activity에서 정보 받아옴
         setTitle(board_title);
 
         write = (Button) findViewById(R.id.write);
+
         write.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +103,6 @@ public class BoardActivity extends AppCompatActivity {
                 swipe_refresh_layout.setRefreshing(false);
             }
         });
-
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recycler_view.setLayoutManager(layoutManager); // 수직 방향의 LinearLayout을 RecyclerView에 지정
@@ -151,9 +153,7 @@ public class BoardActivity extends AppCompatActivity {
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기버튼 활성화
-
         downloadPostList(); // 게시글 목록 다운로드
-
     }
 
 
@@ -167,14 +167,17 @@ public class BoardActivity extends AppCompatActivity {
 
                 List<Post> result = response.body();
                 if (result != null) {
-                    if (result.size() != 0) {
+                    if (result.size() != 0) { // 게시물이 있는 경우
                         for (int i = 0; i < result.size(); i++) { // 다운로드된 게시글 어댑터에 등록
                             board_post_title_adapter.add(new Post(result.get(i).getId(), result.get(i).getTitle(), result.get(i).getDescription(), result.get(i).getNumber(), result.get(i).getMajor(), result.get(i).getDate(), result.get(i).getNickname(), result.get(i).getImages(), result.get(i).getRecommend_num()));
                         }
                         if (result.size() < 15) scroll = false; // 데이터 다 가져왔을 경우, 화면 끝에 닿았을 때 더이상 다운로드 안일어나게함
                         count_board_id = result.get(result.size() - 1).getId(); // 현재 다운로드된 마지막 게시글의 id(PK)값
                     }
+                    else // 게시물이 없는 경우
+                        no_show.setVisibility(View.VISIBLE);
                 }
+
                 recycler_view.clearOnScrollListeners();
                 recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
@@ -188,7 +191,6 @@ public class BoardActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Log.d("실패", t.getMessage());
             }
         });
     }
@@ -203,7 +205,6 @@ public class BoardActivity extends AppCompatActivity {
         downloadPostList();
     }
 
-
     class BoardPostTitleAdapter extends RecyclerView.Adapter<BoardPostTitleAdapter.ViewHolder> {
         List<Post> items = new ArrayList<>();
 
@@ -213,6 +214,8 @@ public class BoardActivity extends AppCompatActivity {
             TextView major;
             TextView number;
             TextView description;
+            TextView date;
+            String temp;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -221,6 +224,7 @@ public class BoardActivity extends AppCompatActivity {
                 major = (TextView) itemView.findViewById(R.id.post_major);
                 number = (TextView) itemView.findViewById(R.id.post_number);
                 description = (TextView) itemView.findViewById(R.id.post_description);
+                date = (TextView) itemView.findViewById(R.id.post_date);
 
                 // 제목 및 내용 글자수가 1줄 초과하면 ...으로 처리.
                 title.setMaxLines(1);
@@ -230,12 +234,15 @@ public class BoardActivity extends AppCompatActivity {
             }
 
             public void setData(Post data) {
+                temp = data.getDate().substring(0, 16);
+
                 //값 읽어오기
                 title.setText(data.getTitle());
                 description.setText(data.getDescription());
                 nickname.setText(data.getNickname());
                 major.setText(data.getMajor());
                 number.setText(data.getNumber()+ "학번");
+                date.setText(temp);
             }
         }
 
@@ -252,6 +259,7 @@ public class BoardActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            // 항목이 없는 경우 메소드 안씀
             holder.setData(items.get(position));
         }
 
@@ -297,7 +305,6 @@ public class BoardActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Log.d("실패", t.getMessage());
             }
         });
     }

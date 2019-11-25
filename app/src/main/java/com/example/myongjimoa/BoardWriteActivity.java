@@ -342,7 +342,6 @@ public class BoardWriteActivity extends AppCompatActivity {
             public void setData(String data) {
                 Glide.with(BoardWriteActivity.this)
                         .load(data)
-                        .override(500)
                         .into(img);
             }
 

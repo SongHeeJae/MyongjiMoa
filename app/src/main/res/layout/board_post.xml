@@ -6,7 +6,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="55dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,6 +45,7 @@
                     android:textSize="17dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginBottom="5dp"
+                    android:layout_marginRight="10dp"
                     android:id="@+id/post_description"/>
 
             </LinearLayout>
@@ -113,35 +115,40 @@
                 android:id="@+id/post_comment_recycler_view">
             </androidx.recyclerview.widget.RecyclerView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="bottom|center">
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="댓글을 입력하세요."
-                    android:background="@drawable/rounded"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:layout_weight="3"
-                    android:textAlignment="center"
-                    android:id="@+id/write_comment"/>
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="7"
-                    android:background="@color/colorneon"
-                    android:text="댓글 작성"
-                    android:textColor="@color/colorwhite"
-                    android:id="@+id/comment_submit"/>
-            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="2dp"
+        android:layout_gravity="bottom|center">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="댓글을 입력하세요."
+            android:background="@drawable/rounded"
+            android:textCursorDrawable="@drawable/cursor"
+            android:layout_weight="3"
+            android:textAlignment="center"
+            android:id="@+id/write_comment"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+            android:background="@color/colorneon"
+            android:text="댓글 작성"
+            android:textColor="@color/colorwhite"
+            android:id="@+id/comment_submit"/>
+    </LinearLayout>
+
+
 </FrameLayout>

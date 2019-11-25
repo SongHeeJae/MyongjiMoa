@@ -308,7 +308,6 @@ public class ReviewWriteActivity extends AppCompatActivity {
                 // download 경로 못읽는거 버그 오류
                 Glide.with(ReviewWriteActivity.this)
                         .load(data)
-                        .override(500)
                         .into(img);
             }
         }

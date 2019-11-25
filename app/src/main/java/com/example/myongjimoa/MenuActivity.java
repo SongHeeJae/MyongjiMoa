@@ -121,7 +121,6 @@ public class MenuActivity extends AppCompatActivity {
                                         progressBar.setProgress(value);
                                     } else {
                                         progressBar.setProgress(100);
-                                        Toast.makeText(getApplicationContext(), "정보 불러오기 완료!", Toast.LENGTH_SHORT).show();
                                         if(!temp)
                                         {
                                             handler.postDelayed(new Runnable() {
