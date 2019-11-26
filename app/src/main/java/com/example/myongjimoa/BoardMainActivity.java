@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,15 +44,16 @@ public class BoardMainActivity extends AppCompatActivity {
     String user_id;
     String user_nickname;
     String user_major;
-    Button my_major;
-
+    ImageButton my_major;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_main);
 
-        my_major = (Button) findViewById(R.id.my_major);
+        setTitle("게시판");
+
+        my_major = (ImageButton) findViewById(R.id.my_major);
 
         if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
             AlertDialog.Builder builder = new AlertDialog.Builder(BoardMainActivity.this);
@@ -162,7 +166,6 @@ public class BoardMainActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<List<Board>> call, Throwable t) {
-                Log.d("실패", t.getMessage());
             }
 
         });
@@ -173,16 +176,56 @@ public class BoardMainActivity extends AppCompatActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView text;
+            LinearLayout linearLayout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 text = (TextView) itemView.findViewById(R.id.title);
-
             }
 
             public void setData(Board data) {
                 //값 읽어오기
-                text.setText(data.getTitle());
+
+                linearLayout = (LinearLayout) itemView.findViewById(R.id.recycle_title);
+                RecyclerView.LayoutParams p1 = (RecyclerView.LayoutParams) linearLayout.getLayoutParams();
+
+                if(data.getTitle().equals("자유게시판")) {
+                    linearLayout.setBackgroundResource(R.color.colorboard1);
+                    p1.leftMargin = 13;
+                    p1.rightMargin = 13;
+                    text.setText(" > " + data.getTitle());
+                }
+                else if(data.getTitle().equals("명지장터")) {
+                    linearLayout.setBackgroundResource(R.color.colorboard1);
+                    p1.leftMargin = 13;
+                    p1.rightMargin = 13;
+                    text.setText(" > " + data.getTitle());
+                }
+                else if(data.getTitle().equals("동아리게시판")) {
+                    linearLayout.setBackgroundResource(R.color.colorboard1);
+                    p1.leftMargin = 13;
+                    p1.rightMargin = 13;
+                    text.setText(" > " + data.getTitle());
+                }
+                else if(data.getTitle().equals("자취생게시판")) {
+                    linearLayout.setBackgroundResource(R.color.colorboard1);
+                    p1.leftMargin = 13;
+                    p1.rightMargin = 13;
+                    text.setText(" > " + data.getTitle());
+                }
+                else if(data.getTitle().equals("기숙사생게시판")) {
+                    linearLayout.setBackgroundResource(R.color.colorboard1);
+                    p1.leftMargin = 13;
+                    p1.rightMargin = 13;
+                    text.setText(" > " + data.getTitle());
+                }
+                else {
+                    p1.leftMargin = 200;
+                    p1.rightMargin = 200;
+                    linearLayout.setBackgroundResource(R.color.colorboard2);
+                    text.setText(data.getTitle());
+                }
+                linearLayout.setLayoutParams(p1);
             }
         }
 

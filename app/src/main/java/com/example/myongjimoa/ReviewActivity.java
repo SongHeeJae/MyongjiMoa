@@ -52,8 +52,6 @@ public class ReviewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Log.d("test : ", "현재 보기");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_main);
 
@@ -210,7 +208,7 @@ public class ReviewActivity extends AppCompatActivity {
                 Glide.with(ReviewActivity.this)
                         .load(data.getImage())
                         .placeholder(R.drawable.noimage)
-                        .override(500, 500)
+                        .override(300, 700)
                         .into(image);
                 title.setText(data.getTitle());
                 category.setText(data.getCategory());

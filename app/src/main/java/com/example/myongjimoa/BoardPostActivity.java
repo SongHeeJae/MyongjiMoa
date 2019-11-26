@@ -26,26 +26,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class BoardPostActivity extends AppCompatActivity {
 
@@ -102,7 +93,29 @@ public class BoardPostActivity extends AppCompatActivity {
         comment_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // 댓글 작성 완료 버튼 클릭 시 댓글 업로드 진행
-                commenting();
+                if(write_comment.getText().toString().length() == 0)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
+                    builder.setTitle("메시지");
+                    builder.setMessage("댓글 내용을 입력하세요.");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    builder.show();
+                    return ;
+                }
+                else
+                    commenting();
+            }
+        });
+
+        recommend_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recommending();
             }
         });
 
@@ -115,12 +128,7 @@ public class BoardPostActivity extends AppCompatActivity {
         post_number.setText(post.getNumber() + " 학번 | ");
         post_major.setText(post.getMajor() + " 전공");
         recommend_num.setText(post.getRecommend_num() + "개");
-        recommend_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recommending();
-            }
-        });
+
         for(int i=0; i<post.getImages().size(); i++) {
             board_post_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + post.getImages().get(i));
         } // 이미지 경로 등록
@@ -239,6 +247,9 @@ public class BoardPostActivity extends AppCompatActivity {
                     post.setRecommend_num(Integer.parseInt(result));
                     Toast.makeText(getApplicationContext(), "추천했습니다.", Toast.LENGTH_SHORT).show();
                     recommend_num.setText(post.getRecommend_num() + "개");
+                    Intent it = getIntent();
+                    it.putExtra("recommend_num", Integer.parseInt(result));
+                    setResult(RESULT_OK, it);
                 } else { // failed 이면 이미 추천 게시글 알림띄어줌
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
                     builder.setTitle("메시지");
@@ -269,39 +280,39 @@ public class BoardPostActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
 
-                if(result.equals("success")) { // 댓글 작성 성공
-                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
-                    builder.setTitle("메시지");
-                    builder.setMessage("댓글 작성에 성공하였습니다.");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            reloadComment();
-                        }
-                    });
-                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(write_comment.getWindowToken(), 0); // 화면에 올라온 키보드 내려줌
-                    write_comment.setText(""); // 댓글 창 초기화
-                    builder.show();
-                } else {
-                    // 실패 시 존재하지 않는 게시글
-                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
-                    builder.setTitle("알림");
-                    builder.setMessage("존재하지않는 게시글입니다.");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-                    builder.show();
-                }
+                    if(result.equals("success")) { // 댓글 작성 성공
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
+                        builder.setTitle("메시지");
+                        builder.setMessage("댓글 작성에 성공하였습니다.");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reloadComment();
+                            }
+                        });
+                        InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(write_comment.getWindowToken(), 0); // 화면에 올라온 키보드 내려줌
+                        write_comment.setText(""); // 댓글 창 초기화
+                        builder.show();
+                    }
+                    else {
+                        // 실패 시 존재하지 않는 게시글
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
+                        builder.setTitle("알림");
+                        builder.setMessage("존재하지않는 게시글입니다.");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                        builder.show();
+                    }
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.d("포스트 작성 실패", t.getMessage());
             }
         });
     }
@@ -325,6 +336,7 @@ public class BoardPostActivity extends AppCompatActivity {
             ImageButton comment_button;
             String temp;
             int pos;
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 comment_nickname = (TextView) itemView.findViewById(R.id.comment_nickname);
@@ -482,7 +494,7 @@ public class BoardPostActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(BoardPostActivity.this);
         switch (item.getItemId()) {
             case R.id.menu_report:
@@ -503,6 +515,19 @@ public class BoardPostActivity extends AppCompatActivity {
                 return true;
 
             case R.id.menu_refresh:
+                item.setEnabled(false);
+                Timer buttonTimer = new Timer();
+                buttonTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                item.setEnabled(true);
+                            }
+                        });
+                    }
+                }, 500);
                 reloadComment();
                 return true;
 

@@ -3,7 +3,17 @@
     <color name="colorPrimary">#303030</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorback">#4C4C4C</color>
+    <color name="colorback">#EEFFFD</color>
     <color name="colorwhite">#EEEEEE</color>
     <color name="colorneon">#008888</color>
+    <color name="colortitle">#000000</color>
+    <color name="coloreditor">#626262</color>
+    <color name="colormain">#009688</color>
+    <color name="colorinfo">#707070</color>
+    <color name="coloradd_user">#B4DAD7</color>
+    <color name="coloradd_user_text">#747474</color>
+    <color name="coloradd_user_tip">#EE6E6E</color>
+    <color name="colorwritereview">#4C4C4C</color>
+    <color name="colorboard1">#C6E4E1</color>
+    <color name="colorboard2">#80CBC4</color>
     </resources>

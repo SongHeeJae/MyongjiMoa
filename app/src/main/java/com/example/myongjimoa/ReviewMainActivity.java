@@ -29,6 +29,8 @@ public class ReviewMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review);
 
+        setTitle("음식점 조회");
+
         Button.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view ) {

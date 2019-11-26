@@ -6,15 +6,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +36,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ModifyUserActivity extends AppCompatActivity {
 
-    Button modify;
+    ImageButton modify;
     TextView email_id;
     TextView nickname;
     TextView major;
@@ -41,15 +44,14 @@ public class ModifyUserActivity extends AppCompatActivity {
     TextView name;
     TextView date;
     EditText nickname_text;
-    Button submit;
+    ImageButton submit;
     String user_id;
     Spinner mod_majorSpinner;
-    boolean modify_check;
 
     String tempnick;
     String tempmajor;
 
-    Button logout;
+    ImageButton logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +60,7 @@ public class ModifyUserActivity extends AppCompatActivity {
 
         setTitle("내정보 확인");
 
-        modify_check = true;
-
-        modify = (Button) findViewById(R.id.user_modify);
+        modify = (ImageButton) findViewById(R.id.user_modify);
         email_id = (TextView) findViewById(R.id.modify_user_email);
         nickname = (TextView) findViewById(R.id.modify_user_nickname);
         major = (TextView) findViewById(R.id.modify_user_major);
@@ -68,8 +68,8 @@ public class ModifyUserActivity extends AppCompatActivity {
         name = (TextView) findViewById(R.id.modify_user_name);
         date = (TextView) findViewById(R.id.modify_user_date);
         nickname_text = (EditText) findViewById(R.id.edit_user_nickname);
-        submit = (Button) findViewById(R.id.modify_submit);
-        logout = (Button) findViewById(R.id.logout);
+        submit = (ImageButton) findViewById(R.id.modify_submit);
+        logout = (ImageButton) findViewById(R.id.logout);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,20 +125,29 @@ public class ModifyUserActivity extends AppCompatActivity {
                 ArrayAdapter majorAdapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.major_field, android.R.layout.simple_spinner_item);
                 majorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mod_majorSpinner.setAdapter(majorAdapter);
-                mod_majorSpinner.setBackgroundColor(Color.WHITE);
+                mod_majorSpinner.setBackgroundColor(Color.rgb(238, 255, 253));
+                mod_majorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        ((TextView) parent.getChildAt(0)).setTextColor(Color.rgb(112, 112, 112));
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
 
-                if(modify_check) { // 수정 상태일때 원상태로돌려줌
+                if(submit.getVisibility() == View.INVISIBLE) { // 수정 상태일때 원상태로돌려줌
                     nickname_text.setText("");
-                    modify.setText("취소");
+                    modify.setImageResource(R.drawable.cancel);
+                    //modify.setText("취소");
                     submit.setVisibility(View.VISIBLE);
                     textSwitch();
-                    modify_check = false;
                 } else {
                     // 수정상태로 들어감
-                    modify.setText("수정");
+                    modify.setImageResource(R.drawable.modify);
+                    //modify.setText("수정");
                     submit.setVisibility(View.INVISIBLE);
                     textSwitch();
-                    modify_check=true;
                 }
             }
         });
@@ -166,7 +175,22 @@ public class ModifyUserActivity extends AppCompatActivity {
                                     builder.show();
                                     return ;
                                 }
-                                modifyUserInfo();
+                                if(nickname_text.getText().toString().trim().equals("") || mod_majorSpinner.getSelectedItem().toString().equals("학과를 선택하세요."))
+                                {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
+                                    builder.setTitle("메시지");
+                                    builder.setMessage("모든 정보를 기입하세요!");
+                                    builder.setCancelable(false);
+                                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    });
+                                    builder.show();
+                                    return ;
+                                }
+                                else
+                                    modifyUserInfo();
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -213,33 +237,19 @@ public class ModifyUserActivity extends AppCompatActivity {
 
                 String result = response.body().trim();
 
-                if(nickname_text.getText().toString().trim().equals("") || mod_majorSpinner.getSelectedItem().toString().equals("학과를 선택하세요.")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ModifyUserActivity.this);
-                    builder.setTitle("메시지");
-                    builder.setMessage("모든 정보를 기입하세요!");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-                    builder.show();
-                }
 
-                else {
                     if(nickname_text.getText().toString().trim().equals(tempnick) || result.equals("success")) { // 결과 정상 처리
-                        modify.setText("수정");
+                        modify.setImageResource(R.drawable.modify);
+                        //modify.setText("수정");
                         submit.setVisibility(View.INVISIBLE);
                         nickname.setText(nickname_text.getText().toString());
                         major.setText(mod_majorSpinner.getSelectedItem().toString());
                         textSwitch();
-                        modify_check=true;
                         Toast.makeText(getApplicationContext(), "수정되었습니다.", Toast.LENGTH_SHORT).show();
                     } else {
                         // 이미 등록된 닉네임일때
                         Toast.makeText(getApplicationContext(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
                     }
-                }
 
             }
             @Override

@@ -61,6 +61,8 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
 
+        setTitle("학식정보");
+
         progressBar = (ProgressBar) findViewById(R.id.h_progressbar);
         progressBar.setIndeterminate(false);
         progressBar.setProgress(80);

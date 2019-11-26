@@ -1,13 +1,11 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,49 +19,36 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ReviewWriteActivity extends AppCompatActivity {
 
     EditText write_description;
-    Button write_submit;
-    Button picture;
+    ImageButton write_submit;
+    ImageButton picture;
     RatingBar rating_bar;
     RecyclerView recycler_view;
     ReviewWriteImageAdapter review_write_image_adapter;
@@ -87,13 +72,15 @@ public class ReviewWriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_write);
 
+        setTitle("리뷰쓰기");
+
         Intent it = getIntent();
         user_id = it.getStringExtra("user_id");
         restaurant_id = it.getStringExtra("restaurant_id");
 
         write_description = (EditText) findViewById(R.id.review_write_description);
-        write_submit = (Button) findViewById(R.id.review_write_submit);
-        picture = (Button) findViewById(R.id.review_picture);
+        write_submit = (ImageButton) findViewById(R.id.review_write_submit);
+        picture = (ImageButton) findViewById(R.id.review_picture);
         rating_bar = (RatingBar) findViewById(R.id.review_write_rating_bar);
         recycler_view = (RecyclerView) findViewById(R.id.review_write_image);
         progressBar = (ProgressBar) findViewById(R.id.h_progressbar);
@@ -147,6 +134,21 @@ public class ReviewWriteActivity extends AppCompatActivity {
                             });
                     builder.show();
                     progressBar.setProgress(0);
+                    return ;
+                }
+
+                if(write_description.getText().toString().length() == 0)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
+                    builder.setTitle("메시지")
+                            .setMessage("제목 혹은 내용을 입력하세요.")
+                            .setCancelable(false)
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+                    builder.show();
                     return ;
                 }
 

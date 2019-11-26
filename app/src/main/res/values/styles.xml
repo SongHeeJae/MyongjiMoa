@@ -15,4 +15,17 @@
         </item>
     </style>
 
+    <style name="EditTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/colormain</item>
+        <item name="colorControlNormal">@color/colormain</item>
+    </style>
+
+    <style name="Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner" >
+        <item name="android:textColor">@color/coloradd_user_text</item>
+    </style>
+
+    <style name="Spinner_mod" parent="Widget.AppCompat.Light.DropDownItem.Spinner" >
+        <item name="android:textColor">@color/colorinfo</item>
+    </style>
+
 </resources>

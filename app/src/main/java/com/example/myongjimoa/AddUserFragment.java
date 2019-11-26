@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -55,7 +56,7 @@ public class AddUserFragment extends Fragment {
     EditText user_nickname;
     EditText user_number;
     EditText user_name;
-    Button submit;
+    ImageButton submit;
     Spinner majorSpinner;
 
     CheckBox checkBox;
@@ -70,7 +71,7 @@ public class AddUserFragment extends Fragment {
         user_nickname = (EditText) view.findViewById(R.id.user_nickname);
         user_number = (EditText) view.findViewById(R.id.user_number);
         user_name = (EditText) view.findViewById(R.id.user_name);
-        submit = (Button) view.findViewById(R.id.submit);
+        submit = (ImageButton) view.findViewById(R.id.submit);
         checkBox = (CheckBox) view.findViewById(R.id.etpw);
         checkBox2 = (CheckBox) view.findViewById(R.id.etpw2); // 레이아웃에 사용되는 객체 할당
 
@@ -95,10 +96,20 @@ public class AddUserFragment extends Fragment {
         });
 
         majorSpinner = (Spinner)view.findViewById(R.id.spinner_major);
-        ArrayAdapter majorAdapter = ArrayAdapter.createFromResource(getContext(), R.array.major_field, android.R.layout.simple_spinner_item);
+        final ArrayAdapter majorAdapter = ArrayAdapter.createFromResource(getContext(), R.array.major_field, android.R.layout.simple_spinner_item);
         majorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         majorSpinner.setAdapter(majorAdapter);
-        majorSpinner.setBackgroundColor(Color.WHITE);
+        majorSpinner.setBackgroundColor(Color.rgb(180, 218, 215));
+        majorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.rgb(116, 116, 116));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         user_email.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
             @Override

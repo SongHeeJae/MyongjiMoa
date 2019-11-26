@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:background="@drawable/rounded_neon"
+    android:layout_height="wrap_content" android:background="@drawable/rounded_black"
     android:layout_marginTop="10dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp" >
@@ -13,7 +13,7 @@
         android:layout_weight="0.8">
 
         <TextView
-            android:textColor="@color/colorneon"
+            android:textColor="@color/colorwritereview"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:id="@+id/list_restaurant_title"/>
 
         <TextView
-            android:textColor="@color/colorneon"
+            android:textColor="@color/colorwritereview"
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,18 +49,18 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textColor="@color/colorneon"
+                android:textColor="@color/colorwritereview"
                 android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/list_restaurant_score"/>
             <TextView
-                android:textColor="@color/colorneon"
+                android:textColor="@color/colorwritereview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="리뷰개수 : "/>
             <TextView
-                android:textColor="@color/colorneon"
+                android:textColor="@color/colorwritereview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/list_restaurant_review_num"/>
@@ -72,7 +72,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:textColor="@color/colorneon"
+                android:textColor="@color/colorwritereview"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorneon"
+                android:textColor="#009688"
                 android:text="> 자세히 보기"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"/>

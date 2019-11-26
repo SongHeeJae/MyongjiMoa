@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -43,15 +44,17 @@ public class BoardActivity extends AppCompatActivity {
     String search_query; // 검색어
     String search_count_board_id;
     boolean search_scroll;
+    boolean initcheck;
 
     public GestureDetector gesture_detector;
     SwipeRefreshLayout swipe_refresh_layout;
-    Button write;
+    ImageButton write;
 
     String count_board_id;
     TextView no_show;
 
     boolean scroll;
+    Post post;
 
     MenuItem search;
 
@@ -73,12 +76,11 @@ public class BoardActivity extends AppCompatActivity {
         // 이전 Activity에서 정보 받아옴
         setTitle(board_title);
 
-        write = (Button) findViewById(R.id.write);
+        write = (ImageButton) findViewById(R.id.write);
 
         write.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //((BoardActivity)getActivity()).addBoardWriteFragment();
                 Intent it = new Intent(BoardActivity.this, BoardWriteActivity.class);
                 it.putExtra("user_id", user_id);
                 it.putExtra("board_title_id", board_title_id);
@@ -120,7 +122,6 @@ public class BoardActivity extends AppCompatActivity {
                 if (childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(BoardActivity.this, BoardPostActivity.class);
-                    Post post;
                     if (search.isActionViewExpanded()) { // 검색창 확장되었을 시 현재 터치한 아이템
                         post = search_adapter.getPost(currentPos);
                     } else {
@@ -134,7 +135,7 @@ public class BoardActivity extends AppCompatActivity {
                     it.putExtra("date", post.getDate());
                     it.putExtra("nickname", post.getNickname());
                     it.putStringArrayListExtra("images", post.getImages());
-                    it.putExtra("recommend_num", post.getRecommend_num() + "");
+                    it.putExtra("recommend_num", (post.getRecommend_num() + ""));
                     it.putExtra("user_id", user_id);
                     it.putExtra("user_nickname", user_nickname);
                     startActivityForResult(it, POST_REMOVE_REQUEST_CODE); // 게시글 화면으로 이동
@@ -156,7 +157,6 @@ public class BoardActivity extends AppCompatActivity {
         downloadPostList(); // 게시글 목록 다운로드
     }
 
-
     public void downloadPostList() {
 
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
@@ -164,6 +164,9 @@ public class BoardActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+
+                if(initcheck == true)
+                    no_show.setVisibility(View.GONE);
 
                 List<Post> result = response.body();
                 if (result != null) {
@@ -175,7 +178,10 @@ public class BoardActivity extends AppCompatActivity {
                         count_board_id = result.get(result.size() - 1).getId(); // 현재 다운로드된 마지막 게시글의 id(PK)값
                     }
                     else // 게시물이 없는 경우
+                    {
+                        initcheck = true;
                         no_show.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 recycler_view.clearOnScrollListeners();
@@ -234,14 +240,12 @@ public class BoardActivity extends AppCompatActivity {
             }
 
             public void setData(Post data) {
-                temp = data.getDate().substring(0, 16);
+                temp = data.getDate().substring(5, 16);
 
                 //값 읽어오기
                 title.setText(data.getTitle());
                 description.setText(data.getDescription());
                 nickname.setText(data.getNickname());
-                major.setText(data.getMajor());
-                number.setText(data.getNumber()+ "학번");
                 date.setText(temp);
             }
         }
@@ -259,7 +263,6 @@ public class BoardActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            // 항목이 없는 경우 메소드 안씀
             holder.setData(items.get(position));
         }
 
@@ -310,7 +313,7 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { // 돋보기. 검색화면
         getMenuInflater().inflate(R.menu.search_refresh, menu);
         menu.findItem(R.id.menu_report).setVisible(false);
         menu.findItem(R.id.menu_modify).setVisible(false);
@@ -384,8 +387,9 @@ public class BoardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && requestCode == WRITE_REQUEST_CODE){
             reloadPost();
-        } else if(resultCode == RESULT_OK && requestCode == POST_REMOVE_REQUEST_CODE) { // 수정 또는 삭제일어났을때 reload
+        } else if(data == null && resultCode == RESULT_OK && requestCode == POST_REMOVE_REQUEST_CODE) { // 수정 또는 삭제일어났을때 reload
             reloadPost();
-        }
+        } else if(data != null && resultCode == RESULT_OK)
+            post.setRecommend_num(data.getIntExtra("recommend_num", -1));
     }
 }

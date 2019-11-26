@@ -22,14 +22,14 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorPrimaryDark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
                         android:id="@+id/restaurant_title"/>
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorwritereview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_category"/>
@@ -45,37 +45,37 @@
                         android:id="@+id/review_list_rating_bar"/>
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorwritereview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_score"/>
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorwritereview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_review_num"/>
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorwritereview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_address"/>
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorwritereview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_telephone"/>
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorwritereview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_homepage"/>
 
                     <TextView
-                        android:textColor="@color/colorneon"
+                        android:textColor="@color/colorwritereview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/restaurant_time"/>
@@ -96,10 +96,10 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:orientation="vertical"
-                        android:background="@drawable/rounded_neon" >
+                        android:background="@drawable/rectangle_neon" >
 
                         <TextView
-                            android:textColor="@color/colorneon"
+                            android:textColor="@color/colorwritereview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
@@ -115,28 +115,44 @@
                             android:id="@+id/restaurant_menu"/>
                         </LinearLayout>
 
-                    <EditText
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="18dp"
-                        android:focusableInTouchMode="false" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="50dp"
+                        android:orientation="vertical">
 
-                     <androidx.recyclerview.widget.RecyclerView
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:id="@+id/review_recycler_view"
-                         />
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="18dp"
+                            android:focusableInTouchMode="false" />
+
+                        <TextView
+                            android:id="@+id/no_review"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textSize="16dp"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:text="리뷰가 없습니다. 올려주세요!" />
+
+                         <androidx.recyclerview.widget.RecyclerView
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:id="@+id/review_recycler_view" />
                     </LinearLayout>
-
+                </LinearLayout>
          </androidx.core.widget.NestedScrollView>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    <Button
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:src="@drawable/review"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:padding="0dp"
+        android:scaleType="fitXY"
         android:text="리뷰쓰기"
         android:layout_marginBottom="10dp"
-        android:textColor="@color/colorwhite"
-        android:background="@color/colorneon"
         android:layout_gravity="center|bottom"
         android:id="@+id/write_review"/>
 </FrameLayout>

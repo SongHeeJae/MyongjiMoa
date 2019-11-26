@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -59,8 +60,8 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     EditText write_title;
     EditText write_description;
-    Button write_submit;
-    Button picture;
+    ImageButton write_submit;
+    ImageButton picture;
     RecyclerView recycler_view;
     BoardWriteImageAdapter board_write_image_adapter;
     public GestureDetector gesture_detector;
@@ -87,13 +88,15 @@ public class BoardWriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_write);
 
+        setTitle("글쓰기");
+
         modify_image_num = 0; // 수정이미지 없으면 0으로초기화 있으면 이 num부터 이미지 올려주면됨.
         modify_mode = false; // 수정 모드 초기값 false
 
         write_title = (EditText) findViewById(R.id.write_title);
         write_description = (EditText) findViewById(R.id.write_description);
-        write_submit = (Button) findViewById(R.id.write_submit);
-        picture = (Button) findViewById(R.id.picture);
+        write_submit = (ImageButton) findViewById(R.id.write_submit);
+        picture = (ImageButton) findViewById(R.id.picture);
         recycler_view = (RecyclerView) findViewById(R.id.board_write_image);
         progressBar = (ProgressBar) findViewById(R.id.h_progressbar);
 

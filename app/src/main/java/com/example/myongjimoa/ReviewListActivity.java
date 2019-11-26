@@ -1,6 +1,7 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -36,6 +37,7 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +56,9 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     TextView menu;
     TextView score;
     TextView review_num;
+    TextView no_review;
     RatingBar restaurant_rating_bar;
-    Button write_review;
+    ImageButton write_review;
     Restaurant restaurant;
 
     RecyclerView review_recycler_view;
@@ -63,6 +66,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     public GestureDetector gesture_detector;
 
     boolean scroll;
+    boolean initcheck;
     String count_review_id;
 
     MapFragment mapFragment;
@@ -101,8 +105,9 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         menu = (TextView) findViewById(R.id.restaurant_menu);
         score = (TextView) findViewById(R.id.restaurant_score);
         review_num = (TextView) findViewById(R.id.restaurant_review_num);
+        no_review = (TextView) findViewById(R.id.no_review);
         restaurant_rating_bar = (RatingBar) findViewById(R.id.review_list_rating_bar);
-        write_review = (Button) findViewById(R.id.write_review);
+        write_review = (ImageButton) findViewById(R.id.write_review);
         review_recycler_view = (RecyclerView) findViewById(R.id.review_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         review_recycler_view.setLayoutManager(layoutManager); // 레이아웃 지정
@@ -122,6 +127,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                 Intent it = new Intent(ReviewListActivity.this, ReviewWriteActivity.class);
                 it.putExtra("user_id", user_id);
                 it.putExtra("restaurant_id", restaurant.getId());
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(write_review.getWindowToken(), 0); // 화면에 올라온 키보드 내려줌
                 startActivityForResult(it, WRITE_REQUEST_CODE); // 글쓰기 버튼 클릭 시 글쓰기 화면으로 이동
             }
         });
@@ -132,7 +139,7 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
         category.setText(restaurant.getCategory());
         telephone.setText("전화번호 : " + restaurant.getTelephone());
         homepage.setText("홈페이지 : " + restaurant.getHomepage());
-        address.setText("주소 : " + restaurant.getAddress());
+        address.setText("식당주소 : " + restaurant.getAddress());
         time.setText("영업시간 : " + restaurant.getTime());
         menu.setText(arrayJoin(menulist));
         score.setText(restaurant.getScore() + "" + " 점");
@@ -189,6 +196,9 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
     public void downloadReviewList() { // 리뷰 목록 다운로드
 
+        if(initcheck == true)
+            no_review.setVisibility(View.GONE);
+
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<ReviewResult> call = connectDB.downloadReview(restaurant.getId(), count_review_id); // ReviewResult 형태로 받아옴
         call.enqueue(new Callback<ReviewResult>() {
@@ -205,10 +215,15 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                     count_review_id = result.getReview(result.getReviewCount() - 1).getId();
                     // 마지막 리뷰의 id 기억해줌
                 }
+                else {
+                    initcheck = true;
+                    no_review.setVisibility(View.VISIBLE);
+                }
+
                 restaurant.setReview_num(result.getReview_num());
                 restaurant.setScore(result.getScore());
                 score.setText("별점 : " + restaurant.getScore() + "점");
-                review_num.setText("리뷰 개수 : " + restaurant.getReview_num() + "개");
+                review_num.setText("리뷰개수 : " + restaurant.getReview_num() + "개");
                 restaurant_rating_bar.setRating(restaurant.getScore());
                 // 다시 받아온 리뷰 갯수와 별점으로 업데이트
 
@@ -224,7 +239,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             }
             @Override
             public void onFailure(Call<ReviewResult> call, Throwable t) {
-                Log.d("실패", t.getMessage());
             }
         });
     }

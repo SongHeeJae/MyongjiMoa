@@ -13,14 +13,15 @@
             android:id="@+id/h_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="5dp"
+            android:progressTint="@color/colorPrimaryDark"
+            android:progressBackgroundTint="@color/colorback"
             android:layerType="none" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="@drawable/rectangle_report"
         android:orientation="vertical">
 
         <LinearLayout
@@ -37,17 +38,19 @@
                 android:layout_marginLeft="10dp"
                 android:textCursorDrawable="@drawable/cursor"
                 android:textAlignment="center"
-                android:textColor="@color/colorwhite"
-                android:textColorHint="@color/colorwhite"
+                android:textColorHint="@color/colorwritereview"
+                android:textColor="@color/colorwritereview"
                 android:id="@+id/write_title" />
 
-            <Button
+            <ImageButton
+                android:src="@drawable/photo"
                 android:id="@+id/picture"
+                android:adjustViewBounds="true"
+                android:padding="0dp"
+                android:scaleType="fitXY"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:background="@color/colorneon"
-                android:text="PHOTO" />
+                android:layout_weight="7" />
 
         </LinearLayout>
 
@@ -55,14 +58,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            android:background="@drawable/rounded_blank"
+            android:background="@drawable/rectangle_report"
             android:textCursorDrawable="@drawable/cursor"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:padding="10dp"
-            android:textColor="@color/colorwhite"
-            android:textColorHint="@color/colorwhite"
+            android:textColorHint="@color/colorwritereview"
+            android:textColor="@color/colorwritereview"
             android:gravity="top"
             android:id="@+id/write_description" />
 
@@ -71,11 +74,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/rounded_neon">
+        android:background="@drawable/rectangle_report">
 
         <TextView
             android:layout_margin="5dp"
-            android:textColor="@color/colorneon"
+            android:textColor="@color/colorwritereview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -90,15 +93,16 @@
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
-        <Button
+        <ImageButton
+            android:src="@drawable/finish"
             android:id="@+id/write_submit"
-            android:background="@color/colorneon"
-            android:textColor="@color/colorwhite"
-            android:layout_width="wrap_content"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|center"
-            android:layout_marginBottom="10dp"
-            android:text="완료" />
+            android:layout_marginBottom="10dp" />
     </LinearLayout>
     </LinearLayout>
 </ScrollView>

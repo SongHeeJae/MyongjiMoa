@@ -56,6 +56,8 @@ public class ShuttleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shuttle);
 
+        setTitle("셔틀정보");
+
         CityBus = (TextView) findViewById(R.id.CityBus_text);
         IntoBus = (TextView) findViewById(R.id.IntoBus_text);
         IntoSchool = (TextView) findViewById(R.id.IntoSchool_text);

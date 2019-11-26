@@ -17,7 +17,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rectangle_report"
+                android:background="@drawable/rectangle_deepneon"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
@@ -41,13 +41,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
+                    android:textColor="@color/colorwritereview"
                     android:textSize="17dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginRight="10dp"
                     android:id="@+id/post_description"/>
-
             </LinearLayout>
 
             <LinearLayout
@@ -91,11 +90,11 @@
                 <ImageButton
                     android:id="@+id/recommend_button"
                     android:src="@drawable/best"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/colorneon"
-                    android:textColor="@color/colorwhite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="0dp"
+                    android:scaleType="fitXY"
                     android:layout_marginLeft="10dp"
                     android:layout_marginBottom="30dp"/>
 
@@ -103,7 +102,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/recommend_num"
+                    android:layout_marginTop="6dp"
                     android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
                     android:textSize="17dp"
                     android:layout_weight="1"
                     android:textColor="@color/colorneon"/>
@@ -114,8 +115,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/post_comment_recycler_view">
             </androidx.recyclerview.widget.RecyclerView>
-
-
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -134,7 +133,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="댓글을 입력하세요."
-            android:background="@drawable/rounded"
             android:textCursorDrawable="@drawable/cursor"
             android:layout_weight="3"
             android:textAlignment="center"
