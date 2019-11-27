@@ -24,19 +24,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/coloreditor"
+                    android:textColor="@color/colorneon"
                     android:id="@+id/comment_number"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/coloreditor"
+                    android:textColor="@color/colorneon"
                     android:id="@+id/comment_major"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/coloreditor"
+                    android:textColor="@color/colorneon"
                     android:id="@+id/comment_nickname"/>
             </LinearLayout>
 
@@ -61,7 +61,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/coloreditor"
+            android:textColor="@color/colorneon"
             android:id="@+id/comment_date"/>
 
         <TextView

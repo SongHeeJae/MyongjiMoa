@@ -196,9 +196,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
     public void downloadReviewList() { // 리뷰 목록 다운로드
 
-        if(initcheck == true)
-            no_review.setVisibility(View.GONE);
-
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<ReviewResult> call = connectDB.downloadReview(restaurant.getId(), count_review_id); // ReviewResult 형태로 받아옴
         call.enqueue(new Callback<ReviewResult>() {
@@ -215,10 +212,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
                     count_review_id = result.getReview(result.getReviewCount() - 1).getId();
                     // 마지막 리뷰의 id 기억해줌
                 }
-                else {
-                    initcheck = true;
+                else if(review_adapter.getItemCount() == 0)
                     no_review.setVisibility(View.VISIBLE);
-                }
 
                 restaurant.setReview_num(result.getReview_num());
                 restaurant.setScore(result.getScore());

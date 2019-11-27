@@ -734,7 +734,7 @@ public class BoardPostActivity extends AppCompatActivity {
             image_recycler_view.setAdapter(board_post_image_adapter);
             post_title.setText(post.getTitle());
             post_description.setText(post.getDescription());
-            recommend_num.setText(post.getRecommend_num() + "");
+            recommend_num.setText(post.getRecommend_num() + "개");
             reloadComment(); // 댓글도 reload
             setResult(RESULT_OK); // 게시판 화면으로 돌아갔을 때 reload 일어날수 있도록 설정
         }

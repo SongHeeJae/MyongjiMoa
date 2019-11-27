@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="237dp"
         android:layout_gravity="center"
         android:orientation="horizontal"
         android:padding="0dp">
@@ -18,18 +18,19 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="109dp"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="20dp"
             android:baselineAligned="false"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/loginping"/>
+            app:srcCompat="@drawable/loginping" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/main_back"
-        android:layout_width="wrap_content"
-        android:layout_height="420dp"
+        android:layout_width="383dp"
+        android:layout_height="384dp"
+        android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:background="@drawable/menu_back"
         android:orientation="vertical">
@@ -37,26 +38,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:layout_marginTop="15dp"
             android:orientation="horizontal"
             android:scaleType="fitXY"
             android:visibility="visible">
 
             <ImageButton
                 android:id="@+id/imageButton2"
-                android:layout_width="180dp"
-                android:layout_height="200dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
                 android:backgroundTint="#00383434"
                 android:scaleType="fitXY"
                 android:src="@drawable/main_me" />
 
             <ImageButton
                 android:id="@+id/group"
-                android:layout_width="180dp"
-                android:layout_height="200dp"
-                android:layout_marginRight="17dp"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
                 android:backgroundTint="#00383434"
                 android:scaleType="fitXY"
                 android:src="@drawable/main_group" />
@@ -65,42 +68,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="visible"
             android:scaleType="fitXY"
-            android:layout_marginBottom="15dp">
+            android:visibility="visible">
 
             <ImageButton
                 android:id="@+id/review"
-                android:layout_width="180dp"
-                android:layout_height="200dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="150dp"
+                android:layout_height="170dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
                 android:backgroundTint="#00383434"
                 android:scaleType="fitXY"
                 android:src="@drawable/main_review" />
 
             <LinearLayout
-                android:layout_width="182dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="17dp"
-                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:scaleType="fitXY"
                 android:visibility="visible">
 
                 <ImageButton
                     android:id="@+id/food"
-                    android:layout_width="180dp"
-                    android:layout_height="87dp"
+                    android:layout_width="150dp"
+                    android:layout_height="75dp"
                     android:backgroundTint="#00383434"
                     android:scaleType="fitXY"
                     android:src="@drawable/main_food" />
 
                 <ImageButton
                     android:id="@+id/shuttle"
-                    android:layout_width="180dp"
-                    android:layout_height="110dp"
+                    android:layout_width="150dp"
+                    android:layout_height="95dp"
                     android:backgroundTint="#00383434"
                     android:scaleType="fitXY"
                     android:src="@drawable/main_shuttle" />

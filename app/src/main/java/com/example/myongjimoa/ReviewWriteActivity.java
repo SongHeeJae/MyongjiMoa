@@ -44,7 +44,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ReviewWriteActivity extends AppCompatActivity {
+public class
+ReviewWriteActivity extends AppCompatActivity {
 
     EditText write_description;
     ImageButton write_submit;
@@ -116,7 +117,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
             }
-        });
+    });
 
         write_submit.setOnClickListener(new View.OnClickListener() {
             @Override

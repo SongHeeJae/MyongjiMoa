@@ -44,7 +44,6 @@ public class BoardActivity extends AppCompatActivity {
     String search_query; // 검색어
     String search_count_board_id;
     boolean search_scroll;
-    boolean initcheck;
 
     public GestureDetector gesture_detector;
     SwipeRefreshLayout swipe_refresh_layout;
@@ -165,9 +164,6 @@ public class BoardActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
 
-                if(initcheck == true)
-                    no_show.setVisibility(View.GONE);
-
                 List<Post> result = response.body();
                 if (result != null) {
                     if (result.size() != 0) { // 게시물이 있는 경우
@@ -177,11 +173,8 @@ public class BoardActivity extends AppCompatActivity {
                         if (result.size() < 15) scroll = false; // 데이터 다 가져왔을 경우, 화면 끝에 닿았을 때 더이상 다운로드 안일어나게함
                         count_board_id = result.get(result.size() - 1).getId(); // 현재 다운로드된 마지막 게시글의 id(PK)값
                     }
-                    else // 게시물이 없는 경우
-                    {
-                        initcheck = true;
+                    else if(board_post_title_adapter.getItemCount() == 0) // 게시물이 없는 경우
                         no_show.setVisibility(View.VISIBLE);
-                    }
                 }
 
                 recycler_view.clearOnScrollListeners();

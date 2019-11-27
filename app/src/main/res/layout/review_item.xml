@@ -46,7 +46,6 @@
                         android:padding="0dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/delete_notify" />
-
                 </RelativeLayout>
             </LinearLayout>
 
