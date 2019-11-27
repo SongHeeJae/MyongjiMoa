@@ -46,7 +46,7 @@
         android:id="@+id/shuttle_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/colorback"
+        app:tabIndicatorColor="@color/colorPrimaryDark"
         android:background="#92CBC5"/>
 
     <androidx.viewpager.widget.ViewPager

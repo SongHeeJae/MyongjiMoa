@@ -126,7 +126,7 @@ public class BoardPostActivity extends AppCompatActivity {
         post_title.setText(post.getTitle());
         post_description.setText(post.getDescription());
         post_number.setText(post.getNumber() + " 학번 | ");
-        post_major.setText(post.getMajor() + " 전공");
+        post_major.setText(post.getMajor());
         recommend_num.setText(post.getRecommend_num() + "개");
 
         for(int i=0; i<post.getImages().size(); i++) {

@@ -34,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="제목을 입력해주세요."
+                android:theme="@style/EditTheme"
                 android:layout_weight="3"
                 android:layout_marginLeft="10dp"
                 android:textCursorDrawable="@drawable/cursor"

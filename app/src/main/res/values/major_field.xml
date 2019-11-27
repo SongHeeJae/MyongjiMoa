@@ -2,29 +2,29 @@
 <resources>
     <string-array name="major_field">
         <item> 학과를 선택하세요. </item>
-        <item>컴퓨터공학과</item>
-        <item>정보통신공학과</item>
-        <item>전기공학과</item>
-        <item>전자공학과</item>
-        <item>화학공학과</item>
-        <item>신소재공학과</item>
-        <item>환경에너지공학과</item>
-        <item>토목환경공학과</item>
+        <item>건축학부</item>
+        <item>공간디자인전공</item>
         <item>교통공학과</item>
         <item>기계공학과</item>
-        <item>산업경영공학과</item>
-        <item>수학과</item>
-        <item>물리학과</item>
-        <item>화학과</item>
-        <item>식품영양학과</item>
-        <item>생명과학정보학과</item>
         <item>디자인학부</item>
-        <item>체육학부</item>
-        <item>음악학부</item>
-        <item>영화뮤지컬학부</item>
-        <item>건축학부</item>
-        <item>전공자유학부</item>
-        <item>공간디자인전공</item>
+        <item>물리학과</item>
         <item>바둑학과</item>
+        <item>산업경영공학과</item>
+        <item>생명과학정보학과</item>
+        <item>수학과</item>
+        <item>식품영양학과</item>
+        <item>신소재공학과</item>
+        <item>영화뮤지컬학부</item>
+        <item>음악학부</item>
+        <item>전공자유학부</item>
+        <item>전기공학과</item>
+        <item>전자공학과</item>
+        <item>정보통신공학과</item>
+        <item>체육학부</item>
+        <item>컴퓨터공학과</item>
+        <item>토목환경공학과</item>
+        <item>화학공학과</item>
+        <item>화학과</item>
+        <item>환경에너지공학과</item>
     </string-array>
 </resources>

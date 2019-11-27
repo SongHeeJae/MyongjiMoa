@@ -24,21 +24,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
+                    android:textColor="@color/coloreditor"
                     android:id="@+id/comment_number"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
+                    android:textColor="@color/coloreditor"
                     android:id="@+id/comment_major"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
+                    android:textColor="@color/coloreditor"
                     android:id="@+id/comment_nickname"/>
-
             </LinearLayout>
 
             <RelativeLayout
@@ -46,10 +45,12 @@
                 android:layout_height="wrap_content" >
 
                 <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
                     android:id="@+id/comment_button"
+                    android:adjustViewBounds="true"
                     android:padding="0dp"
+                    android:scaleType="fitXY"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/delete_notify" />
@@ -60,13 +61,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorneon"
+            android:textColor="@color/coloreditor"
             android:id="@+id/comment_date"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorneon"
+            android:textColor="@color/coloreditor"
             android:layout_marginTop="5dp"
             android:textSize="17dp"
             android:id="@+id/comment"/>

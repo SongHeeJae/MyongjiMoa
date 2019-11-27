@@ -47,10 +47,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
+
                     <RatingBar
+                        style="?android:attr/ratingBarStyleIndicator"
                         android:layout_marginLeft="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -63,11 +66,14 @@
 
                     <ImageButton
                         android:id="@+id/review_setting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="15dp"
+                        android:layout_marginRight="20dp"
+                        android:adjustViewBounds="true"
                         android:padding="0dp"
+                        android:scaleType="fitXY"
                         android:src="@drawable/delete_notify" />
                 </RelativeLayout>
             </LinearLayout>
