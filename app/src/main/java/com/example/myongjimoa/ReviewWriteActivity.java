@@ -100,6 +100,7 @@ ReviewWriteActivity extends AppCompatActivity {
         recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
                 View childView = rv.findChildViewUnder(e.getX(), e.getY());
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {

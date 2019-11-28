@@ -6,8 +6,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,9 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -30,22 +28,47 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
 import me.relex.circleindicator.CircleIndicator;
 
-import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+class MyViewPager extends ViewPager {
+
+    public MyViewPager(@NonNull Context context) {
+        super(context);
+    }
+
+    public MyViewPager(Context context, AttributeSet attr) {
+        super(context, attr);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        try {
+            return super.onTouchEvent(ev);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        try {
+            return super.onInterceptTouchEvent(ev);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+}
 
 public class ImageActivity extends AppCompatActivity {
-
 
     ArrayList<String> images;
     ImageAdapter adapter;
     Button download;
-    ViewPager pager;
+    MyViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +78,11 @@ public class ImageActivity extends AppCompatActivity {
         Intent it = getIntent();
         images = new ArrayList<>(it.getStringArrayListExtra("images")); // 이미지 목록 가져옴
 
+
+        pager = (MyViewPager) findViewById(R.id.image_view_pager);
+        adapter = new ImageAdapter(images);
+        pager.setAdapter(adapter);
+        
         download = (Button) findViewById(R.id.download_image);
         download.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +91,6 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
 
-        pager = (ViewPager) findViewById(R.id.image_view_pager);
-        adapter = new ImageAdapter(images);
-        pager.setAdapter(adapter);
         pager.setCurrentItem(it.getIntExtra("current", 0)); // 초기 화면은 이전 화면에서 클릭했던 이미지의 위치로 지정
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(pager); // 동그라미 모양의 indicator 지정. 뷰 페이저의 이동에 따라 업데이트가 수행됨
@@ -86,12 +111,12 @@ public class ImageActivity extends AppCompatActivity {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.images_item, container, false);
             PhotoView img = (PhotoView) view.findViewById(R.id.full_image);
+
             Glide.with(ImageActivity.this)
                     .load(path.get(position))
                     .into(img);
 
             container.addView(view) ;
-
             return view ;
         }
 

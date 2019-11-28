@@ -157,6 +157,7 @@ public class BoardPostActivity extends AppCompatActivity {
         image_recycler_view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
                 View childView = rv.findChildViewUnder(e.getX(), e.getY());
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
@@ -167,7 +168,6 @@ public class BoardPostActivity extends AppCompatActivity {
                     startActivity(it); // 이미지 중 하나 클릭시 ImageActivity로 이동
                     return true;
                 }
-
                 return false;
             }
 
