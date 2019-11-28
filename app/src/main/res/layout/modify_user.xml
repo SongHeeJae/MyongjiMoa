@@ -103,6 +103,7 @@
                 <Spinner
                     android:id="@+id/spinner_major"
                     android:theme="@style/Spinner_mod"
+                    android:dropDownWidth="200dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
             </ViewSwitcher>

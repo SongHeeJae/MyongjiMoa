@@ -142,7 +142,7 @@ ReviewWriteActivity extends AppCompatActivity {
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
                     builder.setTitle("메시지")
-                            .setMessage("제목 혹은 내용을 입력하세요.")
+                            .setMessage("리뷰 내용을 입력해 주세요!")
                             .setCancelable(false)
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 @Override

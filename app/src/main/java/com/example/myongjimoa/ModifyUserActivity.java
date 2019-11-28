@@ -139,13 +139,11 @@ public class ModifyUserActivity extends AppCompatActivity {
                 if(submit.getVisibility() == View.INVISIBLE) { // 수정 상태일때 원상태로돌려줌
                     nickname_text.setText("");
                     modify.setImageResource(R.drawable.cancel);
-                    //modify.setText("취소");
                     submit.setVisibility(View.VISIBLE);
                     textSwitch();
                 } else {
                     // 수정상태로 들어감
                     modify.setImageResource(R.drawable.modify);
-                    //modify.setText("수정");
                     submit.setVisibility(View.INVISIBLE);
                     textSwitch();
                 }

@@ -1,16 +1,12 @@
 package com.example.myongjimoa;
 
 import android.app.AlertDialog;
-import android.app.assist.AssistStructure;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Spanned;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -20,14 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -184,7 +176,15 @@ public class AddUserFragment extends Fragment {
                     return ;
                 }
 
-                if (user_email.getText().toString().equals("") || !isEmailValid(user_email.getText().toString()))
+                if (user_name.getText().toString().equals(""))
+                    Toast.makeText(getActivity(), "이름을 입력해 주세요.", Toast.LENGTH_LONG).show();
+                else if (user_number.getText().toString().equals(""))
+                    Toast.makeText(getActivity(), "학번을 입력해 주세요.", Toast.LENGTH_LONG).show();
+                else if (user_number.getText().toString().length() > 2 || !isInteger(user_number.getText().toString()))
+                    Toast.makeText(getActivity(), "학번은 숫자 2자리로 입력해 주세요.", Toast.LENGTH_LONG).show();
+                else if (majorSpinner.getSelectedItemPosition() == 0)
+                    Toast.makeText(getActivity(), "학과를 선택해 주세요.", Toast.LENGTH_LONG).show();
+                else if (user_email.getText().toString().equals("") || !isEmailValid(user_email.getText().toString()))
                     Toast.makeText(getActivity(), "올바른 Email 형식을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (user_password.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "비밀번호를 입력해 주세요.", Toast.LENGTH_LONG).show();
@@ -192,18 +192,10 @@ public class AddUserFragment extends Fragment {
                     Toast.makeText(getActivity(), "비밀번호 확인을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (user_password.getText().toString().length() < 6 || re_password.getText().toString().length() < 6)
                     Toast.makeText(getActivity(), "비밀번호는 6자리 이상으로 해주세요.", Toast.LENGTH_LONG).show();
-                else if (user_nickname.getText().toString().equals(""))
-                    Toast.makeText(getActivity(), "닉네임을 입력해 주세요.", Toast.LENGTH_LONG).show();
-                else if (majorSpinner.getSelectedItemPosition() == 0)
-                    Toast.makeText(getActivity(), "학과를 선택해 주세요.", Toast.LENGTH_LONG).show();
-                else if (user_number.getText().toString().equals(""))
-                    Toast.makeText(getActivity(), "학번을 입력해 주세요.", Toast.LENGTH_LONG).show();
-                else if (user_name.getText().toString().equals(""))
-                    Toast.makeText(getActivity(), "이름을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (!user_password.getText().toString().equals(re_password.getText().toString()))
                     Toast.makeText(getActivity(), "비밀번호를 다시 입력해 주세요.", Toast.LENGTH_LONG).show();
-                else if (user_number.getText().toString().length() > 2 || !isInteger(user_number.getText().toString()))
-                    Toast.makeText(getActivity(), "학번은 숫자 2자리로 입력해 주세요.", Toast.LENGTH_LONG).show();
+                else if (user_nickname.getText().toString().equals(""))
+                    Toast.makeText(getActivity(), "닉네임을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else
                     newUser();
             }

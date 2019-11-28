@@ -6,6 +6,7 @@
         android:id="@+id/review_search"
         android:title="찾기"
         android:icon="@drawable/ic_search"
+        android:iconTint="@color/colorwhite"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.widget.SearchView"/>
 
