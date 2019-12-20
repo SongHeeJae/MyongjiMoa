@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -51,10 +53,16 @@ public class ShuttleActivity extends AppCompatActivity {
     TabLayout tabs;
     ShuttleAdapter shuttle_adapter;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shuttle);
+
+        mAdView = findViewById(R.id.shuttle_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         setTitle("셔틀정보");
 
@@ -151,7 +159,7 @@ public class ShuttleActivity extends AppCompatActivity {
             for(int i=0; i<3; i++) {
                 String tt = "";
                 for(int j=t.length/3*i ; j < t.length/3*(i+1); j++) tt += t[j] + "\n";
-                text[i].setText(tt );
+                text[i].setText(tt);
             }
 
             container.addView(view) ;

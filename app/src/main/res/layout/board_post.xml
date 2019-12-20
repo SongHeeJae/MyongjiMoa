@@ -1,153 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:background="@color/colorback"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/board_post_adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id_for_test"></com.google.android.gms.ads.AdView>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="55dp">
-
-        <LinearLayout
+        android:layout_above="@+id/board_post_adView">
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="55dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rectangle_deepneon"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
                 android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorneon"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:id="@+id/post_title"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_deepneon"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorneon"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/post_title"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/post_image_recycler_view"></androidx.recyclerview.widget.RecyclerView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorwritereview"
+                        android:textSize="17dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/post_description"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorneon"
+                        android:id="@+id/post_date"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorneon"
+                        android:id="@+id/post_nickname"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorneon"
+                        android:id="@+id/post_number"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorneon"
+                        android:id="@+id/post_major"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <ImageButton
+                        android:id="@+id/recommend_button"
+                        android:src="@drawable/best"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="30dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/recommend_num"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical"
+                        android:textSize="17dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorneon"/>
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/post_image_recycler_view"></androidx.recyclerview.widget.RecyclerView>
+                    android:id="@+id/post_comment_recycler_view">
+                </androidx.recyclerview.widget.RecyclerView>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorwritereview"
-                    android:textSize="17dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="10dp"
-                    android:id="@+id/post_description"/>
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_gravity="bottom|center">
+
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="horizontal" >
+                android:layout_height="50dp"
+                android:hint="댓글을 입력하세요."
+                android:textCursorDrawable="@drawable/cursor"
+                android:layout_weight="3"
+                android:theme="@style/EditTheme"
+                android:textAlignment="center"
+                android:id="@+id/write_comment"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
-                    android:id="@+id/post_date"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
-                    android:id="@+id/post_nickname"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
-                    android:id="@+id/post_number"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorneon"
-                    android:id="@+id/post_major"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal" >
-
-                <ImageButton
-                    android:id="@+id/recommend_button"
-                    android:src="@drawable/best"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="0dp"
-                    android:scaleType="fitXY"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="30dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/recommend_num"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
-                    android:textSize="17dp"
-                    android:layout_weight="1"
-                    android:textColor="@color/colorneon"/>
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
+            <Button
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/post_comment_recycler_view">
-            </androidx.recyclerview.widget.RecyclerView>
-
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:background="@color/colorneon"
+                android:text="댓글 작성"
+                android:textColor="@color/colorwhite"
+                android:id="@+id/comment_submit"/>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="2dp"
-        android:layout_gravity="bottom|center">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="댓글을 입력하세요."
-            android:textCursorDrawable="@drawable/cursor"
-            android:layout_weight="3"
-            android:theme="@style/EditTheme"
-            android:textAlignment="center"
-            android:id="@+id/write_comment"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="7"
-            android:background="@color/colorneon"
-            android:text="댓글 작성"
-            android:textColor="@color/colorwhite"
-            android:id="@+id/comment_submit"/>
-    </LinearLayout>
+    </FrameLayout>
 
 
-</FrameLayout>
+
+</RelativeLayout>

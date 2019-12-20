@@ -1,115 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity"
     android:background="@color/colorPrimary">
 
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id_for_test"></com.google.android.gms.ads.AdView>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="237dp"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:padding="0dp">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="109dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="20dp"
-            android:baselineAligned="false"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/loginping" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/main_back"
-        android:layout_width="383dp"
-        android:layout_height="384dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/menu_back"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@+id/main_adView">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
+            android:layout_height="237dp"
+            android:layout_gravity="center"
             android:orientation="horizontal"
-            android:scaleType="fitXY"
-            android:visibility="visible">
+            android:padding="0dp">
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="150dp"
-                android:layout_height="170dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="5dp"
-                android:backgroundTint="#00383434"
-                android:scaleType="fitXY"
-                android:src="@drawable/main_me" />
-
-            <ImageButton
-                android:id="@+id/group"
-                android:layout_width="150dp"
-                android:layout_height="170dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="20dp"
-                android:backgroundTint="#00383434"
-                android:scaleType="fitXY"
-                android:src="@drawable/main_group" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="109dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="20dp"
+                android:baselineAligned="false"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/loginping" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:scaleType="fitXY"
-            android:visibility="visible">
-
-            <ImageButton
-                android:id="@+id/review"
-                android:layout_width="150dp"
-                android:layout_height="170dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="5dp"
-                android:backgroundTint="#00383434"
-                android:scaleType="fitXY"
-                android:src="@drawable/main_review" />
+            android:id="@+id/main_back"
+            android:layout_width="383dp"
+            android:layout_height="384dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/menu_back"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:scaleType="fitXY"
                 android:visibility="visible">
 
                 <ImageButton
-                    android:id="@+id/food"
+                    android:id="@+id/imageButton2"
                     android:layout_width="150dp"
-                    android:layout_height="75dp"
+                    android:layout_height="170dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
                     android:backgroundTint="#00383434"
                     android:scaleType="fitXY"
-                    android:src="@drawable/main_food" />
+                    android:src="@drawable/main_me" />
 
                 <ImageButton
-                    android:id="@+id/shuttle"
+                    android:id="@+id/group"
                     android:layout_width="150dp"
-                    android:layout_height="95dp"
+                    android:layout_height="170dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="20dp"
                     android:backgroundTint="#00383434"
                     android:scaleType="fitXY"
-                    android:src="@drawable/main_shuttle" />
+                    android:src="@drawable/main_group" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:scaleType="fitXY"
+                android:visibility="visible">
+
+                <ImageButton
+                    android:id="@+id/review"
+                    android:layout_width="150dp"
+                    android:layout_height="170dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:backgroundTint="#00383434"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/main_review" />
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:scaleType="fitXY"
+                    android:visibility="visible">
+
+                    <ImageButton
+                        android:id="@+id/food"
+                        android:layout_width="150dp"
+                        android:layout_height="75dp"
+                        android:backgroundTint="#00383434"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/main_food" />
+
+                    <ImageButton
+                        android:id="@+id/shuttle"
+                        android:layout_width="150dp"
+                        android:layout_height="95dp"
+                        android:backgroundTint="#00383434"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/main_shuttle" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>

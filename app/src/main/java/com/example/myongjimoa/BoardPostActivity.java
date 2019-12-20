@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +67,16 @@ public class BoardPostActivity extends AppCompatActivity {
 
     private final int MODIFY_REQUEST_CODE = 1000;
 
+    AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_post);
+
+        mAdView = findViewById(R.id.board_post_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         Intent it = getIntent();
         post = new Post(it.getStringExtra("id"), it.getStringExtra("title"), it.getStringExtra("description"), it.getStringExtra("number"), it.getStringExtra("major"), it.getStringExtra("date"), it.getStringExtra("nickname"), it.getStringArrayListExtra("images"), Integer.parseInt(it.getStringExtra("recommend_num")));

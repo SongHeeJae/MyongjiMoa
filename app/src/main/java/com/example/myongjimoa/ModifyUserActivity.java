@@ -27,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myongjimoa.ConnectDB;
 import com.example.myongjimoa.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,10 +55,16 @@ public class ModifyUserActivity extends AppCompatActivity {
 
     ImageButton logout;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.modify_user);
+
+        mAdView = findViewById(R.id.modify_user_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         setTitle("내정보 확인");
 

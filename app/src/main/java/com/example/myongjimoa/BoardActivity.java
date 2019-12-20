@@ -24,6 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +66,16 @@ public class BoardActivity extends AppCompatActivity {
     private final int WRITE_REQUEST_CODE = 1000;
     private final int POST_REMOVE_REQUEST_CODE = 2000;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
+
+        mAdView = findViewById(R.id.board_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         Intent it = getIntent();
         board_title_id = it.getStringExtra("board_title_id");
