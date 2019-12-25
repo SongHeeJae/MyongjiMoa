@@ -54,7 +54,11 @@ public class AddUserFragment extends Fragment {
     Spinner majorSpinner;
     CheckBox checkBox;
     CheckBox checkBox2;
-    int errcode = 0;
+    boolean errcode = true;
+
+    String temp_num;
+    String temp_pw;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.add_user, container, false);
@@ -178,25 +182,6 @@ public class AddUserFragment extends Fragment {
                     return ;
                 }
 
-                ConnectDB connectDB = Request.getLoginRetrofit().create(ConnectDB.class);
-                Call<String> call = connectDB.loginCheck(user_number.getText().toString(), user_password.getText().toString());
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
-                        String result = response.body();
-                        if (result != null) {
-                            if(result.contains("5회 오류시 비밀번호를 재설정후 사용이 가능합니다") || result.contains("아이디 또는 비밀번호를 잘못 입력하셨습니다."))
-                                errcode = 1; // ID or PW ERROR
-                            else
-                                errcode = 0;
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                    }
-                });
-
                 if (user_name.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "이름을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (user_number.getText().toString().equals(""))
@@ -215,11 +200,31 @@ public class AddUserFragment extends Fragment {
                     Toast.makeText(getActivity(), "닉네임을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (user_number.getText().toString().length() < 8)
                     Toast.makeText(getActivity(), "학번은 학교 사이트에 로그인하는 8자리입니다.", Toast.LENGTH_LONG).show();
-                else if(errcode == 1) {
-                    Toast.makeText(getActivity(), "명지대에 등록된 학번 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_LONG).show();
+                else {
+                    temp_num = user_number.getText().toString();
+                    temp_pw = user_password.getText().toString();
+
+                    ConnectDB connect_DB = Request.getLoginRetrofit().create(ConnectDB.class);
+                    Call<String> calling= connect_DB.loginCheck(temp_num, temp_pw);
+                    calling.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            String result = response.body();
+                            Log.d("", result);
+                            if (result != null) {
+                                if(result.contains("5회 오류시 비밀번호를 재설정후 사용이 가능합니다") || result.contains("아이디 또는 비밀번호를 잘못 입력하셨습니다.")) {
+                                    Toast.makeText(getActivity(), "명지대 계정에 등록된 학번 혹은 비밀번호가 다릅니다.", Toast.LENGTH_LONG).show();
+                                    return ;
+                                }
+                                else
+                                    newUser();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                        }
+                    });
                 }
-                else
-                    newUser();
             }
         }); // 리스너 등록. 버튼 클릭 시 회원가입 진행
 
@@ -272,39 +277,40 @@ public class AddUserFragment extends Fragment {
                 .addConverterFactory(ScalarsConverterFactory.create()) // 문자열 형태로 받음.
                 .build();
 
-        ConnectDB connectDB = retrofit.create(ConnectDB.class);
-        Call<String> call = connectDB.addUser(user_email.getText().toString().trim(), user_password.getText().toString(), user_nickname.getText().toString().trim(), majorSpinner.getSelectedItem().toString(), user_number.getText().toString().trim(), user_name.getText().toString().trim(), format_date);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
 
-                String result = response.body().trim();
-                if (result.equals("success")) { // 회원 가입 정상 수행 시 서버에서 success 문자열 출력
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("메시지");
-                    builder.setCancelable(false);
-                    builder.setMessage("회원 가입에 성공하였습니다.");
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ((LoginActivity) getActivity()).removeAddUserFragment();
-                        }
-                    });
-                    builder.show();
-                } else if (result.equals("email")) { // 서버에서 이메일 중복 검사에 걸림
-                    Toast.makeText(getActivity(), "이미 등록된 이메일입니다.", Toast.LENGTH_SHORT).show();
-                } else if (result.equals("nickname")) { // 서버에서 닉네임 중복 검사에 걸림
-                    Toast.makeText(getActivity(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
-                }else if (result.equals("number")) { // 서버에서 학번 중복 검사에 걸림
-                    Toast.makeText(getActivity(), "이미 등록된 학번입니다.", Toast.LENGTH_SHORT).show();
+            ConnectDB connectDB = retrofit.create(ConnectDB.class);
+            Call<String> call = connectDB.addUser(user_email.getText().toString().trim(), user_password.getText().toString(), user_nickname.getText().toString().trim(), majorSpinner.getSelectedItem().toString(), user_number.getText().toString().trim(), user_name.getText().toString().trim(), format_date);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+
+                    String result = response.body().trim();
+                    if (result.equals("success")) { // 회원 가입 정상 수행 시 서버에서 success 문자열 출력
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("메시지");
+                        builder.setCancelable(false);
+                        builder.setMessage("회원 가입에 성공하였습니다.");
+                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((LoginActivity) getActivity()).removeAddUserFragment();
+                            }
+                        });
+                        builder.show();
+                    } else if (result.equals("email")) { // 서버에서 이메일 중복 검사에 걸림
+                        Toast.makeText(getActivity(), "이미 등록된 이메일입니다.", Toast.LENGTH_SHORT).show();
+                    } else if (result.equals("nickname")) { // 서버에서 닉네임 중복 검사에 걸림
+                        Toast.makeText(getActivity(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                    } else if (result.equals("number")) { // 서버에서 학번 중복 검사에 걸림
+                        Toast.makeText(getActivity(), "이미 등록된 학번입니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
 
-            }
-        });
+                }
+            });
     }
 
     private boolean isNetworkConnected() {
