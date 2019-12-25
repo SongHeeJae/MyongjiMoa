@@ -2,6 +2,7 @@ package com.example.myongjimoa;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Region;
@@ -108,6 +109,7 @@ public class Request {
                     str.append(text.charAt(i));
                     if(temp.get(str.toString()) != null) { // 욕설이면 욕설 처리. 순화어 길이차이만큼 계산, 필요없는 인덱스 추가
                         text = text.substring(0, i - count - str.length() + 1) + temp.get(str.toString()) + text.substring(i + 1);
+                        //Log.d("텍스트값 알아보기2222", "text : " + text);
                         i = i - count + temp.get(str.toString()).length() - str.length(); // key와 value의 길이차이 넘어감
                         str.setLength(0);
                     } else if (str.length() > 1 && myMap.get(text.charAt(i)) != null) { // 단어가 새로운 욕의 시작이면 temp값 수정, str 초기화 - 첫번째 if문에서 욕설처리가되었다면 그냥 넘어감.
@@ -120,6 +122,13 @@ public class Request {
             }  else count++;
         }
         return text;
+    }
+
+    static Retrofit getLoginRetrofit() {
+        return new Retrofit.Builder()
+                .baseUrl("https://sso.mju.ac.kr/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
     }
 
     static AmazonS3 getAmazonS3(Context context) {

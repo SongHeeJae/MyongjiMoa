@@ -27,7 +27,6 @@
                 android:textColor="@color/coloradd_user_text"
                 android:textCursorDrawable="@drawable/cursor"
                 android:background="@color/coloradd_user"
-                android:privateImeOptions="defaultInputmode=korean"
                 android:hint="이름을 입력해주세요." />
         </LinearLayout>
 
@@ -49,17 +48,16 @@
                 android:textCursorDrawable="@drawable/cursor"
                 android:imeOptions="actionNext"
                 android:hint="학번을 입력해주세요."
-                android:maxLength="2"
+                android:maxLength="8"
                 android:inputType="number" />
 
             <TextView
                 android:textColor="@color/coloradd_user_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="* 학번은 17, 16 등 숫자 2자리 형식으로 입력하세요."
+                android:text="* 명지대 계정에서 사용하는 학번으로 입력하세요."
                 android:textSize="15dp" />
         </LinearLayout>
-\
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -124,7 +122,7 @@
                 android:background="@color/coloradd_user"
                 android:textColorHint="@color/coloradd_user_text"
                 android:imeOptions="actionNext"
-                android:hint="비밀번호를 입력해주세요 : 6자 이상"
+                android:hint="명지대 계정의 비밀번호를 입력하세요."
                 android:textCursorDrawable="@drawable/cursor"
                 android:textColor="@color/coloradd_user_text"
                 android:inputType="textPassword"

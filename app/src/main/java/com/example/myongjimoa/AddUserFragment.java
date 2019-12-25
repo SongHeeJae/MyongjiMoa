@@ -3,6 +3,7 @@ package com.example.myongjimoa;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -50,9 +52,9 @@ public class AddUserFragment extends Fragment {
     EditText user_name;
     ImageButton submit;
     Spinner majorSpinner;
-
     CheckBox checkBox;
     CheckBox checkBox2;
+    int errcode = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.add_user, container, false);
@@ -176,12 +178,29 @@ public class AddUserFragment extends Fragment {
                     return ;
                 }
 
+                ConnectDB connectDB = Request.getLoginRetrofit().create(ConnectDB.class);
+                Call<String> call = connectDB.loginCheck(user_number.getText().toString(), user_password.getText().toString());
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        String result = response.body();
+                        if (result != null) {
+                            if(result.contains("5회 오류시 비밀번호를 재설정후 사용이 가능합니다") || result.contains("아이디 또는 비밀번호를 잘못 입력하셨습니다."))
+                                errcode = 1; // ID or PW ERROR
+                            else
+                                errcode = 0;
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                    }
+                });
+
                 if (user_name.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "이름을 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (user_number.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "학번을 입력해 주세요.", Toast.LENGTH_LONG).show();
-                else if (user_number.getText().toString().length() > 2 || !isInteger(user_number.getText().toString()))
-                    Toast.makeText(getActivity(), "학번은 숫자 2자리로 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (majorSpinner.getSelectedItemPosition() == 0)
                     Toast.makeText(getActivity(), "학과를 선택해 주세요.", Toast.LENGTH_LONG).show();
                 else if (user_email.getText().toString().equals("") || !isEmailValid(user_email.getText().toString()))
@@ -190,12 +209,15 @@ public class AddUserFragment extends Fragment {
                     Toast.makeText(getActivity(), "비밀번호를 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (re_password.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "비밀번호 확인을 입력해 주세요.", Toast.LENGTH_LONG).show();
-                else if (user_password.getText().toString().length() < 6 || re_password.getText().toString().length() < 6)
-                    Toast.makeText(getActivity(), "비밀번호는 6자리 이상으로 해주세요.", Toast.LENGTH_LONG).show();
                 else if (!user_password.getText().toString().equals(re_password.getText().toString()))
                     Toast.makeText(getActivity(), "비밀번호를 다시 입력해 주세요.", Toast.LENGTH_LONG).show();
                 else if (user_nickname.getText().toString().equals(""))
                     Toast.makeText(getActivity(), "닉네임을 입력해 주세요.", Toast.LENGTH_LONG).show();
+                else if (user_number.getText().toString().length() < 8)
+                    Toast.makeText(getActivity(), "학번은 학교 사이트에 로그인하는 8자리입니다.", Toast.LENGTH_LONG).show();
+                else if(errcode == 1) {
+                    Toast.makeText(getActivity(), "명지대에 등록된 학번 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_LONG).show();
+                }
                 else
                     newUser();
             }
@@ -231,7 +253,6 @@ public class AddUserFragment extends Fragment {
         Pattern pattern = Pattern.compile(emailvalid, Pattern.CASE_INSENSITIVE);
         // emailvalid가 패턴의 형식에 맞는지 검사한다.
         Matcher matcher = pattern.matcher(inputStr);
-        //
 
         if(matcher.matches())
             return true;
@@ -262,7 +283,6 @@ public class AddUserFragment extends Fragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("메시지");
                     builder.setCancelable(false);
-                    Log.d("회원가입 성공", result);
                     builder.setMessage("회원 가입에 성공하였습니다.");
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
@@ -275,6 +295,8 @@ public class AddUserFragment extends Fragment {
                     Toast.makeText(getActivity(), "이미 등록된 이메일입니다.", Toast.LENGTH_SHORT).show();
                 } else if (result.equals("nickname")) { // 서버에서 닉네임 중복 검사에 걸림
                     Toast.makeText(getActivity(), "이미 등록된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                }else if (result.equals("number")) { // 서버에서 학번 중복 검사에 걸림
+                    Toast.makeText(getActivity(), "이미 등록된 학번입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
 

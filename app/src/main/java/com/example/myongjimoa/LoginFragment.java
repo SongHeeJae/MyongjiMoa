@@ -37,12 +37,13 @@ public class LoginFragment extends Fragment {
     boolean fail_login = false;
     ImageButton login;
     ImageButton add_user;
-    EditText user_email;
+    EditText user_num;
     EditText user_password;
     LinearLayout layout;
     ProgressBar progressBar;
     CheckBox auto;
     int value = 0;
+    int errcode = 0;
     Handler handler = new Handler();
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class LoginFragment extends Fragment {
         // 사용할 레이아웃 inflate
         login = (ImageButton) view.findViewById(R.id.login);
         add_user = (ImageButton) view.findViewById(R.id.add_user);
-        user_email = (EditText) view.findViewById(R.id.login_email);
+        user_num = (EditText) view.findViewById(R.id.login_num);
         user_password = (EditText) view.findViewById(R.id.login_password); // 레이아웃의 id 값으로 버튼, 텍스트 객체 할당
         progressBar = (ProgressBar) view.findViewById(R.id.h_progressbar);
         auto = (CheckBox) view.findViewById(R.id.auto);
@@ -60,7 +61,7 @@ public class LoginFragment extends Fragment {
 
         user_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
-        user_email.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
+        user_num.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == event.KEYCODE_ENTER)
@@ -142,64 +143,84 @@ public class LoginFragment extends Fragment {
 
     public void mainLogin() {
 
-            ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
-            Call<User> call = connectDB.userLogin(user_email.getText().toString(), user_password.getText().toString());
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        Call<User> call = connectDB.userLogin(user_num.getText().toString(), user_password.getText().toString());
 
-                    User result = response.body(); // User에 결과가 담김
+        final String temp_num = user_num.getText().toString();
+        final String temp_pw = user_password.getText().toString();
 
-                    if (result.getId() != null) { // 받은 결과의 아이디 값이 null이 아니면 로그인 성공
-                        bool_login = true;
-                        Toast.makeText(getActivity(), "띵지모아에 오신 것을 환영합니다!", Toast.LENGTH_LONG).show();
-                        Intent it = new Intent(getActivity(), MainActivity.class);
-                        it.putExtra("id", result.getId());
-                        it.putExtra("email_id", result.getEmail_id());
-                        it.putExtra("user_nickname", result.getNickname());
-                        it.putExtra("major", result.getMajor());
-                        it.putExtra("number", result.getNumber());
-                        it.putExtra("name", result.getName());
-                        it.putExtra("date", result.getDate());
-                        it.putExtra("admin", result.getAdmin());
-                        if(auto.isChecked()) {
-                            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("id", result.getId());
-                            editor.putString("email_id", result.getEmail_id());
-                            editor.putString("user_nickname", result.getNickname());
-                            editor.putString("major", result.getMajor());
-                            editor.putString("number", result.getNumber());
-                            editor.putString("name", result.getName());
-                            editor.putString("date", result.getDate());
-                            editor.putBoolean("admin", result.getAdmin());
-                            editor.apply();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                User result = response.body(); // User에 결과가 담김
+
+                ConnectDB connectDB = Request.getLoginRetrofit().create(ConnectDB.class);
+                Call<String> calling = connectDB.loginCheck(temp_num, temp_pw);
+                calling.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        String result = response.body();
+                        if (result != null) {
+                            if(result.contains("5회 오류시 비밀번호를 재설정후 사용이 가능합니다") || result.contains("아이디 또는 비밀번호를 잘못 입력하셨습니다."))
+                                errcode = 1; // ID or PW ERROR
+                            else
+                                errcode = 0;
                         }
-                        getActivity().startActivity(it);
-                        getActivity().finish(); // 회원정보 담아서 MainActivity로 이동. LoginActivity는 종료
-                    } else {
-                        fail_login = true;
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); // 로그인 실패하였을 시 알림 처리
-                        builder.setTitle("로그인 실패");
-                        builder.setMessage("아이디나 비밀번호가 틀렸습니다.");
-                        builder.setCancelable(false);
-                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                        builder.show();
-                        fail_login = false;
                     }
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                    }
+                });
 
-
+                if (result.getId() != null && errcode == 0) { // 받은 결과의 아이디 값이 null이 아니면 로그인 성공
+                    bool_login = true;
+                    Toast.makeText(getActivity(), "띵지모아에 오신 것을 환영합니다!", Toast.LENGTH_LONG).show();
+                    Intent it = new Intent(getActivity(), MainActivity.class);
+                    it.putExtra("id", result.getId());
+                    it.putExtra("email_id", result.getEmail_id());
+                    it.putExtra("user_nickname", result.getNickname());
+                    it.putExtra("major", result.getMajor());
+                    it.putExtra("number", result.getNumber());
+                    it.putExtra("name", result.getName());
+                    it.putExtra("date", result.getDate());
+                    it.putExtra("admin", result.getAdmin());
+                    if(auto.isChecked()) {
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("id", result.getId());
+                        editor.putString("email_id", result.getEmail_id());
+                        editor.putString("user_nickname", result.getNickname());
+                        editor.putString("major", result.getMajor());
+                        editor.putString("number", result.getNumber());
+                        editor.putString("name", result.getName());
+                        editor.putString("date", result.getDate());
+                        editor.putBoolean("admin", result.getAdmin());
+                        editor.apply();
+                    }
+                    getActivity().startActivity(it);
+                    getActivity().finish(); // 회원정보 담아서 MainActivity로 이동. LoginActivity는 종료
+                } else{
+                    fail_login = true;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); // 로그인 실패하였을 시 알림 처리
+                    builder.setTitle("로그인 실패");
+                    builder.setMessage("아이디나 비밀번호가 틀렸습니다.");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    builder.show();
+                    fail_login = false;
                 }
+            }
 
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-
-                }
-            });
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+            }
+        });
     }
 
     private boolean isNetworkConnected() {

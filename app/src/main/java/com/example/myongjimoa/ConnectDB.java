@@ -24,6 +24,13 @@ public interface ConnectDB {
     );
 
     @FormUrlEncoded
+    @POST("swift/login/loginCheck.jsp")
+    Call<String> loginCheck(
+            @Field("userID") String user_id,
+            @Field("userPW") String user_pw
+    );
+
+    @FormUrlEncoded
     @POST("download_comments.php")
     Call<List<Comment>> downloadComments(
             @Field("board_id") String board_id
@@ -53,7 +60,7 @@ public interface ConnectDB {
     @FormUrlEncoded
     @POST("login.php")
     Call<User> userLogin(
-            @Field("email_id") String email_id,
+            @Field("number") String number,
             @Field("password") String password
     );
 
