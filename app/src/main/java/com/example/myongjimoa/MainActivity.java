@@ -21,6 +21,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -39,10 +41,16 @@ public class MainActivity extends AppCompatActivity {
 
     static boolean admin;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAdView = findViewById(R.id.main_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         Intent it = getIntent();
         my_info = new User(it.getStringExtra("id"), it.getStringExtra("email_id"), it.getStringExtra("user_nickname"), it.getStringExtra("major"), it.getStringExtra("number"), it.getStringExtra("name"), it.getStringExtra("date"), it.getBooleanExtra("admin", false));

@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +52,16 @@ public class ReviewActivity extends AppCompatActivity {
 
     String order; // 초기값 score순
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_main);
+
+        mAdView = findViewById(R.id.review_main_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         if (!isNetworkConnected()) { // false 인 경우 네트워크 연결 안되어있음.
             AlertDialog.Builder builder = new AlertDialog.Builder(ReviewActivity.this);

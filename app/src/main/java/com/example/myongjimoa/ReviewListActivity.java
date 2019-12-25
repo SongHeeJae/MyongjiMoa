@@ -29,6 +29,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.Tm128;
 import com.naver.maps.map.CameraUpdate;
@@ -77,10 +79,16 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
 
     private final int WRITE_REQUEST_CODE = 1000;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_list);
+
+        mAdView = findViewById(R.id.review_list_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         String[] menulist;
 

@@ -1,227 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorback"
-    android:orientation="vertical">
+    android:background="@color/colorback">
 
-    <TableLayout
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/modify_user_adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id_for_test"></com.google.android.gms.ads.AdView>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="*"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="60dp"
-        android:background="@drawable/rounded_blank" >
-
-        <TableRow
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@+id/modify_user_adView">
+        <TableLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_height="40dp" >
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/rounded_blank" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colormain"
-                android:textSize="18dp"
-                android:text="이메일" />
-
-            <TextView
-                android:textSize="18dp"
-                android:id="@+id/modify_user_email"
-                android:textColor="@color/colorinfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </TableRow>
-        <TableRow
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
-
-            <TextView
-                android:textSize="18dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="@color/colormain"
-                android:gravity="center_vertical"
-                android:text="닉네임" />
-
-            <ViewSwitcher
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/nickname_switcher">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_height="40dp" >
 
                 <TextView
-                    android:textColor="@color/colorinfo"
-                    android:textSize="18dp"
-                    android:layout_gravity="center_vertical"
-                    android:id="@+id/modify_user_nickname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-
-                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="닉네임을 입력해주세요"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:theme="@style/EditTheme"
-                    android:textColorHint="@color/colorinfo"
-                    android:textColor="@color/colorinfo"
-                    android:id="@+id/edit_user_nickname" />
-            </ViewSwitcher>
-        </TableRow>
-
-        <TableRow
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
-
-            <TextView
-                android:textSize="18dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colormain"
-                android:text="전공" />
-
-            <ViewSwitcher
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/major_switcher">
+                    android:textColor="@color/colormain"
+                    android:textSize="18dp"
+                    android:text="이메일" />
 
                 <TextView
                     android:textSize="18dp"
+                    android:id="@+id/modify_user_email"
                     android:textColor="@color/colorinfo"
-                    android:id="@+id/modify_user_major"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <Spinner
-                    android:id="@+id/spinner_major"
-                    android:theme="@style/Spinner_mod"
-                    android:dropDownWidth="200dp"
+            </TableRow>
+            <TableRow
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" >
+
+                <TextView
+                    android:textSize="18dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-            </ViewSwitcher>
-        </TableRow>
+                    android:layout_height="match_parent"
+                    android:textColor="@color/colormain"
+                    android:gravity="center_vertical"
+                    android:text="닉네임" />
 
-        <TableRow
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
+                <ViewSwitcher
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nickname_switcher">
+
+                    <TextView
+                        android:textColor="@color/colorinfo"
+                        android:textSize="18dp"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/modify_user_nickname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="닉네임을 입력해주세요"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:theme="@style/EditTheme"
+                        android:textColorHint="@color/colorinfo"
+                        android:textColor="@color/colorinfo"
+                        android:id="@+id/edit_user_nickname" />
+                </ViewSwitcher>
+            </TableRow>
+
+            <TableRow
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" >
+
+                <TextView
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colormain"
+                    android:text="전공" />
+
+                <ViewSwitcher
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/major_switcher">
+
+                    <TextView
+                        android:textSize="18dp"
+                        android:textColor="@color/colorinfo"
+                        android:id="@+id/modify_user_major"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <Spinner
+                        android:id="@+id/spinner_major"
+                        android:theme="@style/Spinner_mod"
+                        android:dropDownWidth="200dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </ViewSwitcher>
+            </TableRow>
+
+            <TableRow
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" >
+
+                <TextView
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colormain"
+                    android:text="학번" />
+
+                <TextView
+                    android:textSize="18dp"
+                    android:textColor="@color/colorinfo"
+                    android:id="@+id/modify_user_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" >
+
+                <TextView
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colormain"
+                    android:text="이름" />
+
+                <TextView
+                    android:textSize="18dp"
+                    android:textColor="@color/colorinfo"
+                    android:id="@+id/modify_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" >
+
+                <TextView
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colormain"
+                    android:text="가입일" />
+
+                <TextView
+                    android:textSize="18dp"
+                    android:textColor="@color/colorinfo"
+                    android:id="@+id/modify_user_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+        </TableLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp" >
-
-            <TextView
-                android:textSize="18dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colormain"
-                android:text="학번" />
-
-            <TextView
-                android:textSize="18dp"
-                android:textColor="@color/colorinfo"
-                android:id="@+id/modify_user_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_marginLeft="20dp"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
             android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-            <TextView
-                android:textSize="18dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colormain"
-                android:text="이름" />
+            <ImageButton
+                android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:textColor="@color/colorwhite"
+                android:background="@color/colorneon"
+                android:src="@drawable/logout"
+                android:id="@+id/logout" />
 
-            <TextView
-                android:textSize="18dp"
-                android:textColor="@color/colorinfo"
-                android:id="@+id/modify_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
+            <ImageButton
+                android:layout_centerInParent="true"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorwhite"
+                android:background="@color/colorneon"
+                android:id="@+id/user_modify"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/modify" />
 
-        <TableRow
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
+            <ImageButton
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/modify_submit"
+                android:src="@drawable/ok_button2"
+                android:textColor="@color/colorwhite"
+                android:background="@color/colorneon"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:visibility="invisible"/>
 
-            <TextView
-                android:textSize="18dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colormain"
-                android:text="가입일" />
+        </RelativeLayout>
+    </LinearLayout>
 
-            <TextView
-                android:textSize="18dp"
-                android:textColor="@color/colorinfo"
-                android:id="@+id/modify_user_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
-    </TableLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:layout_marginLeft="20dp"
-            android:layout_centerVertical="true"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:textColor="@color/colorwhite"
-            android:background="@color/colorneon"
-            android:src="@drawable/logout"
-            android:id="@+id/logout" />
-
-        <ImageButton
-            android:layout_centerInParent="true"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:textColor="@color/colorwhite"
-            android:background="@color/colorneon"
-            android:id="@+id/user_modify"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/modify" />
-
-        <ImageButton
-            android:layout_marginRight="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:id="@+id/modify_submit"
-            android:src="@drawable/ok_button2"
-            android:textColor="@color/colorwhite"
-            android:background="@color/colorneon"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible"/>
-
-    </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

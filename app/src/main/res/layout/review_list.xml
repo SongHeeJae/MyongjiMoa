@@ -1,166 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:background="@color/colorback"
     android:layout_height="match_parent" >
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/review_list_adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id_for_test"></com.google.android.gms.ads.AdView>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/review_swipe_refresh_layout" >
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nested"
+        android:layout_above="@+id/review_list_adView">
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/review_swipe_refresh_layout" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:textColor="@color/colorPrimaryDark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:id="@+id/restaurant_title"/>
-
-                    <TextView
-                        android:textColor="@color/colorwritereview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/restaurant_category"/>
-
-                    <RatingBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:isIndicator="true"
-                        android:numStars="5"
-                        android:rating="1"
-                        android:max="5"
-                        android:stepSize="0.01"
-                        android:id="@+id/review_list_rating_bar"/>
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="0.3dp"
-                        android:layout_marginBottom="7dp"
-                        android:background="@color/colorneon" />
-
-
-                    <TextView
-                        android:textColor="@color/colorwritereview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/restaurant_score"/>
-
-                    <TextView
-                        android:textColor="@color/colorwritereview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/restaurant_review_num"/>
-
-                    <TextView
-                        android:textColor="@color/colorwritereview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/restaurant_address"/>
-
-                    <TextView
-                        android:textColor="@color/colorwritereview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/restaurant_telephone"/>
-
-                    <TextView
-                        android:textColor="@color/colorwritereview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/restaurant_homepage"/>
-
-                    <TextView
-                        android:textColor="@color/colorwritereview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:id="@+id/restaurant_time"/>
-
-                    <LinearLayout
-                        android:id="@+id/map"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="180dp"
-                            android:id="@+id/review_list_map" />
-                    </LinearLayout>
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nested"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:orientation="vertical"
-                        android:background="@drawable/rectangle_neon" >
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:id="@+id/restaurant_title"/>
 
                         <TextView
                             android:textColor="@color/colorwritereview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="center"
-                            android:textSize="18dp"
-                            android:text="메뉴" />
-
-                        <TextView
-                            android:textColor="@color/colorneon"
-                            android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:id="@+id/restaurant_menu"/>
+                            android:id="@+id/restaurant_category"/>
+
+                        <RatingBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:rating="1"
+                            android:max="5"
+                            android:stepSize="0.01"
+                            android:id="@+id/review_list_rating_bar"/>
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="0.3dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@color/colorneon" />
+
+
+                        <TextView
+                            android:textColor="@color/colorwritereview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/restaurant_score"/>
+
+                        <TextView
+                            android:textColor="@color/colorwritereview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/restaurant_review_num"/>
+
+                        <TextView
+                            android:textColor="@color/colorwritereview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/restaurant_address"/>
+
+                        <TextView
+                            android:textColor="@color/colorwritereview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/restaurant_telephone"/>
+
+                        <TextView
+                            android:textColor="@color/colorwritereview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/restaurant_homepage"/>
+
+                        <TextView
+                            android:textColor="@color/colorwritereview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:id="@+id/restaurant_time"/>
+
+                        <LinearLayout
+                            android:id="@+id/map"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="180dp"
+                                android:id="@+id/review_list_map" />
                         </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="50dp"
-                        android:orientation="vertical">
-
-                        <EditText
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="18dp"
-                            android:focusableInTouchMode="false" />
-
-                        <TextView
-                            android:id="@+id/no_review"
-                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:textSize="16dp"
-                            android:layout_gravity="center"
-                            android:textStyle="bold"
-                            android:text="리뷰가 없습니다. 올려주세요!" />
+                            android:layout_margin="10dp"
+                            android:orientation="vertical"
+                            android:background="@drawable/rectangle_neon" >
 
-                         <androidx.recyclerview.widget.RecyclerView
-                             android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:id="@+id/review_recycler_view" />
+                            <TextView
+                                android:textColor="@color/colorwritereview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:textSize="18dp"
+                                android:text="메뉴" />
+
+                            <TextView
+                                android:textColor="@color/colorneon"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:id="@+id/restaurant_menu"/>
+                            </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="50dp"
+                            android:orientation="vertical">
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="18dp"
+                                android:focusableInTouchMode="false" />
+
+                            <TextView
+                                android:id="@+id/no_review"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:textSize="16dp"
+                                android:layout_gravity="center"
+                                android:textStyle="bold"
+                                android:text="리뷰가 없습니다. 올려주세요!" />
+
+                             <androidx.recyclerview.widget.RecyclerView
+                                 android:layout_width="match_parent"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/review_recycler_view" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-         </androidx.core.widget.NestedScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    <ImageButton
-        android:src="@drawable/review"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:padding="0dp"
-        android:scaleType="fitXY"
-        android:text="리뷰쓰기"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center|bottom"
-        android:id="@+id/write_review"/>
-</FrameLayout>
+             </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <ImageButton
+            android:src="@drawable/review"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:text="리뷰쓰기"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center|bottom"
+            android:id="@+id/write_review"/>
+    </FrameLayout>
+
+
+</RelativeLayout>

@@ -10,6 +10,9 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class ReviewMainActivity extends AppCompatActivity {
 
     Button hansik;
@@ -24,10 +27,16 @@ public class ReviewMainActivity extends AppCompatActivity {
     ImageButton all;
     String user_id;
     String user_nickname;
+
+    private AdView mAdView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review);
+
+        mAdView = findViewById(R.id.review_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         setTitle("음식점 조회");
 

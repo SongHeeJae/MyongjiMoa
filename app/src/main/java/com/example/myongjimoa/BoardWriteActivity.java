@@ -41,6 +41,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -83,10 +85,16 @@ public class BoardWriteActivity extends AppCompatActivity {
     ProgressBar progressBar;
     Handler handler = new Handler();
 
+    AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_write);
+
+        mAdView = findViewById(R.id.board_write_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         setTitle("글쓰기");
 
