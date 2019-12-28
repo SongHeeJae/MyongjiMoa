@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">띵지모아</string>
     <string name="title_activity_maps">Map</string>
-    <string name="admob_app_id">ca-app-pub-6429937664532304~6064449310</string>
-    <string name="banner_ad_unit_id">ca-app-pub-6429937664532304/9545702780</string>
-    <string name="banner_ad_unit_id_for_test">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_app_id"></string>
+    <string name="banner_ad_unit_id"></string>
+    <string name="banner_ad_unit_id_for_test"></string>
 </resources>
