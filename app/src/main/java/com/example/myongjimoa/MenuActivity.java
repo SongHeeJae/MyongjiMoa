@@ -171,25 +171,22 @@ public class MenuActivity extends AppCompatActivity {
                 day.add("Friday_Data");
                 Document doc = Jsoup.connect(params[0]).get();
                 Elements e1 = doc.select("table[class=sub]");
-                int i = 0;
                 // 각 url로 명지대학교 홈페이지에서 해당하는 요일 태그 순서대로 메뉴 긁어옴
                 if(params[0].equals(url1)) {
-                    for (Element e : e1) {
-                        if(i>=day.size()) break;
-                        Elements e2 = e.select("div[name=" + day.get(i++) + "]");
+                    for (int i=0; i<e1.size(); i++) {
+                        Elements e2 = e1.get(i).select("div[name=" + day.get(i) + "]");
                         String menu = "";
-                        for (Element ee : e2) menu += ee.text() + "\n";
+
+                        for (int j=0; j<e2.size(); j++) menu += e2.get(j).text().trim() + " \n";
+
                         day_menu1.add(menu);
                     }
                 } else {
-                    for (Element e : e1) {
-                        Elements e2 = e.select("div[name=" + day.get(i++) + "]");
+                    for (int i=0; i<e1.size(); i++) {
+                        Elements e2 = e1.get(i).select("div[name=" + day.get(i) + "]");
                         String menu = "";
-                        int j=0;
-                        for (Element ee : e2) {
-                            if(j != 1 && j != 4) menu += ee.text() + "\n";
-                            j++;
-                        }
+                        for (int j=0; j<e2.size(); j++)
+                            if(j != 1 && j != 4) menu += e2.get(j).text().trim() + " \n";
                         day_menu2.add(menu);
                     }
                 }
@@ -235,6 +232,7 @@ public class MenuActivity extends AppCompatActivity {
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.menu_item, container, false);
+
             TextView text1 = (TextView) view.findViewById(R.id.menu1);
             TextView text2 = (TextView) view.findViewById(R.id.menu2);
             TextView text3 = (TextView) view.findViewById(R.id.menu3);
@@ -242,14 +240,21 @@ public class MenuActivity extends AppCompatActivity {
             TextView text5 = (TextView) view.findViewById(R.id.menu5);
             TextView text6 = (TextView) view.findViewById(R.id.menu6);
 
-            String[] m1 = menu1.get(position).trim().split("\n");
-            String[] m2 = menu2.get(position).trim().split("\n");
-            text1.setText(m1[0].trim().replaceAll(" ", "\n"));
-            text2.setText(m1[1].trim().replaceAll(" ", "\n"));
-            text3.setText(m1[2].trim().replaceAll(" ", "\n"));
-            text4.setText(m2[0].trim().replaceAll(" ", "\n"));
-            text5.setText(m2[1].trim().replaceAll(" ", "\n"));
-            text6.setText(m2[2].trim().replaceAll(" ", "\n"));
+
+            if(!menu1.isEmpty()) {
+                String[] m1 = menu1.get(position).split("\n");
+                text1.setText(m1[0].trim().replaceAll(" ", "\n"));
+                text2.setText(m1[1].trim().replaceAll(" ", "\n"));
+                text3.setText(m1[2].trim().replaceAll(" ", "\n"));
+            }
+
+            if(!menu2.isEmpty()) {
+                String[] m2 = menu2.get(position).split("\n");
+                text4.setText(m2[0].trim().replaceAll(" ", "\n"));
+                text5.setText(m2[1].trim().replaceAll(" ", "\n"));
+                text6.setText(m2[2].trim().replaceAll(" ", "\n"));
+            }
+
             container.addView(view) ;
 
             return view ;
