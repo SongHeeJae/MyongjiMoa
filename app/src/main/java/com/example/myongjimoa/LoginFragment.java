@@ -37,13 +37,12 @@ public class LoginFragment extends Fragment {
     boolean fail_login = false;
     ImageButton login;
     ImageButton add_user;
-    EditText user_num;
+    EditText user_mail;
     EditText user_password;
     LinearLayout layout;
     ProgressBar progressBar;
     CheckBox auto;
     int value = 0;
-    int errcode = 0;
     Handler handler = new Handler();
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,7 +50,7 @@ public class LoginFragment extends Fragment {
         // 사용할 레이아웃 inflate
         login = (ImageButton) view.findViewById(R.id.login);
         add_user = (ImageButton) view.findViewById(R.id.add_user);
-        user_num = (EditText) view.findViewById(R.id.login_num);
+        user_mail = (EditText) view.findViewById(R.id.login_mail);
         user_password = (EditText) view.findViewById(R.id.login_password); // 레이아웃의 id 값으로 버튼, 텍스트 객체 할당
         progressBar = (ProgressBar) view.findViewById(R.id.h_progressbar);
         auto = (CheckBox) view.findViewById(R.id.auto);
@@ -61,7 +60,7 @@ public class LoginFragment extends Fragment {
 
         user_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
-        user_num.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
+        user_mail.setOnKeyListener(new View.OnKeyListener() { // 아이디 입력 edittext 엔터키 차단
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == event.KEYCODE_ENTER)
@@ -144,37 +143,17 @@ public class LoginFragment extends Fragment {
     public void mainLogin() {
 
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
-        Call<User> call = connectDB.userLogin(user_num.getText().toString(), user_password.getText().toString());
 
-        final String temp_num = user_num.getText().toString();
-        final String temp_pw = user_password.getText().toString();
+        Call<User> call = connectDB.userLogin(user_mail.getText().toString(), user_password.getText().toString());
 
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
                 User result = response.body(); // User에 결과가 담김
-
-                ConnectDB connectDB = Request.getLoginRetrofit().create(ConnectDB.class);
-                Call<String> calling = connectDB.loginCheck(temp_num, temp_pw);
-                calling.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
-                        String result = response.body();
-                        if (result != null) {
-                            if(result.contains("5회 오류시 비밀번호를 재설정후 사용이 가능합니다") || result.contains("아이디 또는 비밀번호를 잘못 입력하셨습니다."))
-                                errcode = 1; // ID or PW ERROR
-                            else
-                                errcode = 0;
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                    }
-                });
-
-                if (result.getId() != null && errcode == 0) { // 받은 결과의 아이디 값이 null이 아니면 로그인 성공
+                Log.d("아아디 값 : ", "" + result.getId());
+                Log.d("이메일아아디 값 : ", "" + result.getEmail_id());
+                if (result.getId() != null) { // 받은 결과의 아이디 값이 null이 아니면 로그인 성공
                     bool_login = true;
                     Toast.makeText(getActivity(), "띵지모아에 오신 것을 환영합니다!", Toast.LENGTH_LONG).show();
                     Intent it = new Intent(getActivity(), MainActivity.class);
@@ -219,6 +198,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Log.d("로그인 실패", "");
             }
         });
     }

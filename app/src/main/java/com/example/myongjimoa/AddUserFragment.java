@@ -54,7 +54,6 @@ public class AddUserFragment extends Fragment {
     Spinner majorSpinner;
     CheckBox checkBox;
     CheckBox checkBox2;
-    boolean errcode = true;
 
     String temp_num;
     String temp_pw;

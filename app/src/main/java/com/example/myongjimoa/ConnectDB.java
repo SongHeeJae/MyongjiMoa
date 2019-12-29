@@ -60,7 +60,7 @@ public interface ConnectDB {
     @FormUrlEncoded
     @POST("login.php")
     Call<User> userLogin(
-            @Field("number") String number,
+            @Field("email_id") String email_id,
             @Field("password") String password
     );
 
