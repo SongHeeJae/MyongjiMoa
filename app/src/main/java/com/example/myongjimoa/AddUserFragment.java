@@ -278,7 +278,7 @@ public class AddUserFragment extends Fragment {
 
 
             ConnectDB connectDB = retrofit.create(ConnectDB.class);
-            Call<String> call = connectDB.addUser(user_email.getText().toString().trim(), user_password.getText().toString(), user_nickname.getText().toString().trim(), majorSpinner.getSelectedItem().toString(), user_number.getText().toString().trim(), user_name.getText().toString().trim(), format_date);
+            Call<String> call = connectDB.addUser(user_email.getText().toString().trim(), user_password.getText().toString(), user_nickname.getText().toString().trim(), majorSpinner.getSelectedItem().toString(), user_number.getText().toString().trim().substring(2, 4), user_name.getText().toString().trim(), format_date);
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
