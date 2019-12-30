@@ -43,6 +43,11 @@ import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.yanzhenjie.album.Action;
+import com.yanzhenjie.album.Album;
+import com.yanzhenjie.album.AlbumConfig;
+import com.yanzhenjie.album.AlbumFile;
+import com.yanzhenjie.album.AlbumLoader;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -231,6 +236,7 @@ public class BoardWriteActivity extends AppCompatActivity {
             for (String img : it.getStringArrayListExtra("modify_images"))
                 board_write_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + img);
         }
+
     }
 
     private boolean isNetworkConnected() {
@@ -320,26 +326,6 @@ public class BoardWriteActivity extends AppCompatActivity {
         bool_upload = true;
     }
 
-    public void setWriteImage(ClipData clip_data) { // 갤러리에서 받아온 clip_data의 실제경로로 adapter에 이미지등록
-        if (clip_data != null) {
-            for (int i = 0; i < clip_data.getItemCount(); i++) {
-                    board_write_image_adapter.add(getRealPathFromURI(clip_data.getItemAt(i).getUri()));
-            }
-        }
-    }
-
-    public String getRealPathFromURI(Uri contentUri) { // 불러온 이미지의 uri로 실제 경로 구하는 메소드
-
-        String[] proj = { MediaStore.Images.Media.DATA };
-
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        cursor.moveToNext();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-
-        cursor.close();
-        return path;
-    }
-
     class BoardWriteImageAdapter extends RecyclerView.Adapter<BoardWriteImageAdapter.ViewHolder> {
        List<String> items = new ArrayList<>();
 
@@ -395,19 +381,37 @@ public class BoardWriteActivity extends AppCompatActivity {
     }
 
     public void getGallery() { // 갤러리 열기
-        Intent it = new Intent();
-        it.setAction(Intent.ACTION_PICK);
-        it.setType("image/*");
-        it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // 다중 선택 가능
-        startActivityForResult(Intent.createChooser(it, "Get Image"), GET_GALLERY_IMAGE);
-    }
+        Album.initialize(AlbumConfig.newBuilder(this).setAlbumLoader(new AlbumLoader() {
+            @Override
+            public void load(ImageView imageView, AlbumFile albumFile) {
+                load(imageView, albumFile.getPath());
+            }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            setWriteImage(data.getClipData()); // 갤러리에서 가져온 데이터로 setWriteImage 진행
-        }
+            @Override
+            public void load(ImageView imageView, String url) {
+                Glide.with(imageView.getContext())
+                        .load(url)
+                        .into(imageView);
+            }
+        }).build());
+
+        Album.image(this) // Image selection.
+                .multipleChoice()
+                .camera(true)
+                .columnCount(3)
+                .selectCount(20)
+                .onResult(new Action<ArrayList<AlbumFile>>() {
+                    @Override
+                    public void onAction(@NonNull ArrayList<AlbumFile> result) {
+                        for (AlbumFile file : result) board_write_image_adapter.add(file.getPath());
+                    }
+                })
+                .onCancel(new Action<String>() {
+                    @Override
+                    public void onAction(@NonNull String result) {
+                    }
+                })
+                .start();
     }
 
     @Override

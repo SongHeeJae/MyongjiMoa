@@ -37,6 +37,11 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.yanzhenjie.album.Action;
+import com.yanzhenjie.album.Album;
+import com.yanzhenjie.album.AlbumConfig;
+import com.yanzhenjie.album.AlbumFile;
+import com.yanzhenjie.album.AlbumLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -285,24 +290,6 @@ ReviewWriteActivity extends AppCompatActivity {
         bool_upload = true;
     }
 
-    public void setWriteImage(ClipData clip_data) { // 갤러리에서 받아온 ClipData를 이용하여 Uri를 얻고 그것에서 실제경로 구해서 어댑터에 등록
-        if (clip_data != null) {
-            for (int i = 0; i < clip_data.getItemCount(); i++) {
-                review_write_image_adapter.add(getRealPathFromURI(clip_data.getItemAt(i).getUri()));
-            }
-        }
-    }
-
-    public String getRealPathFromURI(Uri contentUri) { // Uri를 통해 실제경로 구하는 메소드
-
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        cursor.moveToNext();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-        cursor.close();
-        return path;
-    }
-
     public class ReviewWriteImageAdapter extends RecyclerView.Adapter<ReviewWriteImageAdapter.ViewHolder> {
         List<String> items = new ArrayList<>();
 
@@ -356,20 +343,38 @@ ReviewWriteActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) { // 갤러리 화면에서 얻어온 결과
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            setWriteImage(data.getClipData()); // 얻어온 데이터로 ClipData로 setWriteImage 수행
-        }
-    }
+    public void getGallery() { // 갤러리 열기
+        Album.initialize(AlbumConfig.newBuilder(this).setAlbumLoader(new AlbumLoader() {
+            @Override
+            public void load(ImageView imageView, AlbumFile albumFile) {
+                load(imageView, albumFile.getPath());
+            }
 
-    public void getGallery() { // 갤러리 열어줌
-        Intent it = new Intent();
-        it.setAction(Intent.ACTION_PICK);
-        it.setType("image/*");
-        it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // 다중선택 가능
-        startActivityForResult(Intent.createChooser(it, "Get Image"), GET_GALLERY_IMAGE);
+            @Override
+            public void load(ImageView imageView, String url) {
+                Glide.with(imageView.getContext())
+                        .load(url)
+                        .into(imageView);
+            }
+        }).build());
+
+        Album.image(this) // Image selection.
+                .multipleChoice()
+                .camera(true)
+                .columnCount(3)
+                .selectCount(20)
+                .onResult(new Action<ArrayList<AlbumFile>>() {
+                    @Override
+                    public void onAction(@NonNull ArrayList<AlbumFile> result) {
+                        for (AlbumFile file : result) review_write_image_adapter.add(file.getPath());
+                    }
+                })
+                .onCancel(new Action<String>() {
+                    @Override
+                    public void onAction(@NonNull String result) {
+                    }
+                })
+                .start();
     }
 
     @Override
