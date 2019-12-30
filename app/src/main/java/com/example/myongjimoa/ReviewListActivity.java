@@ -168,8 +168,6 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
             mapFragment.getMapAsync(this);
         } // 네이버 지도 API 사용할 fragment 생성
 
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -464,7 +462,8 @@ public class ReviewListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == WRITE_REQUEST_CODE && resultCode == RESULT_OK){
+        if(requestCode == WRITE_REQUEST_CODE && resultCode == RESULT_OK) {
+            no_review.setVisibility(View.GONE);
            reloadReview(); // 글쓰기하고 돌아왔을 시 reload
         }
     }

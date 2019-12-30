@@ -151,8 +151,6 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call<User> call, Response<User> response) {
 
                 User result = response.body(); // User에 결과가 담김
-                Log.d("아아디 값 : ", "" + result.getId());
-                Log.d("이메일아아디 값 : ", "" + result.getEmail_id());
                 if (result.getId() != null) { // 받은 결과의 아이디 값이 null이 아니면 로그인 성공
                     bool_login = true;
                     Toast.makeText(getActivity(), "띵지모아에 오신 것을 환영합니다!", Toast.LENGTH_LONG).show();

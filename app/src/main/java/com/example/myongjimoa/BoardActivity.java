@@ -83,8 +83,8 @@ public class BoardActivity extends AppCompatActivity {
         user_id = it.getStringExtra("user_id");
         user_nickname = it.getStringExtra("user_nickname");
         no_show = (TextView) findViewById(R.id.no_show);
-
         // 이전 Activity에서 정보 받아옴
+
         setTitle(board_title);
 
         write = (ImageButton) findViewById(R.id.write);
@@ -391,6 +391,7 @@ public class BoardActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && requestCode == WRITE_REQUEST_CODE){
+            no_show.setVisibility(View.GONE);
             reloadPost();
         } else if(data == null && resultCode == RESULT_OK && requestCode == POST_REMOVE_REQUEST_CODE) { // 수정 또는 삭제일어났을때 reload
             reloadPost();
