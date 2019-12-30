@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -36,9 +35,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bumptech.glide.Glide;
-import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ReturnMode;
-import com.esafirm.imagepicker.model.Image;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -206,21 +202,12 @@ ReviewWriteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ReviewWriteActivity.this);
-        builder.setTitle("화면에서 나가시겠습니까?")
-                .setMessage("작성한 내용은 저장되지 않습니다.")
-                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+        builder.setTitle("작성 화면에서 나가시겠습니까?")
+                .setMessage("작성 내용은 저장되지 않습니다.")
+                .setPositiveButton(" 예", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -230,8 +217,17 @@ ReviewWriteActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-    });
+                });
         builder.show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
     }
 
     public void imageUpload() {
@@ -388,8 +384,9 @@ ReviewWriteActivity extends AppCompatActivity {
     }
 
     public void getGallery() { // 갤러리 열어줌
-        Intent it = new Intent(Intent.ACTION_PICK);
-        it.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        Intent it = new Intent();
+        it.setAction(Intent.ACTION_PICK);
+        it.setType("image/*");
         it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // 다중선택 가능
         startActivityForResult(Intent.createChooser(it, "Get Image"), GET_GALLERY_IMAGE);
     }

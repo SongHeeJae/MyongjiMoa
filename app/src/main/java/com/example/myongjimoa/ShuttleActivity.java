@@ -2,6 +2,7 @@ package com.example.myongjimoa;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,13 @@ public class ShuttleActivity extends AppCompatActivity {
     String[] citybus = {"08:00", "08:15", "08:30", "08:45", "09:00", "09:15", "09:30", "09:45"
             , "10:00", "10:15", "10:30", "10:45", "11:00", "11:30","12:00", "12:30",
             "13:00", "13:30", "14:00", "14:30",  "15:00", "15:30", "16:00", "16:30",
-            "17:00", "17:30","18:00", "18:40",  "19:20", "20:00", "20:40"};
+            "17:00", "17:30","18:00", "18:40",  "19:20", "20:00", "20:40"}; // 31
 
     String[] intobus = {"08:10", "08:20", "08:25", "08:40", "08:50", "08:55", "09:10", "09:20",
             "09:25", "09:40", "09:50", "09:55", "10:10", "10:20", "10:25", "10:40", "10:50",
             "10:55", "11:20", "11:40", "11:50", "12:20", "12:40", "12:50", "13:20", "13:40",
             "13:50", "14:20", "14:40", "14:50", "15:20", "15:40", "15:50", "16:20", "16:40",
-            "16:50", "17:20", "17:40", "17:50", "18:20", "19:00", "19:40", "20:20", "21:00"};
+            "16:50", "17:20", "17:40", "17:50", "18:20", "19:00", "19:40", "20:20", "21:00"}; // 44
 
     String[] intoschool = {"08:15", "08:25","08:30", "08:35", "08:40", "08:45", "08:55",
             "09:00","09:05", "09:10", "09:15","09:25","09:30", "09:35", "09:40",
@@ -43,7 +44,7 @@ public class ShuttleActivity extends AppCompatActivity {
             "14:45", "14:55", "15:05", "15:15", "15:35", "15:45", "15:55", "16:05",
             "16:15", "16:35", "16:45", "16:55", "17:05", "17:15", "17:35", "17:45",
             "17:55", "18:05", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00",
-            "20:15", "20:40", "21:00", "21:20"};
+            "20:15", "20:40", "21:00", "21:20"}; // 75
 
     TextView CityBus;
     TextView IntoBus;
@@ -155,15 +156,19 @@ public class ShuttleActivity extends AppCompatActivity {
                     (TextView) view.findViewById(R.id.shuttle_time2),
                     (TextView) view.findViewById(R.id.shuttle_time3)
             };
+
             String[] t = times.get(position).split("\n");
-            for(int i=0; i<3; i++) {
+            for(int i = 0; i < 3; i++) {
                 String tt = "";
-                for(int j=t.length/3*i ; j < t.length/3*(i+1); j++) tt += t[j] + "\n";
+                if(t.length % 3 == 0)
+                    for(int j = t.length / 3 * i; j < t.length / 3 * (i + 1); j++) tt += t[j] + "\n";
+                else if(t.length % 3 == 1)
+                    for(int j = t.length / 3 * i; j <= t.length / 3 * (i + 1); j++) tt += t[j] + "\n";
+                else if(t.length % 3 == 2)
+                    for(int j = t.length / 3 * i; j <= (t.length / 3 * (i + 1)) + 1; j++) tt += t[j] + "\n";
                 text[i].setText(tt);
             }
-
             container.addView(view) ;
-
             return view ;
         }
 
