@@ -43,6 +43,11 @@ import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.yanzhenjie.album.Action;
+import com.yanzhenjie.album.Album;
+import com.yanzhenjie.album.AlbumConfig;
+import com.yanzhenjie.album.AlbumFile;
+import com.yanzhenjie.album.AlbumLoader;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -216,13 +221,11 @@ public class BoardWriteActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         Intent it = getIntent();
         user_id = it.getStringExtra("user_id");
         board_title_id = it.getStringExtra("board_title_id");
         modify_mode = it.getBooleanExtra("modify_mode", false);
-        if(modify_mode) { // 수정 상태로 화면 열었을 시 수정하려고 가져온 데이터에 화면 보여줌
+        if(modify_mode) { // 수정 상태로 화면 열었을 시 수정하려고 가져온 데이터애 화면 보여줌
             board_id = it.getStringExtra("board_id");
             delete_images = new ArrayList<>();
             write_title.setText(it.getStringExtra("title"));
@@ -231,6 +234,7 @@ public class BoardWriteActivity extends AppCompatActivity {
             for (String img : it.getStringArrayListExtra("modify_images"))
                 board_write_image_adapter.add("https://myongjimoa.s3.ap-northeast-2.amazonaws.com/board_images/" + img);
         }
+
     }
 
     @Override
@@ -267,7 +271,7 @@ public class BoardWriteActivity extends AppCompatActivity {
             // adapter에 이미지 개수 - 수정할때 원래 가져온개수 만큼 업로드
 
             TransferObserver observer;
-            
+
             TransferUtility transfer_utility = TransferUtility.builder().s3Client(Request.getAmazonS3(BoardWriteActivity.this)).context(this).build();
 
             for (int i = modify_image_num; i < board_write_image_adapter.getItemCount(); i++) {
@@ -339,30 +343,10 @@ public class BoardWriteActivity extends AppCompatActivity {
         bool_upload = true;
     }
 
-    public void setWriteImage(ClipData clip_data) { // 갤러리에서 받아온 clip_data의 실제경로로 adapter에 이미지등록
-        if (clip_data != null) {
-            for (int i = 0; i < clip_data.getItemCount(); i++) {
-                    board_write_image_adapter.add(getRealPathFromURI(clip_data.getItemAt(i).getUri()));
-            }
-        }
-    }
-
-    public String getRealPathFromURI(Uri contentUri) { // 불러온 이미지의 uri로 실제 경로 구하는 메소드
-
-        String[] proj = { MediaStore.Images.Media.DATA };
-
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        cursor.moveToNext();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-
-        cursor.close();
-        return path;
-    }
-
     class BoardWriteImageAdapter extends RecyclerView.Adapter<BoardWriteImageAdapter.ViewHolder> {
-       List<String> items = new ArrayList<>();
+        List<String> items = new ArrayList<>();
 
-       class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             ImageView img;
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -378,17 +362,17 @@ public class BoardWriteActivity extends AppCompatActivity {
         }
 
         public void removeItem(int position) {
-           if(modify_mode && position < modify_image_num) {
-               modify_image_num--;
-               delete_images.add(items.get(position).substring(items.get(position).lastIndexOf("/")+1));
-           }
-           items.remove(position);
-           notifyItemRemoved(position);
-           notifyItemChanged(position, items.size());
+            if(modify_mode && position < modify_image_num) {
+                modify_image_num--;
+                delete_images.add(items.get(position).substring(items.get(position).lastIndexOf("/")+1));
+            }
+            items.remove(position);
+            notifyItemRemoved(position);
+            notifyItemChanged(position, items.size());
         }
 
         public String getItem(int i) {
-           return items.get(i);
+            return items.get(i);
         }
 
         public void add(String item) {
@@ -414,29 +398,37 @@ public class BoardWriteActivity extends AppCompatActivity {
     }
 
     public void getGallery() { // 갤러리 열기
-        Intent it = new Intent();
-        it.setAction(Intent.ACTION_PICK);
-        it.setType("image/*");
-        it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // 다중 선택 가능
-        startActivityForResult(Intent.createChooser(it, "Get Image"), GET_GALLERY_IMAGE);
-    }
+        Album.initialize(AlbumConfig.newBuilder(this).setAlbumLoader(new AlbumLoader() {
+            @Override
+            public void load(ImageView imageView, AlbumFile albumFile) {
+                load(imageView, albumFile.getPath());
+            }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            setWriteImage(data.getClipData()); // 갤러리에서 가져온 데이터로 setWriteImage 진행
-        }
-    }
+            @Override
+            public void load(ImageView imageView, String url) {
+                Glide.with(imageView.getContext())
+                        .load(url)
+                        .into(imageView);
+            }
+        }).build());
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish(); // 메뉴의 뒤로가기 클릭시 종료
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        Album.image(this) // Image selection.
+                .multipleChoice()
+                .camera(true)
+                .columnCount(3)
+                .selectCount(20)
+                .onResult(new Action<ArrayList<AlbumFile>>() {
+                    @Override
+                    public void onAction(@NonNull ArrayList<AlbumFile> result) {
+                        for (AlbumFile file : result) board_write_image_adapter.add(file.getPath());
+                    }
+                })
+                .onCancel(new Action<String>() {
+                    @Override
+                    public void onAction(@NonNull String result) {
+                    }
+                })
+                .start();
     }
 
     public void modify(ArrayList<String> path) {
@@ -452,7 +444,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            
+
                             List<DeleteObjectsRequest.KeyVersion> key = new ArrayList<>();
                             for (int i = 0; i < delete_images.size(); i++) {
                                 key.add(new DeleteObjectsRequest.KeyVersion("board_images/" + delete_images.get(i)));

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -46,7 +47,14 @@ public class ShuttleActivity extends AppCompatActivity {
             "17:55", "18:05", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00",
             "20:15", "20:40", "21:00", "21:20"}; // 75
 
-    TextView CityBus;
+    /*
+    계절학기 기간에는 08:00부터
+    진입로 방향 버스 17:50 까지
+    학교 방향 버스 18:05 까지
+    시내 방향 버스 17:30 까지
+     */
+
+   TextView CityBus;
     TextView IntoBus;
     TextView IntoSchool;
 
@@ -66,6 +74,7 @@ public class ShuttleActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
 
         setTitle("셔틀정보");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         CityBus = (TextView) findViewById(R.id.CityBus_text);
         IntoBus = (TextView) findViewById(R.id.IntoBus_text);
@@ -97,6 +106,16 @@ public class ShuttleActivity extends AppCompatActivity {
 
         shuttle_adapter = new ShuttleAdapter(add_intoschool, add_citybus, add_intobus);
         view_pager.setAdapter(shuttle_adapter); // 셔틀 시간표로 뷰페이저에 PagerAdapter 지정
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish(); // 뒤로가기 버튼 종료 처리
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void setShuttleTime() { // 가까운 시간대의 셔틀 시간 계산

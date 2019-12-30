@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -70,6 +71,7 @@ public class MenuActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
 
         setTitle("학식정보");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = (ProgressBar) findViewById(R.id.h_progressbar);
         progressBar.setIndeterminate(false);
@@ -102,6 +104,16 @@ public class MenuActivity extends AppCompatActivity {
             new DownloadMenu().execute(url1);
             new DownloadMenu().execute(url2); // 다운로드 진행
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish(); // 뒤로가기 버튼 종료 처리
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean isNetworkConnected() {

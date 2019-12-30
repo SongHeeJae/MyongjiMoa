@@ -2,14 +2,12 @@ package com.example.myongjimoa;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.esafirm.imagepicker.features.ImagePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
