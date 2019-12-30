@@ -78,7 +78,6 @@ public class ImageActivity extends AppCompatActivity {
         Intent it = getIntent();
         images = new ArrayList<>(it.getStringArrayListExtra("images")); // 이미지 목록 가져옴
 
-
         pager = (MyViewPager) findViewById(R.id.image_view_pager);
         adapter = new ImageAdapter(images);
         pager.setAdapter(adapter);
