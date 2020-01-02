@@ -57,6 +57,10 @@ public interface ConnectDB {
             @Field("date") String date
     );
 
+    @POST("shuttle.php")
+    Call<String> shuttle(
+    );
+
     @FormUrlEncoded
     @POST("login.php")
     Call<User> userLogin(

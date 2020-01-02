@@ -1,7 +1,9 @@
 package com.example.myongjimoa;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,13 +16,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ShuttleActivity extends AppCompatActivity {
 
@@ -46,7 +55,6 @@ public class ShuttleActivity extends AppCompatActivity {
             "16:15", "16:35", "16:45", "16:55", "17:05", "17:15", "17:35", "17:45",
             "17:55", "18:05", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00",
             "20:15", "20:40", "21:00", "21:20"}; // 75
-
     /*
     계절학기 기간에는 08:00부터
     진입로 방향 버스 17:50 까지
@@ -54,7 +62,7 @@ public class ShuttleActivity extends AppCompatActivity {
     시내 방향 버스 17:30 까지
      */
 
-   TextView CityBus;
+    TextView CityBus;
     TextView IntoBus;
     TextView IntoSchool;
 
@@ -166,29 +174,46 @@ public class ShuttleActivity extends AppCompatActivity {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(final ViewGroup container, int position) {
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.shuttle_tab, container, false);
-            TextView[] text = {
-                    (TextView) view.findViewById(R.id.shuttle_time1),
-                    (TextView) view.findViewById(R.id.shuttle_time2),
-                    (TextView) view.findViewById(R.id.shuttle_time3)
-            };
+            final View view = inflater.inflate(R.layout.shuttle_tab, container, false);
 
-            String[] t = times.get(position).split("\n");
-            for(int i = 0; i < 3; i++) {
-                String tt = "";
-                if(t.length % 3 == 0)
-                    for(int j = t.length / 3 * i; j < t.length / 3 * (i + 1); j++) tt += t[j] + "\n";
-                else if(t.length % 3 == 1)
-                    for(int j = t.length / 3 * i; j <= t.length / 3 * (i + 1); j++) tt += t[j] + "\n";
-                else if(t.length % 3 == 2)
-                    for(int j = t.length / 3 * i; j <= (t.length / 3 * (i + 1)) + 1; j++) tt += t[j] + "\n";
-                text[i].setText(tt);
-            }
-            container.addView(view) ;
-            return view ;
+            ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+            Call<String> call = connectDB.shuttle();
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    String result = response.body();
+
+                    TextView[] text = {
+                            (TextView) view.findViewById(R.id.shuttle_time1),
+                            (TextView) view.findViewById(R.id.shuttle_time2),
+                            (TextView) view.findViewById(R.id.shuttle_time3)
+                    };
+
+                    String[] bus = result.split("/");
+                    // 0 -> into, 1 -> city, 2 -> intoschool
+
+                    for(int i = 0; i < 3; i++) {
+                        Log.d("bus[" + i + "]의 값 알아보기 : \n", "" + bus[i]);
+                        String[] arr = null;
+                        arr = bus[i].split(",");
+
+                        for(int j = 0; j < arr.length; j++) {
+                            Log.d("","------------------ arr 값은 뭘까요????\n" + arr[j]);
+                            text[i].setText(arr[j]);
+                            text[i].setText("    ");
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                }
+            });
+            container.addView(view);
+            return view;
         }
 
         @Override
